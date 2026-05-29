@@ -1,0 +1,20 @@
+# Git Ignore File for UNSRAT RAG Chatbot
+
+# Environment and secrets
+.env
+
+# Database and indexes
+chroma_db/
+bm25_index/
+
+# Python compiled files
+__pycache__/
+*.pyc
+.conda/
+*.egg-info/
+
+# Logs and outputs
+logs/
+
+# Local tools
+context-mode/
