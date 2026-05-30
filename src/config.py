@@ -33,9 +33,9 @@ CHROMA_DISTANCE_FN  = "cosine"
 
 # ── MODEL ───────────────────────────────────────────────────
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
-LLM_MODEL_NAME       = "gemini-3.5-flash"
+LLM_MODEL_NAME       = "qwen3.5-397b-a17b"
 EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
-EVALUATOR_MODEL_NAME = "gemini-2.5-flash"
+EVALUATOR_MODEL_NAME = "llama-3.1-70b-instruct"
 
 # Daftar model yang bisa dipilih di UI sidebar
 # Catatan: model NVIDIA NIM menggunakan provider "openai_compatible" (lihat Section 18)

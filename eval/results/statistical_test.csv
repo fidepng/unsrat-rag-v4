@@ -1,0 +1,5 @@
+﻿metric,wilcoxon_statistic,p_value,significant_at_0.05,winner,mean_a,mean_b
+faithfulness,0.0,0.5,False,Tidak signifikan,0.4667,1.0
+answer_relevancy,,,False,Tidak signifikan,,
+context_precision,0.0,1.0,False,Tidak signifikan,0.7407,0.6574
+context_recall,0.0,1.0,False,Tidak signifikan,1.0,1.0

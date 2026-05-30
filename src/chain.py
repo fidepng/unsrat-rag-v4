@@ -29,23 +29,46 @@ def estimate_tokens(text: str) -> int:
 
 
 # ── Stateless LLM cache (D-B5) ───────────────────────────────────────────────
-_llm_cache: dict[str, ChatGoogleGenerativeAI] = {}
+_llm_cache: dict[str, Any] = {}
 
 
-def _get_llm(model_name: str) -> ChatGoogleGenerativeAI:
+def _get_llm(model_name: str) -> Any:
     """
     Kembalikan LLM instance untuk model_name. Cache per model, tidak ada global mutation.
 
     Stateless per-request — konsisten dengan arsitektur backend (D-B5, Section 6.7).
     """
     if model_name not in _llm_cache:
-        _llm_cache[model_name] = ChatGoogleGenerativeAI(
-            model=model_name,
-            google_api_key=GOOGLE_API_KEY,
-            temperature=LLM_TEMPERATURE,
-            max_output_tokens=LLM_MAX_OUTPUT_TOKENS,
-            top_p=LLM_TOP_P,
-        )
+        import os
+        nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
+        if nvidia_api_key and ("llama" in model_name or "qwen" in model_name or "nvidia" in model_name or os.getenv("FORCE_NIM_GENERATOR") == "true"):
+            logger.info(f"Menggunakan NVIDIA NIM untuk generator model: {model_name}")
+            from langchain_openai import ChatOpenAI
+            
+            nim_model = model_name
+            if model_name == "qwen3.5-397b-a17b":
+                nim_model = "qwen/qwen3.5-397b-a17b"
+            elif model_name == "llama-3.1-70b-instruct":
+                nim_model = "meta/llama-3.1-70b-instruct"
+            elif model_name == "llama-3.1-8b-instruct":
+                nim_model = "meta/llama-3.1-8b-instruct"
+                
+            _llm_cache[model_name] = ChatOpenAI(
+                model=nim_model,
+                api_key=nvidia_api_key,
+                openai_api_base="https://integrate.api.nvidia.com/v1",
+                temperature=LLM_TEMPERATURE,
+                max_tokens=LLM_MAX_OUTPUT_TOKENS,
+            )
+        else:
+            logger.info(f"Menggunakan Google Gemini untuk generator model: {model_name}")
+            _llm_cache[model_name] = ChatGoogleGenerativeAI(
+                model=model_name,
+                google_api_key=GOOGLE_API_KEY,
+                temperature=LLM_TEMPERATURE,
+                max_output_tokens=LLM_MAX_OUTPUT_TOKENS,
+                top_p=LLM_TOP_P,
+            )
         logger.debug(f"LLM instance dibuat untuk model: {model_name}")
     return _llm_cache[model_name]
 
