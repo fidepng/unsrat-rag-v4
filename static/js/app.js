@@ -222,7 +222,13 @@ function renderMetricsTable(configs) {
         html += `<tr><td><strong>${m}</strong></td>`;
         for (const cfg of Object.keys(configs)) {
             const s = configs[cfg][m];
-            html += s ? `<td>${s.mean.toFixed(3)} ± ${s.std.toFixed(3)}</td>` : "<td>—</td>";
+            if (s && s.mean !== null && s.mean !== undefined) {
+                const meanVal = typeof s.mean === 'number' ? s.mean.toFixed(3) : s.mean;
+                const stdVal = (s.std !== null && s.std !== undefined && typeof s.std === 'number') ? ` ± ${s.std.toFixed(3)}` : '';
+                html += `<td>${meanVal}${stdVal}</td>`;
+            } else {
+                html += "<td>—</td>";
+            }
         }
         html += "</tr>";
     }
@@ -241,7 +247,7 @@ function renderChart(configs) {
 
     const datasets = Object.entries(configs).map(([cfg, stats]) => ({
         label: labels[cfg] || cfg,
-        data: metrics.map(m => stats[m]?.mean || 0),
+        data: metrics.map(m => (stats[m] && stats[m].mean !== null && stats[m].mean !== undefined) ? stats[m].mean : 0),
         backgroundColor: colors[cfg] || "#999",
     }));
 
@@ -264,7 +270,9 @@ function renderWilcoxon(wilcoxon) {
     }
     let html = `<table><tr><th>Metrik</th><th>Statistik</th><th>p-value</th><th>Signifikan (p<0.05)</th><th>Winner</th></tr>`;
     for (const [metric, stat] of Object.entries(wilcoxon)) {
-        html += `<tr><td>${metric}</td><td>${stat.statistic}</td><td>${stat.p_value}</td><td>${stat.significant ? "✅ Ya" : "❌ Tidak"}</td><td>${stat.winner || "—"}</td></tr>`;
+        const statStr = (stat.statistic !== null && stat.statistic !== undefined && typeof stat.statistic === 'number') ? stat.statistic.toFixed(4) : (stat.statistic !== null && stat.statistic !== undefined ? stat.statistic : "—");
+        const pStr = (stat.p_value !== null && stat.p_value !== undefined && typeof stat.p_value === 'number') ? stat.p_value.toFixed(4) : (stat.p_value !== null && stat.p_value !== undefined ? stat.p_value : "—");
+        html += `<tr><td>${metric}</td><td>${statStr}</td><td>${pStr}</td><td>${stat.significant ? "✅ Ya" : "❌ Tidak"}</td><td>${stat.winner || "—"}</td></tr>`;
     }
     html += "</table>";
     container.innerHTML = html;
