@@ -2,7 +2,6 @@
 # PRD Reference: Section 6.4, FR-09, FR-10
 
 import chromadb
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from src.config import (
     CHROMA_DIR_A, CHROMA_DIR_B,
@@ -10,6 +9,7 @@ from src.config import (
     RETRIEVAL_K, SIMILARITY_THRESHOLD,
     EMBEDDING_MODEL_NAME, GOOGLE_API_KEY,
 )
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from src.bm25_retriever import retrieve_chunks_bm25
 from src.logger_manager import get_logger
 

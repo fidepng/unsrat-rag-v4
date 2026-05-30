@@ -9,9 +9,6 @@ from pathlib import Path
 
 import frontmatter
 import chromadb
-from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-
 from src.config import (
     CORPUS_DIR, CHROMA_DIR_A, CHROMA_DIR_B,
     CHROMA_COLLECTION_A, CHROMA_COLLECTION_B, CHROMA_DISTANCE_FN,
@@ -19,6 +16,8 @@ from src.config import (
     CHUNK_SEPARATORS, MIN_CHUNK_LENGTH, REQUIRED_YAML_FIELDS,
     EMBEDDING_MODEL_NAME, GOOGLE_API_KEY,
 )
+from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from src.logger_manager import get_logger, log_ingestion_report
 
 logger = get_logger("ingestion")

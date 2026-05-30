@@ -1,8 +1,13 @@
 # src/config.py — CANONICAL CONFIGURATION FILE
 
 import os
+import warnings
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Suppress library deprecation and future warnings from underlying SDKs
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 load_dotenv()
 
