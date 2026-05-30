@@ -29,7 +29,7 @@ CHROMA_DISTANCE_FN  = "cosine"
 # ── MODEL ───────────────────────────────────────────────────
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
 LLM_MODEL_NAME       = "gemini-3.5-flash"
-EMBEDDING_MODEL_NAME = "gemini-embedding-001"
+EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
 EVALUATOR_MODEL_NAME = "gemini-2.5-flash"
 
 # Daftar model yang bisa dipilih di UI sidebar
