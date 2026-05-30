@@ -140,12 +140,11 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None) -> None:
             temperature=0.0,
             max_tokens=1024,
         ))
-        logger.info("Menggunakan NVIDIA NIM (nvidia/nv-embedqa-e5-v5) sebagai evaluator embeddings.")
-        from langchain_openai import OpenAIEmbeddings
-        evaluator_embeddings = LangchainEmbeddingsWrapper(OpenAIEmbeddings(
-            model="nvidia/nv-embedqa-e5-v5",
-            api_key=nvidia_api_key,
-            openai_api_base="https://integrate.api.nvidia.com/v1",
+        logger.info("Menggunakan Google Gemini (models/gemini-embedding-001) sebagai evaluator embeddings untuk menghindari error 500 NIM.")
+        from langchain_google_genai import GoogleGenerativeAIEmbeddings
+        evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
+            model=EMBEDDING_MODEL_NAME,
+            google_api_key=GOOGLE_API_KEY,
         ))
     else:
         logger.info(f"NVIDIA_NIM_API_KEY tidak ditemukan. Menggunakan Google Gemini ({EVALUATOR_MODEL_NAME}) sebagai evaluator.")
