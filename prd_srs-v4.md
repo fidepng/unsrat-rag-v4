@@ -1703,9 +1703,13 @@ def get_nim_evaluator_llm():
     )
 
 # Model yang sudah diuji untuk evaluator Ragas:
-# - meta/llama-3.1-70b-instruct (direkomendasikan untuk evaluasi)
+# - meta/llama-3.1-70b-instruct (direkomendasikan untuk evaluasi presisi tinggi)
+# - meta/llama-3.1-8b-instruct (sangat direkomendasikan untuk uji coba cepat / cost-free testing)
 # Model yang sudah diuji untuk generator LLM:
-# - nvidia/qwen3.5-397b-a17b (atau nama model sesuai NIM catalog)
+# - nvidia/qwen3.5-397b-a17b (akurasi tinggi, namun antrean NIM lambat)
+# - meta/llama-3.1-8b-instruct (sangat cepat, 1-2 detik per kueri)
+# Model embedding yang sudah diuji untuk evaluator Ragas:
+# - nvidia/nv-embedqa-e5-v5 (bebas dari issue rate-limit Gemini)
 # KONFIRMASI nama model yang aktif di: https://build.nvidia.com/
 ```
 

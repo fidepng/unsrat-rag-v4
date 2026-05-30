@@ -98,11 +98,16 @@ async def get_evaluation():
             stats = {}
             for m in metrics:
                 if m in df.columns:
+                    mean_val = df[m].mean()
+                    std_val = df[m].std()
+                    min_val = df[m].min()
+                    max_val = df[m].max()
+                    
                     stats[m] = {
-                        "mean": round(df[m].mean(), 4),
-                        "std":  round(df[m].std(), 4),
-                        "min":  round(df[m].min(), 4),
-                        "max":  round(df[m].max(), 4),
+                        "mean": None if pd.isna(mean_val) else round(mean_val, 4),
+                        "std":  None if pd.isna(std_val) else round(std_val, 4),
+                        "min":  None if pd.isna(min_val) else round(min_val, 4),
+                        "max":  None if pd.isna(max_val) else round(max_val, 4),
                     }
             result["configs"][config_label] = stats
 
@@ -111,11 +116,16 @@ async def get_evaluation():
     if wilcoxon_path.exists():
         df_w = pd.read_csv(wilcoxon_path)
         for _, row in df_w.iterrows():
+            stat_val = row.get("wilcoxon_statistic")
+            p_val = row.get("p_value")
+            winner_val = row.get("winner")
+            sig_val = row.get("significant_at_0.05")
+            
             result["wilcoxon"][row["metric"]] = {
-                "statistic": row.get("wilcoxon_statistic"),
-                "p_value":   row.get("p_value"),
-                "significant": row.get("significant_at_0.05"),
-                "winner":    row.get("winner"),
+                "statistic": None if pd.isna(stat_val) else stat_val,
+                "p_value":   None if pd.isna(p_val) else p_val,
+                "significant": False if pd.isna(sig_val) else bool(sig_val),
+                "winner":    "Tidak signifikan" if pd.isna(winner_val) or winner_val == "Tidak signifikan" else winner_val,
             }
 
     # Audit log (5 transaksi terakhir)

@@ -187,7 +187,17 @@ tanpa validasi empiris. Parameter ini menentukan apakah sistem menjawab atau dia
 
 ---
 
+### D-B8 — Integrasi NVIDIA NIM Llama-3.1-8B-Instruct & NV-EmbedQA-E5-V5 untuk Uji Coba Cepat & Bebas Gemini API Rate Limit
+**Masalah:** Gemini API Free Tier mengalami HTTP 429 (ResourceExhausted) yang konsisten karena kuota habis untuk model generatif dan embeddings. Evaluator Ragas mandek di `Evaluating: 0%`. Model Qwen-397B di NIM sangat lambat (8 menit/query) karena antrean publik yang padat.
+
+**Keputusan:** Gunakan `llama-3.1-8b-instruct` (NIM: `meta/llama-3.1-8b-instruct`) untuk generator dan evaluator, serta `nvidia/nv-embedqa-e5-v5` untuk Ragas embeddings. Tambahkan model Llama ini ke dalam pilihan sidebar UI (`AVAILABLE_MODELS`).
+
+**Justifikasi:** Model 8B sangat ringan dan cepat (~1-2 detik per kueri), menghindari antrean NIM, dan sepenuhnya bebas dari batasan Gemini API. Menambahkan Llama ke UI memudahkan perpindahan model saat Gemini API mengalami limit.
+
+---
+
 ## Dampak pada Dokumen
 
-Semua perubahan code-critical (D-B1 s/d D-B5) telah diaplikasikan ke `prd_srs-v4.md`.
+Semua perubahan code-critical (D-B1 s/d D-B5, serta D-B8) telah diaplikasikan ke `prd_srs-v4.md` dan berkas konfigurasi `src/config.py`.
 D-B6 dan D-B7 didokumentasikan di Section 9.1 dan Section 12.2b PRD.
+D-B8 didokumentasikan pada Section 18 PRD mengenai pilihan opsi model sistem dan antarmuka UI.

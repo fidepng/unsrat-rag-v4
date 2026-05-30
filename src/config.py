@@ -47,9 +47,8 @@ AVAILABLE_MODELS: list[str] = [
     "gemini-2.5-pro",
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
-    # Model NVIDIA NIM (membutuhkan NVIDIA_NIM_API_KEY di .env dan provider switch — lihat Section 18):
-    # "qwen3.5-397b-a17b",       # LLM generator via NIM — sudah diuji
-    # "llama-3.1-70b-instruct",  # Evaluator Ragas via NIM — sudah diuji
+    "llama-3.1-8b-instruct",
+    "llama-3.1-70b-instruct",
 ]
 
 # ── CHUNKING — CONFIG A ──────────────────────────────────────
