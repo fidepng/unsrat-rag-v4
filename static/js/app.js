@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatInput = document.getElementById("user-input");
     const chatMessages = document.getElementById("chat-messages");
     const sendBtn = document.getElementById("send-btn");
-    const btnIcon = document.getElementById("btn-icon");
     const statusInfo = document.getElementById("status-info");
 
     // Ekspor Clipboard Selectors
@@ -99,8 +98,12 @@ document.addEventListener("DOMContentLoaded", () => {
         chatForm.addEventListener("submit", () => {
             setTimeout(() => {
                 chatInput.style.height = "auto";
+                adjustHeight();
             }, 50);
         });
+
+        // Initialize height on page load
+        adjustHeight();
     }
 
     // ── SYSTEM CONFIG INGESTION ──────────────────────────────────────────────
@@ -136,12 +139,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function clearChatUI() {
-        if (isStreaming) {
-            handleAbort();
-        }
+        handleAbort(); // Unconditionally abort streaming and hard-reset icon to send
         chatHistory = [];
-        if (chatInput && chatInput.tagName.toLowerCase() === "textarea") {
-            chatInput.style.height = "auto";
+        if (chatInput) {
+            chatInput.value = "";
+            if (chatInput.tagName.toLowerCase() === "textarea") {
+                chatInput.style.height = "auto";
+            }
         }
         chatMessages.innerHTML = `
             <!-- Welcome Message Panel (Automatic) -->
@@ -219,22 +223,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function setStreamingState(streaming) {
         isStreaming = streaming;
-        if (streaming) {
-            if (sendBtn) {
-                sendBtn.className = "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 mr-3 mb-3";
-            }
-            if (btnIcon) {
-                btnIcon.setAttribute("data-lucide", "square");
-            }
-        } else {
-            if (sendBtn) {
-                sendBtn.className = "bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 mr-3 mb-3";
-            }
-            if (btnIcon) {
-                btnIcon.setAttribute("data-lucide", "send");
+        const sendIcon = document.getElementById("send-icon");
+        const stopIcon = document.getElementById("stop-icon");
+        
+        if (sendBtn) {
+            // Keep button style exactly identical in both states: Dark Maroon round button with perfect bottom-alignment
+            sendBtn.className = "bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 ml-4";
+        }
+        
+        if (sendIcon && stopIcon) {
+            if (streaming) {
+                sendIcon.classList.add("hidden");
+                stopIcon.classList.remove("hidden");
+            } else {
+                stopIcon.classList.add("hidden");
+                sendIcon.classList.remove("hidden");
             }
         }
-        safeCreateIcons();
     }
 
     function handleAbort() {
