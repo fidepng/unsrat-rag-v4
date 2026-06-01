@@ -132,6 +132,8 @@ async def get_evaluation():
     from src.config import CHAT_LOG_PATH
     if CHAT_LOG_PATH.exists():
         df_audit = pd.read_csv(CHAT_LOG_PATH)
+        # Ganti NaN dengan None agar serialisasi JSON sukses
+        df_audit = df_audit.astype(object).where(pd.notnull(df_audit), None)
         result["audit_log"] = df_audit.tail(5).to_dict(orient="records")
     else:
         result["audit_log"] = []
