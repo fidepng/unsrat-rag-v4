@@ -23,3 +23,5 @@ context-mode/
 .vscode/
 .pytest_cache/
 *.html
+
+reference/
