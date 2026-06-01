@@ -3,92 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Informasi Akademik UNSRAT</title>
-    <meta name="description" content="Sistem tanya-jawab akademik Universitas Sam Ratulangi berbasis RAG">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-    <style>
-        :root {
-            --maroon: #800000;
-            --maroon-dark: #5c0000;
-            --maroon-light: #a33030;
-            --gold: #c9a227;
-            --bg: #f5f5f5;
-            --surface: #ffffff;
-            --text: #1a1a1a;
-            --text-muted: #666666;
-            --border: #e0e0e0;
-            --user-bubble: #800000;
-            --bot-bubble: #f0f0f0;
-            --error-bubble: #fff0f0;
+    <title>Asisten Informasi Akademik UNSRAT</title>
+    <meta name="description" content="Sistem RAG Informasi Regulasi Akademik Universitas Sam Ratulangi">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Marked.js (Markdown Parser UMD) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; }
-
-        /* Header */
-        header { background: var(--maroon); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-        header h1 { font-size: 1.1rem; font-weight: 600; }
-        header p { font-size: 0.8rem; opacity: 0.8; }
-
-        /* Tab navigation */
-        .tabs { display: flex; background: var(--maroon-dark); }
-        .tab-btn { padding: 10px 24px; border: none; background: transparent; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
-        .tab-btn.active { background: var(--bg); color: var(--maroon); font-weight: 600; }
-        .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.1); }
-
-        /* Main layout */
-        .main { display: flex; flex: 1; overflow: hidden; }
-        .tab-content { display: none; flex: 1; overflow: hidden; }
-        .tab-content.active { display: flex; }
-
-        /* Sidebar */
-        .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
-        .sidebar label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-        .sidebar select, .sidebar button { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; }
-        .sidebar button { background: var(--maroon); color: white; border: none; cursor: pointer; margin-top: 4px; }
-        .sidebar button:hover { background: var(--maroon-light); }
-        .sidebar-section { display: flex; flex-direction: column; gap: 6px; }
-
-        /* Chat area */
-        .chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        #chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-
-        /* Bubbles */
-        .bubble { max-width: 75%; padding: 10px 14px; border-radius: 12px; line-height: 1.6; font-size: 0.9rem; }
-        .bubble.user { align-self: flex-end; background: var(--user-bubble); color: white; border-bottom-right-radius: 4px; }
-        .bubble.bot { align-self: flex-start; background: var(--bot-bubble); border-bottom-left-radius: 4px; }
-        .bubble.error { align-self: flex-start; background: var(--error-bubble); border: 1px solid #ff9999; color: #cc0000; }
-        .bubble.thinking { align-self: flex-start; background: var(--bot-bubble); opacity: 0.7; font-style: italic; }
-
-        /* Thinking dots animation */
-        .thinking-dots::after { content: ''; animation: dots 1.2s steps(4, end) infinite; }
-        @keyframes dots { 0%, 20% { content: ''; } 40% { content: '.'; } 60% { content: '..'; } 80%, 100% { content: '...'; } }
-
-        /* Citation panel */
-        .citations { margin-top: 8px; padding: 8px 10px; background: rgba(128,0,0,0.05); border-left: 3px solid var(--maroon); border-radius: 4px; font-size: 0.78rem; }
-        .citations h4 { color: var(--maroon); margin-bottom: 6px; font-size: 0.78rem; }
-        .citation-item { margin-bottom: 4px; }
-        .citation-item strong { color: var(--maroon); }
-
-        /* Input area */
-        .input-area { padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface); display: flex; gap: 10px; }
-        #user-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 0.9rem; resize: none; max-height: 100px; }
-        #send-btn { padding: 10px 20px; background: var(--maroon); color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; }
-        #send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        #send-btn:hover:not(:disabled) { background: var(--maroon-light); }
-
-        /* Disclaimer */
-        .disclaimer { text-align: center; padding: 6px; font-size: 0.72rem; color: var(--text-muted); background: var(--surface); border-top: 1px solid var(--border); }
-
-        /* Tab 2 — Evaluasi */
-        .eval-content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
-        .eval-card { background: var(--surface); border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-        .eval-card h3 { color: var(--maroon); margin-bottom: 12px; font-size: 1rem; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-        th { background: var(--maroon); color: white; padding: 8px 10px; text-align: left; }
-        td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
-        tr:hover td { background: rgba(128,0,0,0.04); }
-        .chart-container { max-width: 700px; }
-        .empty-state { color: var(--text-muted); font-style: italic; padding: 8px 0; font-size: 0.85rem; }
+    </script>
+    <style>
+        /* Custom scrollbar untuk menyelaraskan dengan estetika premium */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #D1C9BE;
+            border-radius: 999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #A82040;
+        }
+        
+        /* Custom Markdown parsed lists styling agar Tailwind prose tidak bentrok */
+        .parsed-markdown p { margin-bottom: 0.5rem; }
+        .parsed-markdown strong { font-weight: 700; color: #4A1515; }
+        .parsed-markdown ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .parsed-markdown ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.5rem; }
+        .parsed-markdown li { margin-bottom: 0.25rem; }
+        .parsed-markdown code { font-family: monospace; background-color: #F3F4F6; padding: 2px 4px; border-radius: 4px; font-size: 0.85em; color: #7B2D2D; }
+        .parsed-markdown blockquote { border-left: 3px solid #7B2D2D; padding-left: 0.75rem; color: #6B7280; font-style: italic; }
     </style>
 </head>
 <body>
