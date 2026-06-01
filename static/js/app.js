@@ -626,7 +626,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     const contentContainer = document.getElementById(`${botMsgId}-content`);
                     if (contentContainer) {
                         contentContainer.classList.remove("hidden");
-                        contentContainer.innerHTML = `<span class="text-amber-700 font-medium bg-amber-50 border border-amber-150 rounded-xl px-4 py-2 block text-xs">Pencarian dan pembuatan jawaban dihentikan oleh pengguna.</span>`;
+                        if (!isFirstToken && fullResponseText.trim() !== "") {
+                            // Keep generated text and append a beautiful unobtrusive italicized warning
+                            if (typeof marked !== "undefined" && marked.parse) {
+                                contentContainer.innerHTML = marked.parse(fullResponseText) + `<p class="text-amber-700 text-xs italic mt-2.5 font-medium flex items-center"><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 flex-shrink-0"></i><span>[Aliran jawaban dihentikan oleh pengguna]</span></p>`;
+                            } else {
+                                contentContainer.innerHTML = escapeHtml(fullResponseText).replace(/\n/g, "<br>") + `<p class="text-amber-700 text-xs italic mt-2.5 font-medium flex items-center"><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 flex-shrink-0"></i><span>[Aliran jawaban dihentikan oleh pengguna]</span></p>`;
+                            }
+                            chatHistory.push({ role: "assistant", content: fullResponseText });
+                            safeCreateIcons();
+                        } else {
+                            // If stopped before any token was received (during the thinking phase)
+                            contentContainer.innerHTML = `<span class="text-amber-700 font-medium bg-amber-50 border border-amber-150 rounded-xl px-4 py-2 block text-xs">Pencarian dan pembuatan jawaban dihentikan oleh pengguna.</span>`;
+                        }
                     }
                     console.log("[RAG Client] Stream request aborted by user.");
                 } else {
