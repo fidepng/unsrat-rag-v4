@@ -206,26 +206,28 @@ Dimuat via CDN di `static/index.html`:
 
 ### 3.4 Model AI
 
-#### 3.4.1 Provider Utama (Google AI Studio — Default)
+#### 3.4.1 Provider Utama & Core Demo (Google AI Studio — CANONICAL CORE)
+> **INTEGRITAS JUDUL SKRIPSI:** Sistem RAG ini secara kanonik dirancang dan berjudul dengan menggunakan **Google Gemini** sebagai generator utama. Untuk keperluan demo akhir, sidang skripsi, dan rilis produksi, **Google Gemini (Google AI Studio) adalah Provider Utama yang wajib digunakan**.
+> 
+> Saat ini, generator utama kanonik adalah `gemini-3.5-flash` dan evaluator utama kanonik adalah `gemini-2.5-flash`.
 
-| Komponen                    | Model                  | Provider         |
-| --------------------------- | ---------------------- | ---------------- |
-| LLM Utama (RAG Generation)  | `gemini-3.5-flash`     | Google AI Studio |
-| Embedding                   | `gemini-embedding-001` | Google AI Studio |
-| LLM Evaluator (Ragas Judge) | `gemini-2.5-flash`     | Google AI Studio |
+| Komponen                    | Model Kanonik          | Provider Kanonik | Catatan Utama                          |
+| --------------------------- | ---------------------- | ---------------- | -------------------------------------- |
+| LLM Utama (RAG Generation)  | `gemini-3.5-flash`     | Google AI Studio | Generator Core Demo Akhir (Kanonik)   |
+| Embedding                   | `gemini-embedding-001` | Google AI Studio | Embeddings Core (Kanonik)              |
+| LLM Evaluator (Ragas Judge) | `gemini-2.5-flash`     | Google AI Studio | Evaluator Core (Mitigasi bias D-16)    |
 
-> **MITIGASI SELF-EVALUATION BIAS (D-16):** Generator (`LLM_MODEL_NAME`) dan evaluator
-> Ragas (`EVALUATOR_MODEL_NAME`) HARUS menggunakan model yang berbeda. Ini mengeliminasi
-> kelemahan metodologis di mana model menilai output dirinya sendiri.
-> Saat ini: generator = `gemini-3.5-flash`, evaluator = `gemini-2.5-flash`.
-> Dokumentasikan pasangan model di jurnal penelitian untuk reproduktibilitas.
+#### 3.4.2 Provider Active Testing & Prototyping (NVIDIA NIM — Solusi Limit Kuota)
+> **CATATAN TESTING:** Selama fase pengembangan, pengujian berulang (prototyping), dan evaluasi batch skripsi, model alternatif dari **NVIDIA NIM dapat digunakan secara aktif sebagai default pengujian** untuk mengatasi keterbatasan kuota Google AI Studio. 
+> 
+> Model pengujian aktif dikonfigurasi secara berbeda untuk **tetap mematuhi aturan D-16 (Self-Evaluation Bias Mitigation)** serta dioptimalkan untuk kecepatan dan efisiensi penalaran:
 
-#### 3.4.2 Provider Alternatif (Opsional — Lihat Section 18)
-
-| Komponen                         | Model                                  | Provider   | Catatan                                |
-| -------------------------------- | -------------------------------------- | ---------- | -------------------------------------- |
-| LLM Utama (alternatif)           | `qwen2.5-72b-instruct` atau model lain | NVIDIA NIM | Sudah diuji: `qwen3.5-397b-a17b`       |
-| LLM Evaluator Ragas (alternatif) | `llama-3.1-70b-instruct`               | NVIDIA NIM | API key `NVIDIA_NIM_API_KEY` di `.env` |
+| Komponen                    | Model Pengujian Active                 | Provider   | Catatan Testing                        |
+| --------------------------- | -------------------------------------- | ---------- | -------------------------------------- |
+| LLM Utama (RAG Generation)  | `llama-3.1-nemotron-nano-8b-v1`        | NVIDIA NIM | Active Generator (Ultra-Cepat / Edge)  |
+| LLM Evaluator (Ragas Judge) | `llama-3.3-nemotron-super-49b-v1.5`    | NVIDIA NIM | Active Evaluator (D-16 Terpenuhi)      |
+| LLM Evaluator (Premium)          | `gemma-4-31b-it`                       | NVIDIA NIM | Reasoning kuat, alternatif evaluator   |
+| LLM Utama (Standard)             | `llama-3.1-8b-instruct`                | NVIDIA NIM | Model standard lama                    |
 | LLM Lokal (gratis, tanpa kuota)  | Model tersedia di Ollama               | Ollama     | Cocok untuk evaluasi batch             |
 
 > **PERINGATAN KOMPARABILITAS:** Jika model evaluator diganti (misalnya dari `gemini-2.5-flash`
@@ -707,9 +709,10 @@ CHROMA_DISTANCE_FN  = "cosine"
 
 # ── MODEL ───────────────────────────────────────────────────
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
-LLM_MODEL_NAME       = "gemini-3.5-flash"
-EMBEDDING_MODEL_NAME = "gemini-embedding-001"
-EVALUATOR_MODEL_NAME = "gemini-2.5-flash"
+# NVIDIA NIM Llama models are used for active testing due to Google AI Studio API limits.
+LLM_MODEL_NAME       = "llama-3.1-8b-instruct"
+EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
+EVALUATOR_MODEL_NAME = "llama-3.1-70b-instruct"
 
 # Daftar model yang bisa dipilih di UI sidebar
 # Catatan: model NVIDIA NIM menggunakan provider "openai_compatible" (lihat Section 18)
@@ -720,10 +723,8 @@ AVAILABLE_MODELS: list[str] = [
     "gemini-3.1-flash-lite",
     "gemini-2.5-pro",
     "gemini-2.5-flash",
-    "gemini-2.5-flash-lite",
-    # Model NVIDIA NIM (membutuhkan NVIDIA_NIM_API_KEY di .env dan provider switch — lihat Section 18):
-    # "qwen3.5-397b-a17b",       # LLM generator via NIM — sudah diuji
-    # "llama-3.1-70b-instruct",  # Evaluator Ragas via NIM — sudah diuji
+    "llama-3.1-8b-instruct",
+    "llama-3.1-70b-instruct",
 ]
 
 # ── CHUNKING — CONFIG A ──────────────────────────────────────

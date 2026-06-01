@@ -33,9 +33,11 @@ CHROMA_DISTANCE_FN  = "cosine"
 
 # ── MODEL ───────────────────────────────────────────────────
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
-LLM_MODEL_NAME       = "llama-3.1-8b-instruct"
+# NVIDIA NIM models are used for active testing due to Google AI Studio API limits.
+# Optimasi kecepatan & penalaran: Generator = Nemotron Nano 8B, Evaluator = Nemotron Super 49B (D-16 Terpenuhi)
+LLM_MODEL_NAME       = "llama-3.1-nemotron-nano-8b-v1"
 EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
-EVALUATOR_MODEL_NAME = "llama-3.1-8b-instruct"
+EVALUATOR_MODEL_NAME = "llama-3.3-nemotron-super-49b-v1.5"
 
 # Daftar model yang bisa dipilih di UI sidebar
 # Catatan: model NVIDIA NIM menggunakan provider "openai_compatible" (lihat Section 18)
@@ -48,6 +50,9 @@ AVAILABLE_MODELS: list[str] = [
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
     "llama-3.1-8b-instruct",
+    "llama-3.1-nemotron-nano-8b-v1",
+    "llama-3.3-nemotron-super-49b-v1.5",
+    "gemma-4-31b-it",
 ]
 
 # ── CHUNKING — CONFIG A ──────────────────────────────────────

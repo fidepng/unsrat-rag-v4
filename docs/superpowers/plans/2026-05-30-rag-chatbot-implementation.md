@@ -40,7 +40,7 @@
 - Create: `environment.yml` (jika belum ada)
 - Create: `data/corpus/.gitkeep`, `eval/dataset/.gitkeep`, `eval/results/.gitkeep`
 
-- [ ] **Step 1.1: Verifikasi .gitignore sudah benar**
+- [x] **Step 1.1: Verifikasi .gitignore sudah benar**
 
 Pastikan `.gitignore` berisi semua yang diperlukan:
 ```
@@ -61,13 +61,13 @@ cat .gitignore
 
 Jika ada yang kurang, tambahkan manual.
 
-- [ ] **Step 1.2: Buat direktori yang diperlukan**
+- [x] **Step 1.2: Buat direktori yang diperlukan**
 
 ```bash
 mkdir -p data/corpus eval/dataset eval/results logs static/js src tests
 ```
 
-- [ ] **Step 1.3: Buat conda environment**
+- [x] **Step 1.3: Buat conda environment**
 
 Pastikan file `environment.yml` sudah ada dengan konten dari PRD Section 3.2. Kemudian:
 
@@ -76,7 +76,7 @@ conda env create -f environment.yml
 conda activate unsrat-rag
 ```
 
-- [ ] **Step 1.4: Verifikasi semua library kritis terinstall**
+- [x] **Step 1.4: Verifikasi semua library kritis terinstall**
 
 ```bash
 python --version
@@ -92,7 +92,7 @@ python -c "import frontmatter; print('python-frontmatter OK')"
 
 Expected: Semua print tanpa error.
 
-- [ ] **Step 1.5: Buat file .env**
+- [x] **Step 1.5: Buat file .env**
 
 ```bash
 # Buat file .env di root proyek (jangan commit!)
@@ -101,7 +101,7 @@ echo "GOOGLE_API_KEY=isi_dengan_api_key_anda" > .env
 
 Edit `.env` dan isi dengan API key Google AI Studio yang valid.
 
-- [ ] **Step 1.6: Commit foundation**
+- [x] **Step 1.6: Commit foundation**
 
 ```bash
 git add .gitignore environment.yml
@@ -116,13 +116,13 @@ git commit -m "chore: verifikasi foundation — gitignore, environment, direktor
 - Create: `src/__init__.py`
 - Create: `src/config.py`
 
-- [ ] **Step 2.1: Buat src/__init__.py**
+- [x] **Step 2.1: Buat src/__init__.py**
 
 ```bash
 echo "" > src/__init__.py
 ```
 
-- [ ] **Step 2.2: Buat src/config.py dengan konten lengkap**
+- [x] **Step 2.2: Buat src/config.py dengan konten lengkap**
 
 Buat file `src/config.py`:
 
@@ -158,16 +158,25 @@ CHROMA_DISTANCE_FN   = "cosine"
 
 # ── MODEL ───────────────────────────────────────────────────
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
-LLM_MODEL_NAME       = "gemini-2.5-flash"
-EMBEDDING_MODEL_NAME = "gemini-embedding-001"
-EVALUATOR_MODEL_NAME = "gemini-2.5-pro"
+# NVIDIA NIM models are used for active testing due to Google AI Studio API limits.
+# Optimasi kecepatan & penalaran: Generator = Nemotron Nano 8B, Evaluator = Nemotron Super 49B (D-16 Terpenuhi)
+LLM_MODEL_NAME       = "llama-3.1-nemotron-nano-8b-v1"
+EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
+EVALUATOR_MODEL_NAME = "llama-3.3-nemotron-super-49b-v1.5"
 
 # Daftar model tersedia di UI sidebar
 AVAILABLE_MODELS: list[str] = [
+    "gemini-3.5-flash",
+    "gemini-3.1-pro-preview",
+    "gemini-3-flash-preview",
+    "gemini-3.1-flash-lite",
+    "gemini-2.5-pro",
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
-    "gemini-2.5-pro",
-    "gemini-2.0-flash",
+    "llama-3.1-8b-instruct",
+    "llama-3.1-nemotron-nano-8b-v1",
+    "llama-3.3-nemotron-super-49b-v1.5",
+    "gemma-4-31b-it",
 ]
 
 # ── CHUNKING — CONFIG A ──────────────────────────────────────
@@ -273,7 +282,7 @@ if not GOOGLE_API_KEY:
 NVIDIA_NIM_API_KEY = os.getenv("NVIDIA_NIM_API_KEY")  # None jika tidak di-set
 ```
 
-- [ ] **Step 2.3: Verifikasi config.py berjalan tanpa error**
+- [x] **Step 2.3: Verifikasi config.py berjalan tanpa error**
 
 ```bash
 python -c "from src.config import ROOT_DIR, REQUIRED_YAML_FIELDS, SYSTEM_PROMPT; print('ROOT_DIR:', ROOT_DIR); print('REQUIRED_YAML_FIELDS:', REQUIRED_YAML_FIELDS); print('Config OK')"
@@ -286,7 +295,7 @@ REQUIRED_YAML_FIELDS: ['doc_id', 'title', 'category']
 Config OK
 ```
 
-- [ ] **Step 2.4: Commit**
+- [x] **Step 2.4: Commit**
 
 ```bash
 git add src/__init__.py src/config.py
@@ -302,7 +311,7 @@ git commit -m "feat: tambah src/config.py — pusat konfigurasi sistem (PRD v9.0
 
 PRD Reference: Section 13
 
-- [ ] **Step 3.1: Buat src/logger_manager.py**
+- [x] **Step 3.1: Buat src/logger_manager.py**
 
 ```python
 # src/logger_manager.py — Logging terpusat tiga output
@@ -446,7 +455,7 @@ def log_chat_transaction(
         })
 ```
 
-- [ ] **Step 3.2: Verifikasi logger_manager**
+- [x] **Step 3.2: Verifikasi logger_manager**
 
 ```bash
 python -c "
@@ -462,7 +471,7 @@ print('logger_manager OK — cek logs/ directory')
 
 Expected: File `logs/unsrat_rag.log` dan `logs/ingestion_report.csv` terbuat.
 
-- [ ] **Step 3.3: Commit**
+- [x] **Step 3.3: Commit**
 
 ```bash
 git add src/logger_manager.py
@@ -478,7 +487,7 @@ git commit -m "feat: tambah src/logger_manager.py — logging terpusat tiga outp
 
 PRD Reference: Section 6.1, 6.2 (D-B1: no summary chunk), 6.3 (D-B3: no priority/chunk_type), FR-01–FR-08
 
-- [ ] **Step 4.1: Verifikasi YAML frontmatter corpus sebelum ingestion**
+- [x] **Step 4.1: Verifikasi YAML frontmatter corpus sebelum ingestion**
 
 Jalankan verifikasi ini dulu sebelum menulis kode:
 ```bash
@@ -496,7 +505,7 @@ for f in sorted(CORPUS_DIR.glob('*.md')):
 
 Expected: Semua file status `OK`. Jika ada `ERROR`, perbaiki YAML frontmatter terlebih dahulu (tambahkan field `doc_id`, `title`, atau `category` yang kurang).
 
-- [ ] **Step 4.2: Buat src/ingestion.py**
+- [x] **Step 4.2: Buat src/ingestion.py**
 
 ```python
 # src/ingestion.py — Pipeline Data Ingestion → ChromaDB
@@ -780,7 +789,7 @@ if __name__ == "__main__":
     run_ingestion(args.config, args.rebuild)
 ```
 
-- [ ] **Step 4.3: Jalankan ingestion Config B terlebih dahulu (chunk besar lebih andal untuk validasi)**
+- [x] **Step 4.3: Jalankan ingestion Config B terlebih dahulu (chunk besar lebih andal untuk validasi)**
 
 ```bash
 python src/ingestion.py --config b --rebuild
@@ -795,7 +804,7 @@ Expected output:
 ... | INFO | ingestion | Ingestion Config B selesai | 9 file | XXX generated | XXX inserted | ...
 ```
 
-- [ ] **Step 4.4: Verifikasi jumlah chunk di ChromaDB**
+- [x] **Step 4.4: Verifikasi jumlah chunk di ChromaDB**
 
 ```bash
 python -c "
@@ -812,13 +821,13 @@ print('Sample metadata:', sample['metadatas'][0])
 
 Expected: count > 0, metadata TIDAK mengandung `priority` atau `chunk_type`.
 
-- [ ] **Step 4.5: Jalankan ingestion Config A**
+- [x] **Step 4.5: Jalankan ingestion Config A**
 
 ```bash
 python src/ingestion.py --config a --rebuild
 ```
 
-- [ ] **Step 4.6: Verifikasi Config A**
+- [x] **Step 4.6: Verifikasi Config A**
 
 ```bash
 python -c "
@@ -831,7 +840,7 @@ print(f'Config A: {col.count()} chunks')
 
 Expected: Config A lebih banyak chunk dari Config B (chunk kecil = lebih banyak potongan).
 
-- [ ] **Step 4.7: Commit**
+- [x] **Step 4.7: Commit**
 
 ```bash
 git add src/ingestion.py
@@ -847,7 +856,7 @@ git commit -m "feat: tambah src/ingestion.py — pipeline ChromaDB Config A & B 
 
 PRD Reference: Section 6.2 (Config C), FR-19, FR-20, D-A6
 
-- [ ] **Step 5.1: Buat src/bm25_retriever.py**
+- [x] **Step 5.1: Buat src/bm25_retriever.py**
 
 ```python
 # src/bm25_retriever.py — BM25 Indexing & Retrieval (Config C)
@@ -1022,7 +1031,7 @@ if __name__ == "__main__":
     build_index(rebuild=args.rebuild)
 ```
 
-- [ ] **Step 5.2: Build BM25 index**
+- [x] **Step 5.2: Build BM25 index**
 
 ```bash
 python src/bm25_retriever.py --rebuild
@@ -1034,7 +1043,7 @@ Expected:
 ... | INFO | bm25_retriever | BM25 index disimpan: .../bm25_index/bm25_index.pkl (XXX chunks)
 ```
 
-- [ ] **Step 5.3: Verifikasi retrieval BM25**
+- [x] **Step 5.3: Verifikasi retrieval BM25**
 
 ```bash
 python -c "
@@ -1048,7 +1057,7 @@ for r in results:
 
 Expected: 1–4 chunk dengan score > 0, konten tentang SKS.
 
-- [ ] **Step 5.4: Commit**
+- [x] **Step 5.4: Commit**
 
 ```bash
 git add src/bm25_retriever.py
@@ -1064,7 +1073,7 @@ git commit -m "feat: tambah src/bm25_retriever.py — BM25 indexing & retrieval 
 
 PRD Reference: Section 6.4, FR-09, FR-10, FR-11
 
-- [ ] **Step 6.1: Buat src/retriever.py**
+- [x] **Step 6.1: Buat src/retriever.py**
 
 ```python
 # src/retriever.py — Unified Retrieval Interface (Config A / B / C)
@@ -1191,7 +1200,7 @@ def retrieve_chunks(query: str, config: str) -> list[dict]:
     return chunks
 ```
 
-- [ ] **Step 6.2: Verifikasi unified retriever**
+- [x] **Step 6.2: Verifikasi unified retriever**
 
 ```bash
 python -c "
@@ -1214,7 +1223,7 @@ for c in chunks_c:
 
 Expected: Kedua config mengembalikan chunk relevan.
 
-- [ ] **Step 6.3: Commit**
+- [x] **Step 6.3: Commit**
 
 ```bash
 git add src/retriever.py
@@ -1231,7 +1240,7 @@ git commit -m "feat: tambah src/retriever.py — unified retrieval interface A/B
 
 PRD Reference: Section 6.5 (citation parsing), 6.6, 6.7, 6.8, FR-12, FR-26, D-B5
 
-- [ ] **Step 7.1: Tulis failing unit test untuk citation parser terlebih dahulu (TDD)**
+- [x] **Step 7.1: Tulis failing unit test untuk citation parser terlebih dahulu (TDD)**
 
 Buat `tests/__init__.py`:
 ```bash
@@ -1301,7 +1310,7 @@ class TestParseCitedIndices:
         assert result == []
 ```
 
-- [ ] **Step 7.2: Jalankan test — pastikan FAIL (ImportError karena chain.py belum ada)**
+- [x] **Step 7.2: Jalankan test — pastikan FAIL (ImportError karena chain.py belum ada)**
 
 ```bash
 pytest tests/test_citation_parser.py -v
@@ -1309,7 +1318,7 @@ pytest tests/test_citation_parser.py -v
 
 Expected: `ImportError: cannot import name 'parse_cited_indices' from 'src.chain'`
 
-- [ ] **Step 7.3: Buat src/chain.py**
+- [x] **Step 7.3: Buat src/chain.py**
 
 ```python
 # src/chain.py — RAG Chain: retrieval + LLM + inline citation + SSE streaming
@@ -1671,7 +1680,7 @@ def _log_transaction(
     )
 ```
 
-- [ ] **Step 7.4: Jalankan test — pastikan PASS**
+- [x] **Step 7.4: Jalankan test — pastikan PASS**
 
 ```bash
 pytest tests/test_citation_parser.py -v
@@ -1692,7 +1701,7 @@ tests/test_citation_parser.py::TestParseCitedIndices::test_empty_text_returns_em
 9 passed in X.XXs
 ```
 
-- [ ] **Step 7.5: Verifikasi get_response non-streaming**
+- [x] **Step 7.5: Verifikasi get_response non-streaming**
 
 ```bash
 python -c "
@@ -1713,7 +1722,7 @@ print('Retrieved contexts:', len(result['retrieved_contexts']))
 
 Expected: `found=True`, jawaban tentang SKS, citation_sources ≥ 1.
 
-- [ ] **Step 7.6: Commit**
+- [x] **Step 7.6: Commit**
 
 ```bash
 git add src/chain.py tests/__init__.py tests/test_citation_parser.py
@@ -1729,7 +1738,7 @@ git commit -m "feat: tambah src/chain.py — RAG chain + citation + SSE (D-B5: s
 
 PRD Reference: Section 10, FR-27, D-B4 (tanpa /api/log_transaction)
 
-- [ ] **Step 8.1: Buat app.py**
+- [x] **Step 8.1: Buat app.py**
 
 ```python
 # app.py — FastAPI Backend Controller
@@ -1885,7 +1894,7 @@ if __name__ == "__main__":
     uvicorn.run("app:app", host=API_HOST, port=API_PORT, reload=False)
 ```
 
-- [ ] **Step 8.2: Test endpoint /api/config**
+- [x] **Step 8.2: Test endpoint /api/config**
 
 Jalankan server di terminal terpisah:
 ```bash
@@ -1903,7 +1912,7 @@ with urllib.request.urlopen('http://localhost:8501/api/config') as r:
 
 Expected: JSON dengan `available_models`, `active_model`, `configs`.
 
-- [ ] **Step 8.3: Test endpoint /api/chat via SSE**
+- [x] **Step 8.3: Test endpoint /api/chat via SSE**
 
 ```bash
 python -c "
@@ -1920,7 +1929,7 @@ with urllib.request.urlopen(req) as r:
 
 Expected: Event `thinking`, lalu beberapa event `token`, event `citations`, event `done`.
 
-- [ ] **Step 8.4: Commit**
+- [x] **Step 8.4: Commit**
 
 ```bash
 git add app.py
@@ -1937,7 +1946,7 @@ git commit -m "feat: tambah app.py — FastAPI 4 endpoint + SSE streaming (D-B4:
 
 PRD Reference: Section 11, FR-27, FR-33
 
-- [ ] **Step 9.1: Buat static/index.html**
+- [x] **Step 9.1: Buat static/index.html**
 
 ```html
 <!DOCTYPE html>
@@ -2113,7 +2122,7 @@ PRD Reference: Section 11, FR-27, FR-33
 </html>
 ```
 
-- [ ] **Step 9.2: Buat static/js/app.js**
+- [x] **Step 9.2: Buat static/js/app.js**
 
 ```javascript
 // static/js/app.js — Frontend SPA Logic
@@ -2402,15 +2411,15 @@ function renderAuditLog(logs) {
 }
 ```
 
-- [ ] **Step 9.3: Verifikasi frontend via browser**
+- [x] **Step 9.3: Verifikasi frontend via browser**
 
 Pastikan server masih berjalan, buka browser ke `http://localhost:8501`. Verifikasi:
-- [ ] Tab Chatbot tampil dengan sidebar config/model
-- [ ] Ketik pertanyaan → muncul thinking indicator → streaming response → citation panel
-- [ ] Reset chat button berfungsi
-- [ ] Tab Evaluasi menampilkan "Belum ada hasil evaluasi" (normal jika belum eval)
+- [x] Tab Chatbot tampil dengan sidebar config/model
+- [x] Ketik pertanyaan → muncul thinking indicator → streaming response → citation panel
+- [x] Reset chat button berfungsi
+- [x] Tab Evaluasi menampilkan "Belum ada hasil evaluasi" (normal jika belum eval)
 
-- [ ] **Step 9.4: Commit**
+- [x] **Step 9.4: Commit**
 
 ```bash
 git add static/index.html static/js/app.js
@@ -2428,7 +2437,7 @@ PRD Reference: Section 12, FR-15–FR-17, FR-21–FR-23, FR-25, FR-31
 
 > ⚠️ **WAJIB sebelum implementasi:** Jalankan `use context7` untuk mendapatkan dokumentasi API Ragas versi yang terinstall. Verifikasi nama class, cara instansiasi, dan signature `evaluate()`. Jangan tulis kode berdasarkan memori.
 
-- [ ] **Step 10.1: Verifikasi API Ragas yang terinstall**
+- [x] **Step 10.1: Verifikasi API Ragas yang terinstall**
 
 ```bash
 python -c "import ragas; print('Ragas version:', ragas.__version__)"
@@ -2438,7 +2447,7 @@ python -c "from ragas.metrics import faithfulness, answer_relevancy, context_pre
 
 Jika ada ImportError atau nama class berbeda, sesuaikan import di kode di bawah.
 
-- [ ] **Step 10.2: Buat evaluation.py**
+- [x] **Step 10.2: Buat evaluation.py**
 
 ```python
 # evaluation.py — Pipeline Evaluasi Ragas + Wilcoxon + Error Analysis + Chart
@@ -2782,7 +2791,7 @@ if __name__ == "__main__":
         run_visualization()
 ```
 
-- [ ] **Step 10.3: Buat ground_truth.csv minimal untuk test**
+- [x] **Step 10.3: Buat ground_truth.csv minimal untuk test**
 
 Buat `eval/dataset/ground_truth.csv` dengan beberapa baris contoh (untuk verifikasi pipeline berjalan):
 
@@ -2795,7 +2804,7 @@ user_input,reference,category,source_doc,notes
 
 > **CATATAN D-B6:** Kolom `reference` harus ditulis dalam natural language seperti contoh di atas — bukan copy-paste verbatim teks dokumen.
 
-- [ ] **Step 10.4: Test evaluasi dengan data minimal**
+- [x] **Step 10.4: Test evaluasi dengan data minimal**
 
 ```bash
 python evaluation.py --config b
@@ -2805,7 +2814,7 @@ Expected: Proses berjalan, file `eval/results/hasil_config_b.csv` terbuat.
 
 Jika ada error import Ragas, jalankan `use context7` untuk verifikasi API dan sesuaikan import.
 
-- [ ] **Step 10.5: Commit**
+- [x] **Step 10.5: Commit**
 
 ```bash
 git add evaluation.py eval/dataset/ground_truth.csv

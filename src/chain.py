@@ -41,13 +41,17 @@ def _get_llm(model_name: str) -> Any:
     if model_name not in _llm_cache:
         import os
         nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
-        if nvidia_api_key and ("llama" in model_name or "qwen" in model_name or "nvidia" in model_name or os.getenv("FORCE_NIM_GENERATOR") == "true"):
+        if nvidia_api_key and ("llama" in model_name or "qwen" in model_name or "nvidia" in model_name or "gemma" in model_name or os.getenv("FORCE_NIM_GENERATOR") == "true"):
             logger.info(f"Menggunakan NVIDIA NIM untuk generator model: {model_name}")
             from langchain_openai import ChatOpenAI
             
             nim_model = model_name
-            if model_name == "qwen3.5-397b-a17b":
-                nim_model = "qwen/qwen3.5-397b-a17b"
+            if model_name == "gemma-4-31b-it":
+                nim_model = "google/gemma-4-31b-it"
+            elif model_name == "llama-3.3-nemotron-super-49b-v1.5":
+                nim_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+            elif model_name == "llama-3.1-nemotron-nano-8b-v1":
+                nim_model = "nvidia/llama-3.1-nemotron-nano-8b-v1"
             elif model_name == "llama-3.1-70b-instruct":
                 nim_model = "meta/llama-3.1-70b-instruct"
             elif model_name == "llama-3.1-8b-instruct":

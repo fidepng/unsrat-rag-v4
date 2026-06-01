@@ -79,8 +79,13 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None) -> None:
             model_name=LLM_MODEL_NAME,
             streaming=False,
         )
-
         elapsed = time.time() - start_time
+
+        # NVIDIA NIM Rate Limit Compliance (40 RPM limit)
+        # 1.5 seconds delay between requests prevents quota exhaustion on NIM integrate endpoints.
+        if any(m in LLM_MODEL_NAME.lower() for m in ["llama", "qwen", "gemma"]):
+            logger.info("Jeda 1.5s untuk mematuhi rate limit NVIDIA NIM (40 RPM)...")
+            time.sleep(1.5)
 
         results.append({
             "user_input":           query,
@@ -127,7 +132,13 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None) -> None:
     nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
     if nvidia_api_key:
         evaluator_model = EVALUATOR_MODEL_NAME
-        if evaluator_model == "llama-3.1-70b-instruct":
+        if evaluator_model == "gemma-4-31b-it":
+            evaluator_model = "google/gemma-4-31b-it"
+        elif evaluator_model == "llama-3.3-nemotron-super-49b-v1.5":
+            evaluator_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+        elif evaluator_model == "llama-3.1-nemotron-nano-8b-v1":
+            evaluator_model = "nvidia/llama-3.1-nemotron-nano-8b-v1"
+        elif evaluator_model == "llama-3.1-70b-instruct":
             evaluator_model = "meta/llama-3.1-70b-instruct"
         elif evaluator_model == "llama-3.1-8b-instruct":
             evaluator_model = "meta/llama-3.1-8b-instruct"

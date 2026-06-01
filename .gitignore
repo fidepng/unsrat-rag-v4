@@ -18,3 +18,8 @@ logs/
 
 # Local tools
 context-mode/
+
+# Editor and cache
+.vscode/
+.pytest_cache/
+*.html
