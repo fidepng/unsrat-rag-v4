@@ -73,7 +73,35 @@ document.addEventListener("DOMContentLoaded", () => {
     window.fillInput = function(text) {
         chatInput.value = text;
         chatInput.focus();
+        if (chatInput && chatInput.tagName.toLowerCase() === "textarea") {
+            chatInput.dispatchEvent(new Event("input"));
+        }
     };
+
+    // Auto-growing textarea logic & Enter-to-submit behavior
+    if (chatInput && chatInput.tagName.toLowerCase() === "textarea") {
+        const adjustHeight = () => {
+            chatInput.style.height = "auto";
+            chatInput.style.height = `${chatInput.scrollHeight}px`;
+        };
+        
+        chatInput.addEventListener("input", adjustHeight);
+        
+        chatInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (chatForm && chatForm.reportValidity()) {
+                    chatForm.dispatchEvent(new Event("submit"));
+                }
+            }
+        });
+        
+        chatForm.addEventListener("submit", () => {
+            setTimeout(() => {
+                chatInput.style.height = "auto";
+            }, 50);
+        });
+    }
 
     // ── SYSTEM CONFIG INGESTION ──────────────────────────────────────────────
     async function loadSystemConfig() {
@@ -108,7 +136,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function clearChatUI() {
+        if (isStreaming) {
+            handleAbort();
+        }
         chatHistory = [];
+        if (chatInput && chatInput.tagName.toLowerCase() === "textarea") {
+            chatInput.style.height = "auto";
+        }
         chatMessages.innerHTML = `
             <!-- Welcome Message Panel (Automatic) -->
             <div class="flex items-start space-x-4 max-w-4xl opacity-100 transition-all duration-300">
@@ -396,12 +430,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, 1800);
             
-            // Watchdog timer (15 seconds)
+            // Watchdog timer (30 seconds)
             let watchdogTimer = setTimeout(() => {
                 console.warn("[RAG Client] Watchdog timeout triggered.");
-                handleError("Batas waktu koneksi habis (15 detik). Tidak ada respon dari server.");
+                handleError("Batas waktu koneksi habis (30 detik). Tidak ada respon dari server.");
                 handleAbort();
-            }, 15000);
+            }, 30000);
             
             let isFirstToken = true;
             let fullResponseText = "";
