@@ -158,9 +158,59 @@
 
           <!-- TAB CONTENT AKAN MASUK DI SINI -->
           <!-- Untuk mempermudah pengerjaan bertahap, Anda dapat meletakkan kontainer div kosong dengan class/id yang tepat di sini agar JS tidak crash: -->
-          <div id="tab-chat" class="flex-1 flex flex-col h-full overflow-hidden">
-              <div id="chat-messages" class="flex-1 overflow-y-auto px-8 py-6"></div>
-              <form id="chat-form" class="hidden"><input id="user-input" /><button id="send-btn"><span id="btn-icon"></span></button></form>
+          <!-- TAB 1: AREA CHATBOT UTAMA -->
+          <div id="tab-chat" class="flex-1 flex flex-col h-full overflow-hidden transition-all duration-300">
+              
+              <!-- Area Riwayat Chat -->
+              <div id="chat-messages" class="flex-1 overflow-y-auto px-8 py-6 space-y-6 custom-scrollbar bg-[#FAF9F6]">
+                  <!-- Welcome Message Panel (Automatic) -->
+                  <div class="flex items-start space-x-4 max-w-4xl opacity-100 transition-all duration-300">
+                      <div class="bg-[#7B2D2D] text-white p-3 rounded-xl flex-shrink-0 mt-1 shadow-md flex items-center justify-center w-10 h-10">
+                          <i data-lucide="award" class="w-5 h-5"></i>
+                      </div>
+                      <div class="space-y-2 flex-1">
+                          <span class="inline-block bg-[#7B2D2D]/10 border border-[#7B2D2D]/15 text-[#7B2D2D] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">Selamat Datang</span>
+                          <div class="bg-white border border-[#EBE7E1] rounded-2xl rounded-tl-none px-5 py-4 shadow-sm text-gray-700 leading-relaxed text-sm">
+                              <p class="font-semibold text-gray-900 mb-1">Halo civitas akademika Universitas Sam Ratulangi!</p>
+                              <p class="text-gray-600 text-xs md:text-sm">Saya adalah asisten virtual akademik resmi Anda. Silakan tanyakan hal-hal terkait Peraturan Akademik (beban SKS, cuti kuliah, KRS, DO, drop-out, yudisium), kalender akademik, visi misi universitas, sejarah, akreditasi, maupun profil institut.</p>
+                              <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                                  <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Syarat dan batas pengambilan cuti akademik di UNSRAT?')">
+                                      <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                      <span class="truncate">Syarat cuti akademik?</span>
+                                  </button>
+                                  <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Visi, misi, dan tujuan resmi Universitas Sam Ratulangi.')">
+                                      <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                      <span class="truncate">Visi misi UNSRAT?</span>
+                                  </button>
+                                  <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Berapa beban SKS maksimum untuk mahasiswa baru semester satu?')">
+                                      <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                      <span class="truncate">Beban SKS semester 1?</span>
+                                  </button>
+                                  <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Bagaimana mekanisme evaluasi putus studi atau DO mahasiswa?')">
+                                      <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                      <span class="truncate">Mekanisme evaluasi DO?</span>
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Area Form Input Bawah (Floating panel) -->
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#FAF9F6] via-[#FAF9F6]/95 to-transparent pt-8 pb-6 px-8 flex flex-col items-center z-10">
+                  <form id="chat-form" class="w-full max-w-4xl flex items-center bg-white border border-[#E4DFD9] rounded-2xl shadow-xl overflow-hidden focus-within:border-[#7B2D2D] focus-within:ring-2 focus-within:ring-[#7B2D2D]/20 transition duration-300">
+                      <input type="text" id="user-input" placeholder="Ketik pertanyaan akademik Anda di sini (misal: 'berapa batas minimal IPK...')" class="flex-1 px-6 py-4.5 text-sm text-gray-800 focus:outline-none placeholder-gray-400 bg-white" autocomplete="off" required>
+                      <button type="submit" id="send-btn" class="bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white p-3 rounded-xl mr-3 shadow-md hover:shadow-lg active:scale-95 transition duration-200 flex items-center justify-center w-11 h-11 cursor-pointer">
+                          <i data-lucide="send" id="btn-icon" class="w-5 h-5"></i>
+                      </button>
+                  </form>
+                  
+                  <!-- Catatan Kaki Disclaimer Formal (Section 6) -->
+                  <div class="flex items-center space-x-1.5 text-[10px] text-gray-400 mt-2.5 text-center">
+                      <i data-lucide="shield-alert" class="w-3.5 h-3.5 flex-shrink-0 text-gray-400"></i>
+                      <span>Sistem ini adalah prototipe penelitian berbasis LLM. Tanggapan didasarkan pada dokumen ground-truth peraturan resmi Universitas Sam Ratulangi. Harap verifikasi informasi penting ke sub-bagian akademik fakultas Anda.</span>
+                  </div>
+              </div>
           </div>
           <div id="tab-eval" class="hidden">
               <button id="refresh-eval-btn"></button>
