@@ -727,4 +727,74 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // ── TASK 9: JS Logic — Clipboard Copy & CSV Export ────────────────────────
+    function copyTableToClipboard(tableId) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+
+        const rows = Array.from(table.querySelectorAll("tr"));
+        const text = rows.map(row => {
+            const cells = Array.from(row.querySelectorAll("th, td"));
+            return cells.map(cell => cell.textContent.trim()).join("\t");
+        }).join("\n");
+
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                alert("Data tabel berhasil disalin ke clipboard! Silakan paste langsung di Excel atau Word.");
+            })
+            .catch(err => {
+                console.error("[RAG Client] Failed to copy table to clipboard:", err);
+                alert("Gagal menyalin data ke clipboard.");
+            });
+    }
+
+    if (btnCopyWilcoxon) {
+        btnCopyWilcoxon.addEventListener("click", () => {
+            copyTableToClipboard("table-wilcoxon");
+        });
+    }
+
+    if (btnCopyAudit) {
+        btnCopyAudit.addEventListener("click", () => {
+            copyTableToClipboard("table-audit");
+        });
+    }
+
+    if (btnDownloadAudit) {
+        btnDownloadAudit.addEventListener("click", () => {
+            fetch("/api/evaluation")
+                .then(res => {
+                    if (!res.ok) throw new Error("Gagal mengambil data evaluasi");
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.audit_log && data.audit_log.length > 0) {
+                        let csvContent = "Timestamp,Config,Model,Query,ChunksCount,BestScore,Latency,EstTokens\n";
+                        const rows = data.audit_log.map(row => {
+                            return `"${row.timestamp}","${row.config}","${row.model_llm}","${row.user_query ? row.user_query.replace(/"/g, '""') : ''}",${row.chunks_retrieved_count !== null ? row.chunks_retrieved_count : 0},${row.best_similarity_score !== null ? row.best_similarity_score : 0.0},${row.response_time_seconds !== null ? row.response_time_seconds : 0.0},${row.estimated_total_tokens !== null ? row.estimated_total_tokens : 0}`;
+                        });
+                        csvContent += rows.join("\n");
+
+                        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement("a");
+                        link.setAttribute("href", url);
+                        link.setAttribute("download", "transaksi_chat.csv");
+                        link.style.visibility = "hidden";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                    } else {
+                        alert("Belum ada log transaksi untuk diunduh.");
+                    }
+                })
+                .catch(err => {
+                    console.error("[RAG Client] Failed to download CSV:", err);
+                    alert("Gagal mengunduh file CSV.");
+                });
+        });
+    }
 });
+
