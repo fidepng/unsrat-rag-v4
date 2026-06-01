@@ -110,21 +110,40 @@ document.addEventListener("DOMContentLoaded", () => {
     function clearChatUI() {
         chatHistory = [];
         chatMessages.innerHTML = `
-            <!-- Welcome Panel (Tanpa Emoji) -->
+            <!-- Welcome Message Panel (Automatic) -->
             <div class="flex items-start space-x-4 max-w-4xl opacity-100 transition-all duration-300">
                 <div class="bg-[#7B2D2D] text-white p-3 rounded-xl flex-shrink-0 mt-1 shadow-md flex items-center justify-center w-10 h-10">
                     <i data-lucide="award" class="w-5 h-5"></i>
                 </div>
                 <div class="space-y-2 flex-1">
-                    <span class="inline-block bg-[#7B2D2D]/10 border border-[#7B2D2D]/15 text-[#7B2D2D] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">SYSTEM</span>
+                    <span class="inline-block bg-[#7B2D2D]/10 border border-[#7B2D2D]/15 text-[#7B2D2D] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">Selamat Datang</span>
                     <div class="bg-white border border-[#EBE7E1] rounded-2xl rounded-tl-none px-5 py-4 shadow-sm text-gray-700 leading-relaxed text-sm">
-                        Riwayat percakapan telah dibersihkan. Konfigurasi ${configSelect.value.toUpperCase()} aktif. Silakan ajukan pertanyaan regulasi akademik Anda.
+                        <p class="font-semibold text-gray-900 mb-1">Halo civitas akademika Universitas Sam Ratulangi!</p>
+                        <p class="text-gray-600 text-xs md:text-sm">Saya adalah asisten virtual akademik resmi Anda. Silakan tanyakan hal-hal terkait Peraturan Akademik (beban SKS, cuti kuliah, KRS, DO, drop-out, yudisium), kalender akademik, visi misi universitas, sejarah, akreditasi, maupun profil institut. Konfigurasi ${configSelect.value.toUpperCase()} saat ini aktif.</p>
+                        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                            <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Syarat dan batas pengambilan cuti akademik di UNSRAT?')">
+                                <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                <span class="truncate">Syarat cuti akademik?</span>
+                            </button>
+                            <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Visi, misi, dan tujuan resmi Universitas Sam Ratulangi.')">
+                                <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                <span class="truncate">Visi misi UNSRAT?</span>
+                            </button>
+                            <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Berapa beban SKS maksimum untuk mahasiswa baru semester satu?')">
+                                <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                <span class="truncate">Beban SKS semester 1?</span>
+                            </button>
+                            <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Bagaimana mekanisme evaluasi putus studi atau DO mahasiswa?')">
+                                <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
+                                <span class="truncate">Mekanisme evaluasi DO?</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         `;
         safeCreateIcons();
-        console.log("[RAG Client] Conversation cleared.");
+        console.log("[RAG Client] Conversation cleared and welcome greeting restored.");
     }
 
     resetBtn.addEventListener("click", clearChatUI);
@@ -300,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
             userBubble.id = userMsgId;
             userBubble.className = "flex items-start space-x-4 max-w-4xl opacity-0 translate-y-2 transition-all duration-300 ml-auto justify-end w-full";
             userBubble.innerHTML = `
-                <div class="space-y-2 flex-1 flex flex-col items-end max-w-2xl">
+                <div class="space-y-2 flex flex-col items-end max-w-[70%]">
                     <div class="flex items-center space-x-2">
                         <span class="inline-block bg-gray-200 border border-gray-300 text-gray-700 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">Mahasiswa</span>
                         <span class="text-[10px] text-gray-400 font-medium">${userTimestamp}</span>
