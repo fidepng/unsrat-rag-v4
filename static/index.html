@@ -54,81 +54,131 @@
         .parsed-markdown blockquote { border-left: 3px solid #7B2D2D; padding-left: 0.75rem; color: #6B7280; font-style: italic; }
     </style>
 </head>
-<body>
-    <header>
-        <div>
-            <h1>💬 Chatbot Informasi Akademik UNSRAT</h1>
-            <p>Universitas Sam Ratulangi — Sistem RAG Penelitian</p>
-        </div>
-    </header>
+<body class="h-screen w-screen flex overflow-hidden bg-[#FAF9F6] font-sans antialiased text-gray-800">
+      
+      <!-- Panel Sidebar Kiri (Maroon Klasik) -->
+      <aside class="w-80 h-screen bg-gradient-to-b from-[#4A1515] via-[#5B1A1A] to-[#7B2D2D] text-white flex flex-col justify-between p-6 shadow-2xl z-20 flex-shrink-0">
+          <div class="space-y-6">
+              <!-- Header Brand & Logo Placeholder -->
+              <div class="flex items-center space-x-3 pb-4 border-b border-white/10">
+                  <div class="bg-white/10 p-2 rounded-xl flex items-center justify-center border border-white/15 w-12 h-12">
+                      <img src="/static/assets/logo-unsrat.png" alt="UNSRAT" class="w-8 h-8 object-contain" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'white\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 14l9-5-9-5-9 5 9 5z\'/><path d=\'M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z\'/></svg>'">
+                  </div>
+                  <div>
+                      <h2 class="font-bold text-base leading-tight uppercase tracking-wider">UNSRAT</h2>
+                      <p class="text-white/60 text-[10px] uppercase font-bold tracking-widest">Sistem RAG Penelitian</p>
+                  </div>
+              </div>
 
-    <div class="tabs">
-        <button class="tab-btn active" id="tab-chat-btn" onclick="switchTab('chat')">💬 Chatbot</button>
-        <button class="tab-btn" id="tab-eval-btn" onclick="switchTab('eval')">📊 Evaluasi Ragas</button>
-    </div>
+              <!-- Tombol Navigasi SPA (Tab Buttons - Tanpa Emoji) -->
+              <nav class="space-y-1.5" id="navigation-tabs">
+                  <button id="tab-chat-btn" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl font-medium transition duration-200 bg-white/15 text-white border-l-4 border-white">
+                      <i data-lucide="message-square" class="w-5 h-5"></i>
+                      <span class="text-sm">Chatbot Utama</span>
+                  </button>
+                  <button id="tab-eval-btn" class="w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl font-medium transition duration-200 text-white/70 border-l-4 border-transparent hover:bg-white/5 hover:text-white">
+                      <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                      <span class="text-sm">Evaluasi Ragas</span>
+                  </button>
+              </nav>
 
-    <div class="main">
-        <!-- Tab 1: Chatbot -->
-        <div class="tab-content active" id="tab-chat">
-            <div class="sidebar">
-                <div class="sidebar-section">
-                    <label>Konfigurasi</label>
-                    <select id="config-select">
-                        <option value="b">Config B — RAG (2000 char)</option>
-                        <option value="a">Config A — RAG (500 char)</option>
-                        <option value="c">Config C — BM25 Keyword</option>
-                    </select>
-                </div>
-                <div class="sidebar-section">
-                    <label>Model LLM</label>
-                    <select id="model-select">
-                        <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-                    </select>
-                </div>
-                <div class="sidebar-section">
-                    <button id="reset-btn" onclick="resetChat()">🔄 Reset Percakapan</button>
-                </div>
-                <div class="sidebar-section" style="margin-top: auto; font-size: 0.75rem; color: var(--text-muted);">
-                    <p id="status-info">Ready</p>
-                </div>
-            </div>
+              <!-- Parameter Config Sidebar -->
+              <div class="space-y-4 pt-4 border-t border-white/10">
+                  <h3 class="text-[10px] font-bold text-white/40 tracking-widest uppercase flex items-center space-x-2">
+                      <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                      <span>Parameter Sistem</span>
+                  </h3>
+                  
+                  <!-- Config Dropdown -->
+                  <div class="space-y-1.5">
+                      <label class="text-xs font-semibold text-white/70 flex items-center space-x-2" for="config-select">
+                          <i data-lucide="database" class="w-3.5 h-3.5 text-white/50"></i>
+                          <span>Konfigurasi Retrieval</span>
+                      </label>
+                      <div class="relative">
+                          <select id="config-select" class="w-full bg-black/20 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-white/30 cursor-pointer appearance-none">
+                              <option value="b" class="text-gray-800">Config B - RAG 2000 char</option>
+                              <option value="a" class="text-gray-800">Config A - RAG 500 char</option>
+                              <option value="c" class="text-gray-800">Config C - BM25 Baseline</option>
+                          </select>
+                          <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-white/50">
+                              <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                          </div>
+                      </div>
+                  </div>
 
-            <div class="chat-area">
-                <div id="chat-messages"></div>
-                <div class="input-area">
-                    <textarea id="user-input" placeholder="Ketik pertanyaan Anda tentang akademik UNSRAT..." rows="1"
-                        onkeydown="handleKeyDown(event)"></textarea>
-                    <button id="send-btn" onclick="sendMessage()">Kirim</button>
-                </div>
-                <div class="disclaimer">
-                    ⚠️ Sistem ini adalah prototipe penelitian. Verifikasi informasi ke Bagian Akademik UNSRAT untuk kepastian.
-                </div>
-            </div>
-        </div>
+                  <!-- Model Dropdown -->
+                  <div class="space-y-1.5">
+                      <label class="text-xs font-semibold text-white/70 flex items-center space-x-2" for="model-select">
+                          <i data-lucide="cpu" class="w-3.5 h-3.5 text-white/50"></i>
+                          <span>Model Generator LLM</span>
+                      </label>
+                      <div class="relative">
+                          <select id="model-select" class="w-full bg-black/20 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-white/30 cursor-pointer appearance-none">
+                              <!-- Dimuat dinamis -->
+                          </select>
+                          <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-white/50">
+                              <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-        <!-- Tab 2: Evaluasi -->
-        <div class="tab-content" id="tab-eval">
-            <div class="eval-content">
-                <div class="eval-card">
-                    <h3>📊 Perbandingan Metrik Ragas (Mean ± Std)</h3>
-                    <div id="metrics-table-container"><p class="empty-state">Jalankan evaluasi terlebih dahulu: <code>python evaluation.py --config a</code></p></div>
-                </div>
-                <div class="eval-card">
-                    <h3>📈 Visualisasi Komparasi Config</h3>
-                    <div class="chart-container"><canvas id="metricsChart"></canvas></div>
-                </div>
-                <div class="eval-card">
-                    <h3>🔬 Uji Wilcoxon Signed-Rank (Config A vs B)</h3>
-                    <div id="wilcoxon-table-container"><p class="empty-state">Jalankan: <code>python evaluation.py --stats</code></p></div>
-                </div>
-                <div class="eval-card">
-                    <h3>📋 5 Transaksi Terakhir (Audit Log)</h3>
-                    <div id="audit-log-container"><p class="empty-state">Belum ada transaksi.</p></div>
-                </div>
-            </div>
-        </div>
-    </div>
+          <!-- Tombol Reset & Info Status -->
+          <div class="space-y-3">
+              <button id="reset-btn" class="w-full flex items-center justify-center space-x-2 py-3 bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-xl text-xs text-white font-semibold transition duration-200 border border-white/10 active:scale-[0.98]">
+                  <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                  <span>Reset Percakapan</span>
+              </button>
+              <div class="text-[10px] text-white/40 flex items-center justify-center space-x-1.5 border-t border-white/5 pt-2">
+                  <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                  <span id="status-info">Ready</span>
+              </div>
+          </div>
+      </aside>
 
-    <script src="/static/js/app.js"></script>
-</body>
+      <!-- Area Konten Utama -->
+      <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+          <!-- Header melintang atas -->
+          <header class="bg-gradient-to-r from-[#5C1F1F] to-[#7B2D2D] text-white px-8 py-4.5 shadow-md flex items-center justify-between z-10">
+              <div class="flex items-center space-x-3.5">
+                  <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/15">
+                      <i data-lucide="message-square" class="w-5 h-5 text-white"></i>
+                  </div>
+                  <div>
+                      <h1 class="font-bold text-base tracking-tight">Asisten Informasi Akademik UNSRAT</h1>
+                      <p class="text-white/60 text-[10px] font-medium">Sistem Penjawab Regulasi & Profil Kampus berbasis Retrieval-Augmented Generation</p>
+                  </div>
+              </div>
+              <div>
+                  <span id="badge-config-display" class="bg-white/15 border border-white/10 px-3.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white">Config B</span>
+              </div>
+          </header>
+
+          <!-- TAB CONTENT AKAN MASUK DI SINI -->
+          <!-- Untuk mempermudah pengerjaan bertahap, Anda dapat meletakkan kontainer div kosong dengan class/id yang tepat di sini agar JS tidak crash: -->
+          <div id="tab-chat" class="flex-1 flex flex-col h-full overflow-hidden">
+              <div id="chat-messages" class="flex-1 overflow-y-auto px-8 py-6"></div>
+              <form id="chat-form" class="hidden"><input id="user-input" /><button id="send-btn"><span id="btn-icon"></span></button></form>
+          </div>
+          <div id="tab-eval" class="hidden">
+              <button id="refresh-eval-btn"></button>
+              <canvas id="metricsChart"></canvas>
+              <table id="table-wilcoxon"><tbody id="wilcoxon-table-body"></tbody></table>
+              <button id="btn-copy-wilcoxon"></button>
+              <table id="table-audit"><tbody id="audit-table-body"></tbody></table>
+              <button id="btn-copy-audit"></button>
+              <button id="btn-download-audit"></button>
+              <!-- metadata panel placeholders -->
+              <span id="meta-last-run"></span>
+              <span id="meta-dataset-size"></span>
+              <span id="meta-generator-model"></span>
+              <span id="meta-evaluator-model"></span>
+              <span id="meta-embedding-model"></span>
+          </div>
+      </main>
+      
+      <script src="/static/js/app.js"></script>
+  </body>
 </html>
