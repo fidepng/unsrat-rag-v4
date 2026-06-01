@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const adjustHeight = () => {
             chatInput.style.height = "auto";
             chatInput.style.height = `${chatInput.scrollHeight}px`;
+            chatInput.scrollTop = chatInput.scrollHeight;
         };
         
         chatInput.addEventListener("input", adjustHeight);
@@ -340,6 +341,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollToBottom();
             });
         }
+    }
+
+    if (sendBtn) {
+        sendBtn.addEventListener("click", (e) => {
+            if (isStreaming) {
+                e.preventDefault();
+                handleAbort();
+            }
+        });
     }
 
     // ── CHAT FORM SUBMIT LISTENER ─────────────────────────────────────────────
