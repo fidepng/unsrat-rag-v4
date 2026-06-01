@@ -13,7 +13,7 @@ def test_root_serves_index_html():
     response = client.get("/")
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
-    assert "Chatbot Informasi Akademik UNSRAT" in response.text
+    assert "Asisten Informasi Akademik UNSRAT" in response.text
     assert '<script src="/static/js/app.js"></script>' in response.text
 
 def test_static_files_js_app_served():
@@ -22,5 +22,5 @@ def test_static_files_js_app_served():
     assert response.status_code == 200
     assert "application/javascript" in response.headers["content-type"] or "text/plain" in response.headers["content-type"] or "javascript" in response.headers["content-type"]
     assert "isStreaming" in response.text
-    assert "sendMessage" in response.text
-    assert "loadEvalData" in response.text
+    assert "loadEvaluationData" in response.text
+    assert "copyTableToClipboard" in response.text
