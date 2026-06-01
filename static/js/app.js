@@ -217,12 +217,32 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
+    function setStreamingState(streaming) {
+        isStreaming = streaming;
+        if (streaming) {
+            if (sendBtn) {
+                sendBtn.className = "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 mr-3 mb-3";
+            }
+            if (btnIcon) {
+                btnIcon.setAttribute("data-lucide", "square");
+            }
+        } else {
+            if (sendBtn) {
+                sendBtn.className = "bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 mr-3 mb-3";
+            }
+            if (btnIcon) {
+                btnIcon.setAttribute("data-lucide", "send");
+            }
+        }
+        safeCreateIcons();
+    }
+
     function handleAbort() {
         if (abortController) {
             abortController.abort();
             console.log("[RAG Client] Abort controller triggered.");
         }
-        isStreaming = false;
+        setStreamingState(false);
     }
 
     function handleError(message) {
@@ -334,17 +354,8 @@ document.addEventListener("DOMContentLoaded", () => {
             chatInput.value = "";
             
             // Set streaming state
-            isStreaming = true;
             abortController = new AbortController();
-            
-            // Toggle submit button to Red-600 background and Lucide 'square' icon
-            if (sendBtn) {
-                sendBtn.className = "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white p-3 rounded-xl mr-3 shadow-md hover:shadow-lg active:scale-95 transition duration-200 flex items-center justify-center w-11 h-11 cursor-pointer";
-            }
-            if (btnIcon) {
-                btnIcon.setAttribute("data-lucide", "square");
-            }
-            safeCreateIcons();
+            setStreamingState(true);
             
             // Create user bubble
             const userMsgId = `user-msg-${Date.now()}`;
@@ -524,6 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 }
                             } else if (event.type === "done") {
                                 chatHistory.push({ role: "assistant", content: fullResponseText });
+                                handleAbort();
                                 break;
                             } else if (event.type === "error") {
                                 handleError(event.message || "Terjadi kesalahan pada stream server.");
@@ -607,18 +619,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     handleError("Terjadi kegagalan komunikasi dengan server RAG.");
                 }
             } finally {
-                isStreaming = false;
                 clearTimeout(watchdogTimer);
                 clearInterval(thinkingInterval);
-                
-                // Restore send button background color and send icon
-                if (sendBtn) {
-                    sendBtn.className = "bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white p-3 rounded-xl mr-3 shadow-md hover:shadow-lg active:scale-95 transition duration-200 flex items-center justify-center w-11 h-11 cursor-pointer";
-                }
-                if (btnIcon) {
-                    btnIcon.setAttribute("data-lucide", "send");
-                }
-                safeCreateIcons();
+                setStreamingState(false);
                 
                 if (statusInfo) {
                     statusInfo.textContent = "Ready";
