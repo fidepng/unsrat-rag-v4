@@ -85,10 +85,41 @@ async def get_evaluation():
     """
     Baca dan kembalikan statistik evaluasi dari CSV hasil.
 
-    Mengembalikan mean, std per metrik per config.
-    Data ini digunakan oleh Tab Evaluasi frontend untuk render Chart.js.
+    Mengembalikan mean, std per metrik per config beserta metadata parameter uji.
     """
-    result = {"configs": {}, "wilcoxon": {}}
+    import os
+    from datetime import datetime
+    from src.config import (
+        EVAL_DATASET_PATH, EVALUATOR_MODEL_NAME, EMBEDDING_MODEL_NAME, LLM_MODEL_NAME
+    )
+
+    result = {"configs": {}, "wilcoxon": {}, "metadata": {}}
+
+    # Ekstrak data metadata parameter pengujian untuk laporan skripsi
+    dataset_size = 0
+    if EVAL_DATASET_PATH.exists():
+        try:
+            df_gt = pd.read_csv(EVAL_DATASET_PATH)
+            dataset_size = len(df_gt)
+        except Exception:
+            pass
+
+    last_run = "-"
+    wilcoxon_path = EVAL_RESULTS_DIR / "statistical_test.csv"
+    if wilcoxon_path.exists():
+        try:
+            mtime = os.path.getmtime(wilcoxon_path)
+            last_run = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M")
+        except Exception:
+            pass
+
+    result["metadata"] = {
+        "last_run":        last_run,
+        "dataset_size":    f"{dataset_size} Pertanyaan",
+        "generator_model":  LLM_MODEL_NAME,
+        "evaluator_model":  EVALUATOR_MODEL_NAME,
+        "embedding_model":  EMBEDDING_MODEL_NAME
+    }
 
     for config_label in ["a", "b", "c"]:
         csv_path = EVAL_RESULTS_DIR / f"hasil_config_{config_label}.csv"
@@ -112,7 +143,6 @@ async def get_evaluation():
             result["configs"][config_label] = stats
 
     # Wilcoxon results
-    wilcoxon_path = EVAL_RESULTS_DIR / "statistical_test.csv"
     if wilcoxon_path.exists():
         df_w = pd.read_csv(wilcoxon_path)
         for _, row in df_w.iterrows():
@@ -132,7 +162,7 @@ async def get_evaluation():
     from src.config import CHAT_LOG_PATH
     if CHAT_LOG_PATH.exists():
         df_audit = pd.read_csv(CHAT_LOG_PATH)
-        # Ganti NaN dengan None agar serialisasi JSON sukses
+        # Mengganti NaN dengan None agar tidak merusak serialisasi JSON (D-A7)
         df_audit = df_audit.astype(object).where(pd.notnull(df_audit), None)
         result["audit_log"] = df_audit.tail(5).to_dict(orient="records")
     else:
