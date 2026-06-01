@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tabChatBtn.className = "w-full flex items-center space-x-3 px-4 py-3.5 rounded-xl font-medium transition duration-200 text-white/70 border-l-4 border-transparent hover:bg-white/5 hover:text-white";
         tabEval.classList.remove("hidden");
         tabChat.classList.add("hidden");
-        // loadEvaluationData(); // Akan dipanggil dinamis di tugas selanjutnya
+        loadEvaluationData();
     });
 
     // Helper untuk mengisi kueri cepat
@@ -128,6 +128,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     resetBtn.addEventListener("click", clearChatUI);
+
+    if (refreshEvalBtn) {
+        refreshEvalBtn.addEventListener("click", loadEvaluationData);
+    }
 
     // Load config on startup
     loadSystemConfig();
@@ -567,6 +571,158 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 if (statusInfo) {
                     statusInfo.textContent = "Ready";
+                }
+            }
+        });
+    }
+
+    // ── TAB EVALUASI - LOAD QUANTITATIVE METRICS & METADATA ──────────────────
+    async function loadEvaluationData() {
+        const wilcoxonTable = document.getElementById("wilcoxon-table-body");
+        const auditTable = document.getElementById("audit-table-body");
+
+        try {
+            console.log("[RAG Client] Fetching evaluation data from /api/evaluation");
+            const res = await fetch("/api/evaluation");
+            if (!res.ok) throw new Error("Gagal mengambil data evaluasi");
+            const data = await res.json();
+
+            // A. Render Metadata Panel (Section 5.A)
+            if (data.metadata) {
+                metaLastRun.innerText     = data.metadata.last_run || "-";
+                metaDatasetSize.innerText = data.metadata.dataset_size || "-";
+                metaGenerator.innerText   = data.metadata.generator_model || "-";
+                metaEvaluator.innerText   = data.metadata.evaluator_model || "-";
+                metaEmbedding.innerText   = data.metadata.embedding_model || "-";
+                console.log("[RAG Client] Dynamic metadata panel populated successfully.");
+            }
+
+            // B. Populasi Tabel Wilcoxon
+            if (data.wilcoxon && Object.keys(data.wilcoxon).length > 0) {
+                wilcoxonTable.innerHTML = Object.entries(data.wilcoxon).map(([metric, row]) => {
+                    const sigBadge = row.significant
+                        ? `<span class="bg-green-50 border border-green-200 text-green-700 px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase">Signifikan</span>`
+                        : `<span class="bg-gray-50 border border-gray-200 text-gray-500 px-2 py-0.5 rounded-full text-[9px] font-bold">Tidak Sig.</span>`;
+                    
+                    const winnerStr = row.winner === "Tidak signifikan" ? "Tidak signifikan" : row.winner;
+
+                    // Display metric key nicely (e.g. capitalizing and removing underscores)
+                    const formatMetric = metric.split('_')
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ');
+
+                    return `
+                        <tr class="hover:bg-gray-50 transition duration-150 text-xs">
+                            <td class="px-4 py-3 font-bold text-gray-800">${formatMetric}</td>
+                            <td class="px-4 py-3 font-mono text-[10px] text-gray-500">${parseFloat(row.p_value).toFixed(5)}</td>
+                            <td class="px-4 py-3">${sigBadge}</td>
+                            <td class="px-4 py-3 text-right"><span class="font-extrabold text-[#7B2D2D]">${winnerStr}</span></td>
+                        </tr>
+                    `;
+                }).join("");
+            } else {
+                wilcoxonTable.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-gray-400">Data uji Wilcoxon tidak tersedia. Silakan jalankan evaluasi offline.</td></tr>`;
+            }
+
+            // C. Populasi Live Audit Log
+            const logs = data.audit_log || [];
+            if (logs.length > 0) {
+                const reversedLogs = [...logs].reverse();
+                auditTable.innerHTML = reversedLogs.map(row => {
+                    const timestampStr = row.timestamp ? (row.timestamp.includes(" ") ? row.timestamp.split(" ")[1] : row.timestamp) : "-";
+                    const configName = row.config ? row.config.toUpperCase() : "-";
+                    
+                    return `
+                        <tr class="hover:bg-gray-50/50 transition duration-150 text-xs">
+                            <td class="px-4 py-2.5 text-gray-400 font-mono text-[10px]">${timestampStr}</td>
+                            <td class="px-4 py-2.5">
+                                <span class="bg-[#7B2D2D]/10 text-[#7B2D2D] px-2 py-0.5 rounded text-[8px] font-extrabold border border-[#7B2D2D]/15">${configName}</span>
+                            </td>
+                            <td class="px-4 py-2.5 font-mono text-[9px] text-gray-400 truncate max-w-[80px]" title="${row.model_llm || ''}">${row.model_llm || '-'}</td>
+                            <td class="px-4 py-2.5 font-semibold text-gray-700 truncate max-w-[150px]" title="${row.user_query || ''}">${row.user_query || ''}</td>
+                            <td class="px-4 py-2.5 text-center font-mono font-bold text-gray-600">${row.chunks_retrieved_count !== null && row.chunks_retrieved_count !== undefined ? row.chunks_retrieved_count : 0}</td>
+                            <td class="px-4 py-2.5 font-mono font-bold text-[#7B2D2D]">${row.best_similarity_score !== null && row.best_similarity_score !== undefined ? parseFloat(row.best_similarity_score).toFixed(4) : "0.0000"}</td>
+                            <td class="px-4 py-2.5 font-mono text-amber-600 font-bold">${row.response_time_seconds !== null && row.response_time_seconds !== undefined ? parseFloat(row.response_time_seconds).toFixed(2) + "s" : "-"}</td>
+                            <td class="px-4 py-2.5 text-right font-mono font-bold text-gray-800">${row.estimated_total_tokens !== null && row.estimated_total_tokens !== undefined ? row.estimated_total_tokens : 0}</td>
+                        </tr>
+                    `;
+                }).join("");
+            } else {
+                auditTable.innerHTML = `<tr><td colspan="8" class="px-4 py-4 text-center text-gray-400">Belum ada transaksi terekam di logs/transaksi_chat.csv.</td></tr>`;
+            }
+
+            renderRagasChart(data.configs);
+            safeCreateIcons();
+        } catch (err) {
+            console.error("[RAG Client] Failed to load evaluation metrics:", err);
+            wilcoxonTable.innerHTML = `<tr><td colspan="4" class="px-4 py-3 text-center text-red-500">Gagal memuat metrik Wilcoxon.</td></tr>`;
+            auditTable.innerHTML = `<tr><td colspan="8" class="px-4 py-3 text-center text-red-500">Gagal memuat log transaksi.</td></tr>`;
+        }
+    }
+
+    function renderRagasChart(configs) {
+        const ctx = document.getElementById("metricsChart");
+        if (!ctx) return;
+
+        const metrics = ["faithfulness", "answer_relevancy", "context_precision", "context_recall"];
+        const labels = ["Faithfulness", "Answer Relevancy", "Context Precision", "Context Recall"];
+
+        const dataA = metrics.map(m => configs.a && configs.a[m] ? (configs.a[m].mean !== null && configs.a[m].mean !== undefined ? configs.a[m].mean : 0.0) : 0.0);
+        const dataB = metrics.map(m => configs.b && configs.b[m] ? (configs.b[m].mean !== null && configs.b[m].mean !== undefined ? configs.b[m].mean : 0.0) : 0.0);
+        const dataC = metrics.map(m => configs.c && configs.c[m] ? (configs.c[m].mean !== null && configs.c[m].mean !== undefined ? configs.c[m].mean : 0.0) : 0.0);
+
+        if (metricsChartInstance) {
+            metricsChartInstance.destroy();
+        }
+
+        metricsChartInstance = new Chart(ctx.getContext("2d"), {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Config A (500 char)",
+                        data: dataA,
+                        backgroundColor: "rgba(123, 45, 45, 0.4)",
+                        borderColor: "rgb(123, 45, 45)",
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    },
+                    {
+                        label: "Config B (2000 char)",
+                        data: dataB,
+                        backgroundColor: "rgba(168, 69, 69, 0.9)",
+                        borderColor: "rgb(168, 69, 69)",
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    },
+                    {
+                        label: "Config C (BM25)",
+                        data: dataC,
+                        backgroundColor: "rgba(156, 163, 175, 0.5)",
+                        borderColor: "rgb(156, 163, 175)",
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1.0,
+                        ticks: { font: { family: "Inter", size: 10 } }
+                    },
+                    x: {
+                        ticks: { font: { family: "Inter", size: 10, weight: 600 } }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { font: { family: "Inter", size: 10, weight: 600 } }
+                    }
                 }
             }
         });
