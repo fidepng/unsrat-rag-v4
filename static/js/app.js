@@ -324,9 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="inline-block bg-gray-200 border border-gray-300 text-gray-700 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">Mahasiswa</span>
                         <span class="text-[10px] text-gray-400 font-medium">${userTimestamp}</span>
                     </div>
-                    <div class="bg-gradient-to-br from-[#7B2D2D] to-[#963E3E] text-white rounded-2xl rounded-tr-none px-5 py-4 shadow-sm text-sm leading-relaxed whitespace-pre-wrap">
-                        ${escapeHtml(query)}
-                    </div>
+                    <div class="bg-gradient-to-br from-[#7B2D2D] to-[#963E3E] text-white rounded-2xl rounded-tr-none px-5 py-4 shadow-sm text-sm leading-relaxed whitespace-pre-wrap">${escapeHtml(query)}</div>
                 </div>
                 <div class="bg-white border border-gray-200 text-gray-700 p-3 rounded-xl flex-shrink-0 mt-1 shadow-sm flex items-center justify-center w-10 h-10">
                     <i data-lucide="user" class="w-5 h-5"></i>
