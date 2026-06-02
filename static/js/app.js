@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ── STATE MANAGEMENT ───────────────────────────────────────────────────────
     let chatHistory = [];
     let isStreaming = false;
+    let isUserAborted = false;
     let abortController = null;
     let metricsChartInstance = null;
 
@@ -347,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sendBtn.addEventListener("click", (e) => {
             if (isStreaming) {
                 e.preventDefault();
+                isUserAborted = true;
                 handleAbort();
             }
         });
@@ -358,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             
             if (isStreaming) {
+                isUserAborted = true;
                 handleAbort();
                 return;
             }
@@ -369,6 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
             chatInput.value = "";
             
             // Set streaming state
+            isUserAborted = false;
             abortController = new AbortController();
             setStreamingState(true);
             
