@@ -27,7 +27,7 @@ Sistem dibagi menjadi 13 Task utama sesuai dengan rencana implementasi (`docs/su
 ---
 
 ## 📈 Status Data Ingestion & Indexing
-Pipeline ingestion telah berhasil dieksekusi untuk kedua konfigurasi vektor dan keyword search dengan hasil sebagai berikut (tercatat di [ingestion_report.csv](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/logs/ingestion_report.csv)):
+Pipeline ingestion telah berhasil dieksekusi untuk kedua konfigurasi vektor dan keyword search dengan hasil sebagai berikut (tercatat di [ingestion_report.csv](../logs/ingestion_report.csv)):
 
 1. **Config B (Vektor - Chunk 2000)**:
    * **File diproses**: 9 file Markdown corpus
@@ -39,7 +39,7 @@ Pipeline ingestion telah berhasil dieksekusi untuk kedua konfigurasi vektor dan 
    * **Total chunk ter-ingest**: **430 chunks** disimpan di ChromaDB (`unsrat_rag_config_a`)
 
 3. **Config C (Keyword - BM25 Okapi)**:
-   * **Total chunk terindeks**: **179 chunks** disimpan di pickle file ([bm25_index.pkl](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/bm25_index/bm25_index.pkl)) untuk perbandingan baseline yang adil dengan Config B.
+   * **Total chunk terindeks**: **179 chunks** disimpan di pickle file ([bm25_index.pkl](../bm25_index/bm25_index.pkl)) untuk perbandingan baseline yang adil dengan Config B.
 
 ---
 
@@ -53,10 +53,10 @@ Sebagai bagian dari penyempurnaan keandalan sistem di Phase 2, optimasi berikut 
 ## 🛠️ Modul Pengujian & Verifikasi yang Tersedia
 
 Beberapa script verifikasi mandiri telah dibuat untuk menguji sistem secara aman dan andal:
-* **Kalibrasi Threshold**: [calibrate_threshold.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/scripts/calibrate_threshold.py) — Menganalisis gap keputusan cosine distance antara kueri relevan dan tidak relevan untuk menentukan threshold optimal.
-* **Verifikasi Ingestion**: [verify_ingestion.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/tests/verify_ingestion.py) — Menguji jumlah chunk ChromaDB dan kepatuhan format metadata (PRD Section D-B3).
-* **Verifikasi Retriever**: [verify_retriever.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/tests/verify_retriever.py) — Menguji fungsionalitas retrieval Config A, B, dan C dengan query sampel dan threshold filter.
-* **Verifikasi NVIDIA NIM API & Rate Limit**: [test_nvidia_nim_api.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/tests/test_nvidia_nim_api.py) — Menguji keandalan pemanggilan model generator dan evaluator NVIDIA NIM dengan pembatasan RPM secara otomatis.
+* **Kalibrasi Threshold**: [calibrate_threshold.py](../scripts/calibrate_threshold.py) — Menganalisis gap keputusan cosine distance antara kueri relevan dan tidak relevan untuk menentukan threshold optimal.
+* **Verifikasi Ingestion**: [verify_ingestion.py](../tests/verify_ingestion.py) — Menguji jumlah chunk ChromaDB dan kepatuhan format metadata (PRD Section D-B3).
+* **Verifikasi Retriever**: [verify_retriever.py](../tests/verify_retriever.py) — Menguji fungsionalitas retrieval Config A, B, dan C dengan query sampel dan threshold filter.
+* **Verifikasi NVIDIA NIM API & Rate Limit**: [test_nvidia_nim_api.py](../tests/test_nvidia_nim_api.py) — Menguji keandalan pemanggilan model generator dan evaluator NVIDIA NIM dengan pembatasan RPM secara otomatis.
 * **Unit Tests Terpadu**: Diuji menggunakan `pytest` untuk parser sitasi dan SPA serving (`tests/test_citation_parser.py`, `tests/test_spa_serving.py`).
 
 ---

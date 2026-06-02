@@ -627,9 +627,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             if (!isFirstToken && fullResponseText.trim() !== "") {
                                 // Keep generated text and append a beautiful unobtrusive italicized warning
                                 if (typeof marked !== "undefined" && marked.parse) {
-                                    contentContainer.innerHTML = marked.parse(fullResponseText) + `<p class="text-amber-700 text-xs italic mt-2.5 font-medium flex items-center"><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 flex-shrink-0"></i><span>[Aliran jawaban dihentikan oleh pengguna]</span></p>`;
+                                    contentContainer.innerHTML = marked.parse(fullResponseText) + `<p class="text-amber-700 text-xs italic mt-2.5 font-medium flex items-center"><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 flex-shrink-0"></i><span>[Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.]</span></p>`;
                                 } else {
-                                    contentContainer.innerHTML = escapeHtml(fullResponseText).replace(/\n/g, "<br>") + `<p class="text-amber-700 text-xs italic mt-2.5 font-medium flex items-center"><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 flex-shrink-0"></i><span>[Aliran jawaban dihentikan oleh pengguna]</span></p>`;
+                                    contentContainer.innerHTML = escapeHtml(fullResponseText).replace(/\n/g, "<br>") + `<p class="text-amber-700 text-xs italic mt-2.5 font-medium flex items-center"><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 flex-shrink-0"></i><span>[Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.]</span></p>`;
                                 }
                                 chatHistory.push({ role: "assistant", content: fullResponseText });
                                 safeCreateIcons();
