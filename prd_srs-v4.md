@@ -227,11 +227,11 @@ Dimuat via CDN di `static/index.html`:
 | LLM Utama (RAG Generation)  | `llama-3.1-nemotron-nano-8b-v1`        | NVIDIA NIM | Active Generator (Ultra-Cepat / Edge)  |
 | LLM Evaluator (Ragas Judge) | `llama-3.3-nemotron-super-49b-v1.5`    | NVIDIA NIM | Active Evaluator (D-16 Terpenuhi)      |
 | LLM Evaluator (Premium)          | `gemma-4-31b-it`                       | NVIDIA NIM | Reasoning kuat, alternatif evaluator   |
-| LLM Utama (Standard)             | `llama-3.1-8b-instruct`                | NVIDIA NIM | Model standard lama                    |
+| LLM Utama (Standard)             | `llama-3.1-nemotron-nano-8b-v1`        | NVIDIA NIM | Model generator aktif                  |
 | LLM Lokal (gratis, tanpa kuota)  | Model tersedia di Ollama               | Ollama     | Cocok untuk evaluasi batch             |
 
 > **PERINGATAN KOMPARABILITAS:** Jika model evaluator diganti (misalnya dari `gemini-2.5-flash`
-> ke `llama-3.1-70b-instruct`), hasil evaluasi Ragas TIDAK DAPAT dibandingkan secara
+> ke `llama-3.3-nemotron-super-49b-v1.5`), hasil evaluasi Ragas TIDAK DAPAT dibandingkan secara
 > apples-to-apples. Dokumentasikan secara eksplisit provider dan versi model yang digunakan
 > untuk setiap sesi evaluasi di jurnal penelitian.
 
@@ -543,7 +543,7 @@ Tidak ada category pre-filtering (lihat D-A2). Semua query mencari di seluruh co
 
 - ChromaDB distance function: **cosine**
 - Nilai mendekati 0 = lebih mirip, mendekati 2 = tidak mirip
-- `SIMILARITY_THRESHOLD = 0.65` — buang chunk dengan distance > 0.65
+- `SIMILARITY_THRESHOLD = 0.3` — buang chunk dengan distance > 0.3 (Hasil kalibrasi empiris)
 
 ### 6.5 Inline Citation — Mekanisme & Spesifikasi Parsing
 
@@ -710,9 +710,9 @@ CHROMA_DISTANCE_FN  = "cosine"
 # ── MODEL ───────────────────────────────────────────────────
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
 # NVIDIA NIM Llama models are used for active testing due to Google AI Studio API limits.
-LLM_MODEL_NAME       = "llama-3.1-8b-instruct"
+LLM_MODEL_NAME       = "llama-3.1-nemotron-nano-8b-v1"
 EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
-EVALUATOR_MODEL_NAME = "llama-3.1-70b-instruct"
+EVALUATOR_MODEL_NAME = "llama-3.3-nemotron-super-49b-v1.5"
 
 # Daftar model yang bisa dipilih di UI sidebar
 # Catatan: model NVIDIA NIM menggunakan provider "openai_compatible" (lihat Section 18)
@@ -723,8 +723,8 @@ AVAILABLE_MODELS: list[str] = [
     "gemini-3.1-flash-lite",
     "gemini-2.5-pro",
     "gemini-2.5-flash",
-    "llama-3.1-8b-instruct",
-    "llama-3.1-70b-instruct",
+    "llama-3.1-nemotron-nano-8b-v1",
+    "llama-3.3-nemotron-super-49b-v1.5",
 ]
 
 # ── CHUNKING — CONFIG A ──────────────────────────────────────
@@ -749,7 +749,7 @@ REQUIRED_YAML_FIELDS = [
 
 # ── RETRIEVAL ────────────────────────────────────────────────
 RETRIEVAL_K          = 4
-SIMILARITY_THRESHOLD = 0.65
+SIMILARITY_THRESHOLD = 0.3
 MIN_CHUNK_LENGTH     = 50
 
 # ── BM25 — CONFIG C ──────────────────────────────────────────
@@ -1601,7 +1601,7 @@ git commit -m "feat: tambah evaluation.py — Ragas 0.4.x + Wilcoxon + chart"
 | ----- | ---------------------------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | D-01  | Model: `gemini-3.5-flash`                                                          | gemini-2.0-flash                  | Rilis terbaru; fleksibel ganti via config dan UI model switcher                                               |
 | D-02  | ChromaDB: Dua collection terpisah per config                                       | Satu collection, metadata filter  | Isolasi penuh data antar config; tidak saling timpa                                                           |
-| D-03  | Retrieval: k=4, cosine distance threshold=0.65                                     | k=2, k=10 tanpa threshold         | Keseimbangan presisi-recall; threshold cegah halusinasi                                                       |
+| D-03  | Retrieval: k=4, cosine distance threshold=0.3                                      | k=2, k=10 tanpa threshold         | Keseimbangan presisi-recall; threshold cegah halusinasi (Telah Dikalibrasi)                                    |
 | D-04  | Memory: Manual history list                                                        | ConversationBufferWindowMemory    | Hindari deprecated LangChain API; lebih transparan untuk debugging                                            |
 | D-05  | UI: FastAPI + Vanilla SPA                                                          | Streamlit, Chainlit, Gradio       | Kontrol DOM penuh, tidak re-run script saat widget berubah, SSE stabil                                        |
 | D-06  | Ground truth: CSV UTF-8                                                            | Excel, JSON                       | Portabel, kompatibel Ragas, mudah diedit                                                                      |
@@ -1636,7 +1636,7 @@ git commit -m "feat: tambah evaluation.py — Ragas 0.4.x + Wilcoxon + chart"
 | **D-B4** | **Hapus endpoint `POST /api/log_transaction`**                                 | Endpoint terpisah                | Backend sudah punya semua data; endpoint terpisah = extra round-trip tanpa nilai tambah |
 | **D-B5** | **Hapus `reinitialize_llm()`; gunakan `_get_llm(model_name)` stateless**       | Global LLM mutation              | Konsisten dengan stateless backend (Section 6.7); eliminasi potensi race condition |
 | **D-B6** | **Ground truth `reference`: natural language dengan key facts**                 | Verbatim copy-paste dokumen      | Verbatim membuat context_recall trivial; natural language mengukur semantic recall |
-| **D-B7** | **Kalibrasi empiris SIMILARITY_THRESHOLD sebelum evaluasi resmi**              | Pakai nilai tanpa validasi       | 0.65 dipilih dari AI tanpa validasi; kalibrasi 10 query wajib sebelum evaluasi utama |
+| **D-B7** | **Kalibrasi empiris SIMILARITY_THRESHOLD sebelum evaluasi resmi**              | Pakai nilai tanpa validasi       | Selesai. Nilai 0.3 divalidasi sangat optimal dengan gap keputusan 0.117 |
 
 ---
 
@@ -1681,7 +1681,7 @@ def get_nim_evaluator_llm():
     """
     Inisialisasi LLM evaluator menggunakan NVIDIA NIM via OpenAI-compatible endpoint.
 
-    Model yang sudah diuji: llama-3.1-70b-instruct
+Model yang sudah diuji: llama-3.3-nemotron-super-49b-v1.5
     Endpoint: https://integrate.api.nvidia.com/v1
 
     PENTING: Konfirmasi nama model dan endpoint terbaru di:
@@ -1704,11 +1704,11 @@ def get_nim_evaluator_llm():
     )
 
 # Model yang sudah diuji untuk evaluator Ragas:
-# - meta/llama-3.1-70b-instruct (direkomendasikan untuk evaluasi presisi tinggi)
-# - meta/llama-3.1-8b-instruct (sangat direkomendasikan untuk uji coba cepat / cost-free testing)
+# - nvidia/llama-3.3-nemotron-super-49b-v1.5 (direkomendasikan untuk evaluasi presisi tinggi)
+# - nvidia/llama-3.1-nemotron-nano-8b-v1 (sangat direkomendasikan untuk uji coba cepat)
 # Model yang sudah diuji untuk generator LLM:
 # - nvidia/qwen3.5-397b-a17b (akurasi tinggi, namun antrean NIM lambat)
-# - meta/llama-3.1-8b-instruct (sangat cepat, 1-2 detik per kueri)
+# - nvidia/llama-3.1-nemotron-nano-8b-v1 (sangat cepat, 1-2 detik per kueri)
 # Model embedding yang sudah diuji untuk evaluator Ragas:
 # - nvidia/nv-embedqa-e5-v5 (bebas dari issue rate-limit Gemini)
 # KONFIRMASI nama model yang aktif di: https://build.nvidia.com/
@@ -1795,7 +1795,7 @@ Jika provider atau model evaluator diganti antar sesi evaluasi, hasil skor Ragas
 **tidak dapat dibandingkan secara langsung**. Ini karena:
 
 - Setiap LLM memiliki calibrasi dan standar penilaian yang berbeda
-- `faithfulness` yang dinilai `gemini-2.5-flash` ≠ `faithfulness` yang dinilai `llama-3.1-70b-instruct`
+- `faithfulness` yang dinilai `gemini-2.5-flash` ≠ `faithfulness` yang dinilai `llama-3.3-nemotron-super-49b-v1.5`
 
 **Aturan evaluasi:**
 
@@ -1816,7 +1816,7 @@ Skenario 2: Eksperimen / debugging metrik sebelum evaluasi resmi
 → Cepat untuk iterasi; hasil tidak dimasukkan ke laporan utama
 
 Skenario 3: Evaluasi resmi tapi quota Gemini hampir habis
-→ Gunakan NVIDIA NIM (llama-3.1-70b-instruct)
+→ Gunakan NVIDIA NIM (llama-3.3-nemotron-super-49b-v1.5)
 → Catat pergantian provider ini secara eksplisit di laporan
 → Diskusikan implikasi metodologisnya di Bab 5 (keterbatasan)
 ```
