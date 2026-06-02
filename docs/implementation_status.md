@@ -43,6 +43,13 @@ Pipeline ingestion telah berhasil dieksekusi untuk kedua konfigurasi vektor dan 
 
 ---
 
+## ⚡ Optimasi UI & Robustness (Phase 2)
+Sebagai bagian dari penyempurnaan keandalan sistem di Phase 2, optimasi berikut telah diterapkan pada frontend chatbot:
+* **Penghapusan Watchdog Timer**: Client-side watchdog timer keras selama 30 detik dihapus sepenuhnya untuk mendukung dokumen/konteks berukuran besar dan memastikan model generator NVIDIA NIM dapat menyelesaikan stream respons secara utuh tanpa interupsi sepihak dari klien.
+* **Peningkatan UX Manual Abort**: Mengenalkan state flag `isUserAborted` untuk mengelola event penghentian stream secara presisi. Jika stream berhenti secara alami, respons ditutup dengan bersih tanpa memicu peringatan. Jika dihentikan secara manual melalui tombol Stop, teks respons yang parsial dipertahankan, ditambahkan catatan kaki peringatan `⚠️ [Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.]`, dan aplikasi kembali ke status `Ready` seketika.
+
+---
+
 ## 🛠️ Modul Pengujian & Verifikasi yang Tersedia
 
 Beberapa script verifikasi mandiri telah dibuat untuk menguji sistem secara aman dan andal:
