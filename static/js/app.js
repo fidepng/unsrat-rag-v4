@@ -460,12 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }, 1800);
             
-            // Watchdog timer (30 seconds)
-            let watchdogTimer = setTimeout(() => {
-                console.warn("[RAG Client] Watchdog timeout triggered.");
-                handleError("Batas waktu koneksi habis (30 detik). Tidak ada respon dari server.");
-                handleAbort();
-            }, 30000);
+
             
             let isFirstToken = true;
             let fullResponseText = "";
@@ -515,10 +510,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             const event = JSON.parse(jsonStr);
                             
                             if (event.type === "token") {
-                                // On first token, clear thinking container & watchdog/thinking intervals
+                                // On first token, clear thinking container & thinking intervals
                                 if (isFirstToken) {
                                     isFirstToken = false;
-                                    clearTimeout(watchdogTimer);
                                     clearInterval(thinkingInterval);
                                     
                                     const thinkingContainer = document.getElementById(`${botMsgId}-thinking`);
@@ -578,7 +572,6 @@ document.addEventListener("DOMContentLoaded", () => {
                                 if (event.type === "token") {
                                     if (isFirstToken) {
                                         isFirstToken = false;
-                                        clearTimeout(watchdogTimer);
                                         clearInterval(thinkingInterval);
                                         const thinkingContainer = document.getElementById(`${botMsgId}-thinking`);
                                         if (thinkingContainer) {
@@ -650,7 +643,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     handleError("Terjadi kegagalan komunikasi dengan server RAG.");
                 }
             } finally {
-                clearTimeout(watchdogTimer);
                 clearInterval(thinkingInterval);
                 setStreamingState(false);
                 
