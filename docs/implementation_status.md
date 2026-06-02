@@ -1,6 +1,6 @@
 # 📊 Status Implementasi Proyek: UNSRAT RAG Chatbot
 
-Laporan ini merinci kemajuan implementasi sistem **UNSRAT RAG Chatbot v4** per **1 Juni 2026**. Proyek saat ini telah menyelesaikan seluruh Phase 1 (Task 1 hingga Task 10) dengan lengkap dan teruji secara menyeluruh. Sistem kini siap untuk masuk ke Phase 2 (Kalibrasi Threshold & Ekspansi Data Evaluasi).
+Laporan ini merinci kemajuan implementasi sistem **UNSRAT RAG Chatbot v4** per **3 Juni 2026**. Proyek saat ini telah menyelesaikan seluruh Phase 1 (Task 1 hingga Task 10) serta Task 11 (Kalibrasi Threshold Empiris) dari Phase 2 dengan lengkap dan teruji secara menyeluruh. Sistem kini berada pada tahap persiapan akhir evaluasi resmi (Task 12 dan Task 13).
 
 ---
 
@@ -20,8 +20,8 @@ Sistem dibagi menjadi 13 Task utama sesuai dengan rencana implementasi (`docs/su
 | **Task 8** | **`app.py` — FastAPI Backend** | ✅ **SELESAI** | Endpoint SSE `/api/chat` (streaming), server static UI, dan stateless model list `/api/models`. |
 | **Task 9** | **`static/` — SPA Frontend** | ✅ **SELESAI** | UI Web dua tab (Chat RAG & Visualisasi Evaluasi Ragas) dengan indikator thinking. |
 | **Task 10**| **`evaluation.py` — Pipeline Evaluasi** | ✅ **SELESAI** | Batch evaluation menggunakan Ragas, analisis statistik Wilcoxon, & ekspor Chart.js/visualisasi. |
-| **Task 11**| **Kalibrasi Threshold Empiris** | ⏳ *BERIKUTNYA* | Pengujian presisi threshold retrieval (`D-B7`) sebelum evaluasi resmi. |
-| **Task 12**| **Persiapan Ground Truth** | ⏳ *BERIKUTNYA* | dataset evaluasi (NL) dari file peraturan akademik (`D-B6`). |
+| **Task 11**| **Kalibrasi Threshold Empiris** | ✅ **SELESAI** | Kalibrasi empiris menggunakan `calibrate_threshold.py` selesai. Threshold `0.3` divalidasi sangat optimal (gap 0.117, midpoint 0.291). |
+| **Task 12**| **Persiapan Ground Truth** | ⏳ *BERIKUTNYA* | Ekspansi dataset evaluasi (NL) dari minimal 3 pertanyaan menjadi 30–50 pasang Q&A (`D-B6`). |
 | **Task 13**| **Evaluasi Resmi & Validasi Akhir** | 📋 Terencana | Pengujian performa komparatif tiga konfigurasi dengan visualisasi performa. |
 
 ---
@@ -46,6 +46,7 @@ Pipeline ingestion telah berhasil dieksekusi untuk kedua konfigurasi vektor dan 
 ## 🛠️ Modul Pengujian & Verifikasi yang Tersedia
 
 Beberapa script verifikasi mandiri telah dibuat untuk menguji sistem secara aman dan andal:
+* **Kalibrasi Threshold**: [calibrate_threshold.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/scripts/calibrate_threshold.py) — Menganalisis gap keputusan cosine distance antara kueri relevan dan tidak relevan untuk menentukan threshold optimal.
 * **Verifikasi Ingestion**: [verify_ingestion.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/tests/verify_ingestion.py) — Menguji jumlah chunk ChromaDB dan kepatuhan format metadata (PRD Section D-B3).
 * **Verifikasi Retriever**: [verify_retriever.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/tests/verify_retriever.py) — Menguji fungsionalitas retrieval Config A, B, dan C dengan query sampel dan threshold filter.
 * **Verifikasi NVIDIA NIM API & Rate Limit**: [test_nvidia_nim_api.py](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/tests/test_nvidia_nim_api.py) — Menguji keandalan pemanggilan model generator dan evaluator NVIDIA NIM dengan pembatasan RPM secara otomatis.
@@ -54,6 +55,7 @@ Beberapa script verifikasi mandiri telah dibuat untuk menguji sistem secara aman
 ---
 
 ## 🎯 Langkah Selanjutnya (Next Steps)
-Fokus berikutnya adalah **Task 11 (Kalibrasi Threshold D-B7)** dan **Task 12 (Persiapan Ground Truth D-B6)**:
-1. Menyusun berkas kalibrasi empiris (`tests/calibrate_threshold.py`) untuk menganalisis akurasi retrieval pada threshold kesamaan berbeda.
-2. Memperluas `eval/dataset/ground_truth.csv` dari 3 pasang data uji menjadi 30–50 pertanyaan-jawaban alami untuk evaluasi ilmiah naskah skripsi.
+Fokus berikutnya adalah **Task 12 (Persiapan Ground Truth D-B6)** dan **Task 13 (Evaluasi Resmi & Validasi Akhir)**:
+1. Memperluas `eval/dataset/ground_truth.csv` dari 3 pasang data uji menjadi 30–50 pertanyaan-jawaban alami untuk evaluasi ilmiah naskah skripsi.
+2. Melakukan pengujian resmi untuk tiga konfigurasi (Config A, Config B, Config C) dengan menjalankan `evaluation.py`.
+3. Menganalisis hasil evaluasi secara statistik menggunakan uji Wilcoxon signed-rank (`python evaluation.py --stats`) dan membuat visualisasi bar chart perbandingan (`python evaluation.py --visualize`).

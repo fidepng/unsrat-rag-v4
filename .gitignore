@@ -26,3 +26,7 @@ context-mode/
 
 reference/
 .playwright-mcp/
+
+# Agent and Graph tools
+.understand-anything/
+GEMINI.md
