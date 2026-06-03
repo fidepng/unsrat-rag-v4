@@ -8,6 +8,16 @@ from datetime import datetime
 from src.config import SYSTEM_LOG_PATH, CHAT_LOG_PATH, INGESTION_LOG_PATH, LOGS_DIR
 
 _loggers: dict[str, logging.Logger] = {}
+_shared_handlers: list[logging.Handler] = []
+
+
+def _reset_logger_manager() -> None:
+    """Helper untuk membersihkan cache logger dan handler selama testing."""
+    global _shared_handlers, _loggers
+    for handler in _shared_handlers:
+        handler.close()
+    _shared_handlers = []
+    _loggers = {}
 
 
 def get_logger(name: str) -> logging.Logger:
@@ -20,35 +30,41 @@ def get_logger(name: str) -> logging.Logger:
     if name in _loggers:
         return _loggers[name]
 
-    LOGS_DIR.mkdir(parents=True, exist_ok=True)
-
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
 
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)-8s | %(name)-15s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    global _shared_handlers
+    if not _shared_handlers:
+        LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
-    from logging.handlers import RotatingFileHandler
+        formatter = logging.Formatter(
+            "%(asctime)s | %(levelname)-8s | %(name)-15s | %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
 
-    # File handler — semua level dengan rotasi file (max 5MB, keep 3 backups)
-    fh = RotatingFileHandler(
-        SYSTEM_LOG_PATH,
-        maxBytes=5 * 1024 * 1024,
-        backupCount=3,
-        encoding="utf-8"
-    )
-    fh.setLevel(logging.DEBUG)
-    fh.setFormatter(formatter)
+        from logging.handlers import RotatingFileHandler
 
-    # Console handler — INFO dan ke atas
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    ch.setFormatter(formatter)
+        # File handler — semua level dengan rotasi file (max 5MB, keep 3 backups)
+        fh = RotatingFileHandler(
+            SYSTEM_LOG_PATH,
+            maxBytes=5 * 1024 * 1024,
+            backupCount=3,
+            encoding="utf-8"
+        )
+        fh.setLevel(logging.DEBUG)
+        fh.setFormatter(formatter)
 
-    logger.addHandler(fh)
-    logger.addHandler(ch)
+        # Console handler — INFO dan ke atas
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.INFO)
+        ch.setFormatter(formatter)
+
+        _shared_handlers = [fh, ch]
+
+    logger.handlers.clear()
+    for handler in _shared_handlers:
+        logger.addHandler(handler)
+        
     logger.propagate = False
 
     _loggers[name] = logger
