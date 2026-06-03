@@ -7,7 +7,7 @@ from pathlib import Path
 import chromadb
 
 # Tambahkan src ke python path
-sys.path.append(str(Path(__file__).parent.parent))
+sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from src.config import (
     CHROMA_DIR_A, CHROMA_DIR_B,

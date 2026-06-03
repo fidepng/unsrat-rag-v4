@@ -3,7 +3,7 @@ import os
 import time
 import sys
 # Inject parent directory to sys.path to allow running as standalone script (best practice)
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
