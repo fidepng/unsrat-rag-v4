@@ -30,8 +30,15 @@ def get_logger(name: str) -> logging.Logger:
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    # File handler — semua level
-    fh = logging.FileHandler(SYSTEM_LOG_PATH, encoding="utf-8")
+    from logging.handlers import RotatingFileHandler
+
+    # File handler — semua level dengan rotasi file (max 5MB, keep 3 backups)
+    fh = RotatingFileHandler(
+        SYSTEM_LOG_PATH,
+        maxBytes=5 * 1024 * 1024,
+        backupCount=3,
+        encoding="utf-8"
+    )
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
 
