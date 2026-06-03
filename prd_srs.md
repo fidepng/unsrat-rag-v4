@@ -22,6 +22,7 @@
 | 7.0     | 2026-05     | \*\*Revisi arsitektur komprehensif: klarifikasi bug citation parsing, fix konflik MAX_RETRIES, klarifikasi retrieved_contexts vs citation_sources untuk Ragas, tambah provider alternatif (Ollama/NIM), upgrade skema log, hapus referensi usang Streamlit/PNG-UI, tambah Section 20 (Biaya Evaluasi & Provider Switching)           |
 | **8.0** | **2026-05** | **Bug fix NIM integration (max_tokens & base_url), tambah Chart.js ke tech stack, klarifikasi memory stateless frontend, tambah panduan NIM embedding, tambah interpretasi skor BM25 vs cosine, tambah gap evaluasi (resume, threshold validation, urutan config), fix prompt engineering, klarifikasi 02-unsrat-red-variants.html** |
 | **9.0** | **2026-05** | **Brainstorming refinement (Socratic): hapus summary chunk (D-B1), slim REQUIRED_YAML_FIELDS ke 3 field (D-B2), hapus priority+chunk_type dari ChromaDB (D-B3), hapus /api/log_transaction (D-B4), ganti reinitialize_llm() dengan _get_llm() stateless (D-B5), panduan ground_truth natural language (D-B6), wajib kalibrasi threshold empiris (D-B7)** |
+| **10.0** | **2026-06** | **Optimalisasi logging dengan rotasi file log otomatis (RotatingFileHandler), penambahan middleware penanganan error global di app.py, modularisasi direktori tests/ dengan mock fixture conftest.py, dan penulisan test suite unit & integrasi lengkap.** |
 
 > **PERINGATAN:** Dokumen ini adalah Sumber Kebenaran Tunggal (Single Source of Truth). Setiap
 > keputusan teknis, nama file, nama variabel, dan nilai parameter yang tercantum di sini adalah
@@ -300,10 +301,17 @@ unsrat-rag/                          ← Root folder proyek (git repository)
 │   ├── chain.py                     ← Logika RAG (retriever + LLM + inline citation)
 │   └── logger_manager.py            ← Logging terpusat (file + CSV audit)
 │
+├── tests/                           ← Modul pengujian terpadu (Pytest)
+│   ├── unit/                        ← Pengujian unit (logger, ingestion, retriever, dll.)
+│   ├── integration/                 ← Pengujian integrasi (FastAPI Chat API & SPA Serving)
+│   ├── scripts/                     ← Skrip verifikasi mandiri (NIM, ingestion, retriever)
+│   └── conftest.py                  ← Fixture mock global (ChromaDB, Gemini, NIM)
+│
 ├── .env                             ← API Keys (TIDAK di-commit)
 ├── .gitignore
 ├── environment.yml
-├── app.py                           ← FastAPI backend (API Controller)
+├── pytest.ini                       ← Konfigurasi penanda pengujian (offline/online)
+├── app.py                           ← FastAPI backend (API Controller + Error Middleware)
 └── evaluation.py                    ← Pipeline evaluasi Ragas (CLI)
 ```
 
@@ -321,6 +329,10 @@ unsrat-rag/                          ← Root folder proyek (git repository)
 | `evaluation.py`         | Load CSV, evaluasi Ragas, statistik, simpan hasil           | CLI langsung                |
 | `static/index.html`     | Entry point SPA: markup HTML dasar                          | Browser (via FastAPI serve) |
 | `static/js/app.js`      | Frontend logic: fetch API, SSE stream, render UI            | Browser                     |
+| `tests/conftest.py`     | Fixture mock global (Chroma, LLM, Embedding)                | Pytest                      |
+| `tests/unit/`           | Suite pengujian unit modular offline                        | Pytest / CLI langsung       |
+| `tests/integration/`    | Suite pengujian integrasi (API & SPA Serving)               | Pytest / CLI langsung       |
+| `tests/scripts/`        | Skrip verifikasi mandiri (NIM, ingestion, retriever)        | CLI langsung                |
 
 > **Prinsip Modularitas Backend:** Semua logika bisnis (RAG, retrieval, LLM) WAJIB ada
 > di dalam `src/`. File `app.py` hanya boleh berisi route handler dan response formatting.
@@ -1345,7 +1357,7 @@ def estimate_tokens(text: str) -> int:
 - Semua file log berada di `logs/` yang ada di `.gitignore`
 - Log tidak pernah berisi API key atau data sensitif
 - `logs/transaksi_chat.csv` dibaca oleh dashboard evaluasi di Tab 2 UI
-- Ukuran `unsrat_rag.log` tidak dibatasi secara otomatis (cukup untuk prototipe penelitian)
+- Ukuran `unsrat_rag.log` dibatasi secara otomatis dengan `RotatingFileHandler` (maksimal 5MB, menyimpan 3 berkas backup) untuk mencegah pembengkakan log.
 
 ---
 
@@ -1481,6 +1493,16 @@ MAX_RETRIES_INGESTION = 5
 # - chain.py: single-query interaktif. Pengguna tidak boleh menunggu >30 detik.
 #   Jika 3x retry gagal, lebih baik tampilkan error + minta coba ulang.
 ```
+
+### 15.3 Penanganan Kesalahan Global Backend (Middleware)
+
+Aplikasi FastAPI (`app.py`) dilengkapi dengan handler eksepsi global menggunakan decorator `@app.exception_handler(Exception)` untuk menangkap seluruh pengecualian yang tidak tertangani selama runtime:
+
+- **Logging**: Traceback kesalahan dicatat secara otomatis ke file log utama (`logs/unsrat_rag.log`) menggunakan `logger.exception()`.
+- **Response**: Mengembalikan status HTTP 500 dengan pesan JSON seragam (bukan raw stack trace yang sensitif demi keamanan):
+  ```json
+  {"detail": "Terjadi kesalahan internal pada server. Silakan hubungi administrator."}
+  ```
 
 ---
 
@@ -2198,4 +2220,38 @@ Rekomendasikan Config X jika memenuhi ≥ 3 dari 4 kriteria:
 
 ---
 
-_Dokumen terakhir direvisi: 30 Mei 2026 | Versi: 9.0_
+## 23. SPESIFIKASI PENGUJIAN & VERIFIKASI (TESTING)
+
+Sistem menggunakan framework `pytest` untuk melakukan pengujian unit dan integrasi secara modular. Pengujian dibagi menjadi mode **offline** (cepat, tanpa API call eksternal) dan mode **online** (memerlukan koneksi API riil).
+
+### 23.1 Konfigurasi Penanda (pytest.ini)
+
+Pembedaan pengujian diatur melalui penanda kustom di `pytest.ini`:
+- `pytest -m offline`: Menjalankan suite pengujian offline menggunakan tiruan (mocking) untuk database ChromaDB, Gemini, dan NIM.
+- `pytest -m online`: Menjalankan suite pengujian yang berinteraksi langsung dengan API eksternal (Google GenAI, NVIDIA NIM).
+
+### 23.2 Mocking Global (tests/conftest.py)
+
+Untuk mendukung pengujian offline yang cepat dan andal, `conftest.py` mendefinisikan fixture mock global yang di-patch secara otomatis ke seluruh berkas pengujian:
+1. `mock_chroma`: Mem-patch `chromadb.PersistentClient` agar tidak membuat berkas database fisik.
+2. `mock_embeddings`: Menyediakan mock untuk class embeddings dan mengembalikan vektor berdimensi statis.
+3. `mock_google_llm` & `mock_nim_llm`: Menyimulasikan respons model Gemini dan NIM dengan teks akademik tiruan.
+
+### 23.3 Skenario Pengujian Unit (tests/unit/)
+
+Pengujian unit memverifikasi kebenaran logika logika modular program:
+- `test_logger_manager.py`: Menguji rotasi log `RotatingFileHandler` dan format output CSV.
+- `test_ingestion.py`: Memvalidasi parsing frontmatter Markdown, pembagian chunk, pembuatan hash ID, dan retry embedding.
+- `test_bm25_retriever.py`: Memvalidasi logika tokenisasi dan pemfilteran kata dasar leksikal.
+- `test_retriever.py`: Menguji fungsionalitas retrieval hibrida dan ambang batas filter similarity.
+- `test_chain.py` & `test_citation_parser.py`: Menguji parsing tanda kurung sitasi `[N]` dan pembuatan struktur respons RAG.
+
+### 23.4 Skenario Pengujian Integrasi (tests/integration/)
+
+Pengujian integrasi memvalidasi interaksi antarmuka HTTP backend:
+- `test_chat_api.py`: Menguji endpoint chat `/api/chat` dalam memancarkan event streaming SSE (thinking, token, citations, done) dan memvalidasi keandalan middleware eksepsi global.
+- `test_spa_serving.py`: Memastikan API root FastAPI menyajikan file `index.html` dan statis assets JavaScript dengan tipe konten (`mime-type`) yang tepat.
+
+---
+
+_Dokumen terakhir direvisi: 4 Juni 2026 | Versi: 10.0_

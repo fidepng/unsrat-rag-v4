@@ -1,6 +1,6 @@
 # Desain Optimalisasi Logging & Testing — unsrat-rag
 
-Spesifikasi desain ini menjelaskan arsitektur dan strategi implementasi untuk meningkatkan sistem logging serta testing pada proyek `unsrat-rag`. Sesuai dengan filosofi pengembangan di [prd_srs-v4.md](file:///D:/Kuliah/Skripsi Repository/unsrat-rag-v4-28.05.2026/prd_srs-v4.md) (Section 13 dan Section 18), desain ini memprioritaskan kesederhanaan, performa, serta kemudahan debugging tanpa mengenalkan dependensi eksternal yang kompleks.
+Spesifikasi desain ini menjelaskan arsitektur dan strategi implementasi untuk meningkatkan sistem logging serta testing pada proyek `unsrat-rag`. Sesuai dengan filosofi pengembangan di [prd_srs.md](file:///D:/Kuliah/Skripsi Repository/unsrat-rag-v4-28.05.2026/prd_srs.md) (Section 13 dan Section 18), desain ini memprioritaskan kesederhanaan, performa, serta kemudahan debugging tanpa mengenalkan dependensi eksternal yang kompleks.
 
 ---
 

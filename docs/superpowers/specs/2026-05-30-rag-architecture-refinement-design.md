@@ -8,8 +8,8 @@
 ## Konteks
 
 Dokumen ini merangkum keputusan arsitektur hasil sesi brainstorming (Socratic design
-refinement) terhadap `prd_srs-v4.md` sebelum fase konstruksi dimulai. Semua perubahan
-di bawah ini telah diaplikasikan langsung ke `prd_srs-v4.md` sebagai Single Source of
+refinement) terhadap `prd_srs.md` sebelum fase konstruksi dimulai. Semua perubahan
+di bawah ini telah diaplikasikan langsung ke `prd_srs.md` sebagai Single Source of
 Truth.
 
 ---
@@ -198,6 +198,6 @@ tanpa validasi empiris. Parameter ini menentukan apakah sistem menjawab atau dia
 
 ## Dampak pada Dokumen
 
-Semua perubahan code-critical (D-B1 s/d D-B5, serta D-B8) telah diaplikasikan ke `prd_srs-v4.md` dan berkas konfigurasi `src/config.py`.
+Semua perubahan code-critical (D-B1 s/d D-B5, serta D-B8) telah diaplikasikan ke `prd_srs.md` dan berkas konfigurasi `src/config.py`.
 D-B6 dan D-B7 didokumentasikan di Section 9.1 dan Section 12.2b PRD.
 D-B8 didokumentasikan pada Section 18 PRD mengenai pilihan opsi model sistem dan antarmuka UI.

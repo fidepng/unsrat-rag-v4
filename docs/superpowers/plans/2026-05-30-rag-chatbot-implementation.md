@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3.11, FastAPI, ChromaDB, LangChain, Google Gemini API, rank-bm25, Ragas, scipy, tiktoken, Chart.js (CDN)
 
-**Spec Reference:** `prd_srs-v4.md` v9.0 — baca sebelum mengeksekusi setiap task.
+**Spec Reference:** `prd_srs.md` v9.0 — baca sebelum mengeksekusi setiap task.
 
 ---
 
