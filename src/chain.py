@@ -382,3 +382,25 @@ def _log_transaction(
         found_state=found,
         answer_preview=answer[:200],
     )
+
+
+def run_rag_chain(
+    query: str,
+    config_choice: str = "b",
+    model_name: str = "nvidia/llama-3.1-nemotron-nano-8b-v1"
+) -> dict:
+    """
+    Orchestrate retrieve + prompt + generation sync for unit test/mock matching.
+    """
+    res = get_response(
+        query=query,
+        config=config_choice,
+        chat_history=[],
+        model_name=model_name,
+        streaming=False
+    )
+    return {
+        "answer": res["answer"],
+        "sources": res["citation_sources"],
+        "found_state": res["found"],
+    }

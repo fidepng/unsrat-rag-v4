@@ -52,6 +52,6 @@ def mock_nim_llm():
         mock_openai_class.return_value = mock_instance
         
         mock_response = MagicMock()
-        mock_response.content = "UNSRAT"
+        mock_response.content = "Berdasarkan pedoman akademik [1], mahasiswa dapat mengambil maksimal 24 SKS."
         mock_instance.invoke.return_value = mock_response
         yield mock_instance
