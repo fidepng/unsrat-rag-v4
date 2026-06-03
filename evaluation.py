@@ -288,7 +288,7 @@ def run_statistical_test() -> None:
         )
 
     results = []
-    for metric in METRICS_COLS:
+    for metric in METRICS_COLS + ["response_time_seconds"]:
         if metric not in df_a.columns or metric not in df_b.columns:
             continue
         scores_a = df_a[metric].dropna()
@@ -299,7 +299,10 @@ def run_statistical_test() -> None:
             significant = p_value < 0.05
             winner = None
             if significant:
-                winner = "Config B" if scores_b.mean() > scores_a.mean() else "Config A"
+                if metric == "response_time_seconds":
+                    winner = "Config B" if scores_b.mean() < scores_a.mean() else "Config A"
+                else:
+                    winner = "Config B" if scores_b.mean() > scores_a.mean() else "Config A"
             results.append({
                 "metric": metric,
                 "wilcoxon_statistic": round(stat, 4),
