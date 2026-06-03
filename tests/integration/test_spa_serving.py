@@ -8,6 +8,7 @@ from app import app
 
 client = TestClient(app)
 
+@pytest.mark.offline
 def test_root_serves_index_html():
     """Verifikasi endpoint root (/) mengembalikan static/index.html dengan benar."""
     response = client.get("/")
@@ -16,6 +17,7 @@ def test_root_serves_index_html():
     assert "Asisten Informasi Akademik UNSRAT" in response.text
     assert '<script src="/static/js/app.js"></script>' in response.text
 
+@pytest.mark.offline
 def test_static_files_js_app_served():
     """Verifikasi /static/js/app.js disajikan dengan status 200 dan tipe konten yang tepat."""
     response = client.get("/static/js/app.js")

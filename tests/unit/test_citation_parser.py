@@ -9,6 +9,7 @@ import pytest
 from src.chain import parse_cited_indices
 
 
+@pytest.mark.offline
 class TestParseCitedIndices:
     """Test suite untuk parse_cited_indices (PRD Section 6.5)."""
 
