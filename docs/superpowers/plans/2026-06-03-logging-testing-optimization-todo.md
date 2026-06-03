@@ -4,7 +4,7 @@ This file tracks the execution of the Logging & Testing Optimization implementat
 
 - [x] **Task 1: Setup Pytest Configuration & Test Markers**
 - [x] **Task 2: Migrate Files & Set Up Global Mocks in conftest.py**
-- [ ] **Task 3: Implement Logging Optimization (RotatingFileHandler)**
+- [x] **Task 3: Implement Logging Optimization (RotatingFileHandler)**
 - [ ] **Task 4: Implement Ingestion Unit Tests**
 - [ ] **Task 5: Implement BM25 Retriever Unit Tests**
 - [ ] **Task 6: Implement Retriever Unit Tests**
