@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asisten Informasi Akademik UNSRAT</title>
     <meta name="description" content="Sistem RAG Informasi Regulasi Akademik Universitas Sam Ratulangi">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts Inter & Crimson Pro -->
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -22,6 +22,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
                     }
                 }
             }
@@ -65,7 +66,7 @@
                       <img src="/static/assets/logo-unsrat.png" alt="UNSRAT" class="w-8 h-8 object-contain" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'white\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M12 14l9-5-9-5-9 5 9 5z\'/><path d=\'M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z\'/></svg>'">
                   </div>
                   <div>
-                      <h2 class="font-bold text-base leading-tight uppercase tracking-wider">UNSRAT</h2>
+                      <h2 class="font-serif font-bold text-xl leading-tight uppercase tracking-wider">UNSRAT</h2>
                       <p class="text-white/60 text-[10px] uppercase font-bold tracking-widest">Asisten Akademik</p>
                   </div>
               </div>
@@ -204,7 +205,7 @@
           <div id="tab-eval" class="hidden flex-1 flex flex-col h-full overflow-y-auto px-8 py-6 space-y-6 custom-scrollbar pb-10">
               <div class="flex items-center justify-between border-b border-gray-200 pb-3">
                   <div>
-                      <h2 class="font-bold text-xl text-gray-850 tracking-tight flex items-center space-x-2">
+                      <h2 class="font-serif font-bold text-2xl text-gray-800 tracking-tight flex items-center space-x-2">
                           <i data-lucide="line-chart" class="w-5 h-5 text-[#7B2D2D]"></i>
                           <span>Laporan Pengujian & Evaluasi Kuantitatif RAGAS</span>
                       </h2>
