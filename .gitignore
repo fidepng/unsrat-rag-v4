@@ -30,3 +30,11 @@ reference/
 # Agent and Graph tools
 .understand-anything/
 GEMINI.md
+
+# Local AI / Developer Tooling
+.agents/
+.claude/
+.cursor/
+.gemini/
+.impeccable/
+.kiro/
