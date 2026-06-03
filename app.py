@@ -22,6 +22,17 @@ logger = get_logger("app")
 
 app = FastAPI(title="UNSRAT RAG Chatbot API", version="1.0.0")
 
+from fastapi.responses import JSONResponse
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    logger.exception(f"Unhandled exception occurred during request to {request.url.path}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Terjadi kesalahan internal pada server. Silakan hubungi administrator."}
+    )
+
+
 
 # ── Request/Response Models ────────────────────────────────────────────────────
 
