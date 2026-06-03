@@ -7,6 +7,6 @@ This file tracks the execution of the Logging & Testing Optimization implementat
 - [x] **Task 3: Implement Logging Optimization (RotatingFileHandler)**
 - [x] **Task 4: Implement Ingestion Unit Tests**
 - [x] **Task 5: Implement BM25 Retriever Unit Tests**
-- [ ] **Task 6: Implement Retriever Unit Tests**
+- [x] **Task 6: Implement Retriever Unit Tests**
 - [ ] **Task 7: Implement RAG Chain Unit Tests**
 - [ ] **Task 8: Implement FastAPI Exception Logging Middleware & Integration Tests**
