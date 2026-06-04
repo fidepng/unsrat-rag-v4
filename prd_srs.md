@@ -4,7 +4,7 @@
 
 **Nama Mahasiswa:** Teofide W. K. Pangemanan
 **NIM:** 220211060317
-**Program Studi:** Informatika / Ilmu Komputer
+**Program Studi:** Informatika
 **Universitas:** Universitas Sam Ratulangi (UNSRAT) Manado
 
 ---
@@ -20,9 +20,10 @@
 | 5.0     | 2026-05     | Tambah Config C (BM25), 5 metrik Ragas, pengukuran latensi, UI model switcher, uji Wilcoxon, analisis kegagalan, mitigasi self-eval bias, Section 19 Rencana Analisis Bab IV                                                                                                                                                         |
 | 6.0     | 2026-05     | Sinkronisasi penuh dengan codebase aktual: migrasi FastAPI+SPA, hapus category UI, tambah logging terpusat, inline citation, git workflow, context7, revisi model evaluator                                                                                                                                                          |
 | 7.0     | 2026-05     | \*\*Revisi arsitektur komprehensif: klarifikasi bug citation parsing, fix konflik MAX_RETRIES, klarifikasi retrieved_contexts vs citation_sources untuk Ragas, tambah provider alternatif (Ollama/NIM), upgrade skema log, hapus referensi usang Streamlit/PNG-UI, tambah Section 20 (Biaya Evaluasi & Provider Switching)           |
-| **8.0** | **2026-05** | **Bug fix NIM integration (max_tokens & base_url), tambah Chart.js ke tech stack, klarifikasi memory stateless frontend, tambah panduan NIM embedding, tambah interpretasi skor BM25 vs cosine, tambah gap evaluasi (resume, threshold validation, urutan config), fix prompt engineering, klarifikasi 02-unsrat-red-variants.html** |
-| **9.0** | **2026-05** | **Brainstorming refinement (Socratic): hapus summary chunk (D-B1), slim REQUIRED_YAML_FIELDS ke 3 field (D-B2), hapus priority+chunk_type dari ChromaDB (D-B3), hapus /api/log_transaction (D-B4), ganti reinitialize_llm() dengan _get_llm() stateless (D-B5), panduan ground_truth natural language (D-B6), wajib kalibrasi threshold empiris (D-B7)** |
-| **10.0** | **2026-06** | **Optimalisasi logging dengan rotasi file log otomatis (RotatingFileHandler), penambahan middleware penanganan error global di app.py, modularisasi direktori tests/ dengan mock fixture conftest.py, dan penulisan test suite unit & integrasi lengkap.** |
+| 8.0     | 2026-05     | **Bug fix NIM integration (max_tokens & base_url), tambah Chart.js ke tech stack, klarifikasi memory stateless frontend, tambah panduan NIM embedding, tambah interpretasi skor BM25 vs cosine, tambah gap evaluasi (resume, threshold validation, urutan config), fix prompt engineering, klarifikasi 02-unsrat-red-variants.html** |
+| 9.0     | 2026-05     | **Brainstorming refinement (Socratic): hapus summary chunk (D-B1), slim REQUIRED_YAML_FIELDS ke 3 field (D-B2), hapus priority+chunk_type dari ChromaDB (D-B3), hapus /api/log_transaction (D-B4), ganti reinitialize_llm() dengan _get_llm() stateless (D-B5), panduan ground_truth natural language (D-B6), wajib kalibrasi threshold empiris (D-B7)** |
+| 10.0    | 2026-06     | **Optimalisasi logging dengan rotasi file log otomatis (RotatingFileHandler), penambahan middleware penanganan error global di app.py, modularisasi direktori tests/ dengan mock fixture conftest.py, dan penulisan test suite unit & integrasi lengkap.** |
+| **11.0**| **2026-06** | **Penyelarasan menyeluruh dengan codebase riil: integrasi scripts/calibrate_threshold.py, sinkronisasi model AVAILABLE_MODELS, penyesuaian skema CSV hasil evaluasi (category, source_doc), perbaikan UI empty states, aturan commit Git campuran bahasa, penambahan FR-35, FR-36, FR-37, NFR-11, NFR-12, dan spesifikasi sub-bagian 23.5.** |
 
 > **PERINGATAN:** Dokumen ini adalah Sumber Kebenaran Tunggal (Single Source of Truth). Setiap
 > keputusan teknis, nama file, nama variabel, dan nilai parameter yang tercantum di sini adalah
@@ -116,6 +117,8 @@ UNSRAT tentang:
 > **Prinsip Utama:** Setiap keputusan teknis harus melewati filter ini:
 > _"Apakah kompleksitas tambahan ini secara langsung meningkatkan kualitas penelitian atau
 > kemudahan debugging? Jika tidak, jangan tambahkan."_
+>
+> **Filosofi Inti:** Selalu mulai dari yang paling minimal dan berhasil (working minimum). Jangan membuat sistem menjadi terlalu kompleks secara prematur yang hanya akan membuat ribet, sulit didebug, dan mengacaukan fokus utama penelitian. Sederhanakan alur kerja dan hindari over-engineering.
 
 | Fitur                        | Status           | Alasan                                                             |
 | ---------------------------- | ---------------- | ------------------------------------------------------------------ |
@@ -128,7 +131,6 @@ UNSRAT tentang:
 | Database SQL chat history    | ❌ Tidak dipakai | In-memory sudah cukup                                              |
 | Google Search Grounding      | ❌ Dilarang      | Biaya tambahan + keluar dari scope RAG                             |
 | Multi-language support       | ❌ Tidak dipakai | Fokus Bahasa Indonesia                                             |
-| Streamlit UI                 | ❌ Digantikan    | FastAPI + SPA memberikan kontrol DOM penuh dan tidak re-run script |
 | Tiktoken (estimasi token)    | ✅ Dipakai       | Estimasi token offline tanpa API call tambahan (D-A5)              |
 | Ollama / NVIDIA NIM          | ✅ Opsional      | Alternatif cost-free untuk skenario evaluasi; lihat Section 18     |
 
@@ -192,18 +194,31 @@ dependencies:
 
 ### 3.3 Frontend Dependencies (CDN — Tidak Perlu Install)
 
-| Library  | Versi | Digunakan Di       | Catatan                                              |
-| -------- | ----- | ------------------ | ---------------------------------------------------- |
-| Chart.js | 4.x   | `static/js/app.js` | Grouped bar chart komparasi 3 config di Tab Evaluasi |
+| Library       | Versi | Digunakan Di       | Catatan                                                          |
+| ------------- | ----- | ------------------ | ---------------------------------------------------------------- |
+| Chart.js      | 4.x   | `static/js/app.js` | Grouped bar chart komparasi 3 config di Tab Evaluasi             |
+| Tailwind CSS  | 3.x   | `static/index.html`| Styling framework utility-first untuk desain antarmuka premium    |
+| Lucide Icons  | Latest| `static/index.html`| SVG Icon pack interaktif untuk navigasi dan tombol               |
+| Marked.js     | Latest| `static/index.html`| Parser Markdown UMD untuk merender teks jawaban LLM secara rapi  |
+| Google Fonts  | —     | `static/index.html`| Font keluarga Inter (Sans-serif) & Crimson Pro (Serif)           |
 
 Dimuat via CDN di `static/index.html`:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<!-- Google Fonts Inter & Crimson Pro -->
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Marked.js (Markdown Parser UMD) -->
+<script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 ```
 
 > Tidak perlu diinstall ke conda environment. Tidak ada build step.
-> use context7 untuk mendapatkan dokumentasi terbaru
+> Gunakan `use context7` untuk mendapatkan dokumentasi terbaru jika diperlukan.
 
 ### 3.4 Model AI
 
@@ -302,10 +317,30 @@ unsrat-rag/                          ← Root folder proyek (git repository)
 │   └── logger_manager.py            ← Logging terpusat (file + CSV audit)
 │
 ├── tests/                           ← Modul pengujian terpadu (Pytest)
-│   ├── unit/                        ← Pengujian unit (logger, ingestion, retriever, dll.)
+│   ├── __init__.py
+│   ├── conftest.py                  ← Fixture mock global (ChromaDB, Gemini, NIM)
+│   ├── unit/                        ← Pengujian unit (offline)
+│   │   ├── __init__.py
+│   │   ├── test_bm25_retriever.py   ← Unit test indeks dan retrieval BM25
+│   │   ├── test_chain.py            ← Unit test pipeline RAG chain
+│   │   ├── test_citation_parser.py  ← Unit test regex parser citation
+│   │   ├── test_ingestion.py        ← Unit test parser YAML & splitter
+│   │   ├── test_logger_manager.py   ← Unit test modular log manager
+│   │   └── test_retriever.py        ← Unit test routing retriever
+│   │
 │   ├── integration/                 ← Pengujian integrasi (FastAPI Chat API & SPA Serving)
-│   ├── scripts/                     ← Skrip verifikasi mandiri (NIM, ingestion, retriever)
-│   └── conftest.py                  ← Fixture mock global (ChromaDB, Gemini, NIM)
+│   │   ├── __init__.py
+│   │   ├── test_chat_api.py         ← Integrasi endpoints chat
+│   │   └── test_spa_serving.py      ← Integrasi SPA static assets serving
+│   │
+│   └── scripts/                     ← Skrip verifikasi mandiri (CLI tools)
+│       ├── __init__.py
+│       ├── test_nvidia_nim_api.py   ← Uji coba konektivitas NIM API
+│       ├── verify_ingestion.py      ← Verifikasi hasil ingestion
+│       └── verify_retriever.py      ← Verifikasi hasil retrieval
+│
+├── scripts/                         ← Skrip utilitas/pemeliharaan
+│   └── calibrate_threshold.py       ← Skrip kalibrasi threshold RAG secara empiris
 │
 ├── .env                             ← API Keys (TIDAK di-commit)
 ├── .gitignore
@@ -333,6 +368,7 @@ unsrat-rag/                          ← Root folder proyek (git repository)
 | `tests/unit/`           | Suite pengujian unit modular offline                        | Pytest / CLI langsung       |
 | `tests/integration/`    | Suite pengujian integrasi (API & SPA Serving)               | Pytest / CLI langsung       |
 | `tests/scripts/`        | Skrip verifikasi mandiri (NIM, ingestion, retriever)        | CLI langsung                |
+| `scripts/calibrate_threshold.py` | Menghitung gap cosine distance untuk kalibrasi threshold optimal | CLI langsung        |
 
 > **Prinsip Modularitas Backend:** Semua logika bisnis (RAG, retrieval, LLM) WAJIB ada
 > di dalam `src/`. File `app.py` hanya boleh berisi route handler dan response formatting.
@@ -357,10 +393,6 @@ unsrat-rag/                          ← Root folder proyek (git repository)
 | 9   | `Kalender_Akademik_UNSRAT_Genap_2025-2026.md`   | UNSRAT-CAL-2026-001     | calendar            | calendar     | 2        | ✅ Siap    |
 | 10+ | `faq.md`                                        | UNSRAT-FAQ-001          | faq                 | guide        | 2        | ⏳ PENDING |
 
-> **Catatan:** Field `category` digunakan sebagai metadata di ChromaDB untuk
-> keperluan audit dan filtering pada `error_analysis`. Ia TIDAK digunakan sebagai
-> pre-filter saat retrieval runtime (lihat D-A2).
-
 ### 5.2 Standar YAML Frontmatter v2.0
 
 Setiap file corpus WAJIB memiliki YAML frontmatter. Field kritis yang WAJIB terisi:
@@ -371,64 +403,17 @@ Setiap file corpus WAJIB memiliki YAML frontmatter. Field kritis yang WAJIB teri
 | `title`             | ✅     | Sama persis dengan judul di dokumen asli                         |
 | `category`          | ✅     | Metadata ChromaDB; digunakan untuk error analysis post-hoc       |
 | `content_type`      | ⬜     | Opsional — metadata ChromaDB; tidak dipakai untuk filter runtime |
-| `valid_from`        | ⬜     | Opsional — dokumentasi tanggal berlaku dokumen                   |
 | `status`            | ⬜     | Opsional — file yang ada di `data/corpus/` dianggap aktif        |
-| `retrieval_summary` | ⬜     | Opsional — catatan dokumentasi manusia; tidak dibuat chunk       |
-| `chunk_strategy`    | ⬜     | Opsional — dokumentasi metodologi (tidak runtime, D-A1)          |
-| `last_updated`      | ⬜     | Opsional — tidak disimpan di ChromaDB                            |
 
-**Contoh lengkap (field wajib + kritis):**
+**Contoh lengkap minimalis (hanya 3 field wajib + metadata opsional penting):**
 
 ```yaml
 ---
 doc_id: "UNSRAT-REG-2025-001"
 title: "Peraturan Rektor UNSRAT Nomor 01 Tahun 2025 tentang Peraturan Akademik"
-version: "1.0"
-language_primary: "id"
-institution: "Universitas Sam Ratulangi"
-unit_penerbit: "Rektorat"
-content_type: "regulation"
 category: "academic"
-subcategory:
-  - "perkuliahan"
-  - "evaluasi"
-  - "wisuda"
-audience:
-  - "mahasiswa_s1"
-  - "dosen"
-access_level: "public"
-nomor_sk: "01/2025"
-tanggal_penetapan: "2025-02-13"
-pejabat_penandatangan: "Oktovian Berty Alexander Sompie, Rektor UNSRAT"
-source_document: "Peraturan-Rektor-Unsrat-Nomor-1-tahun-2025.pdf"
-valid_from: "2025-02-13"
-valid_until: null
-status: "active"
-last_updated: "2025-12-16"
-last_verified: "2025-12-16"
-retrieval_summary: "Peraturan Rektor UNSRAT Nomor 01 Tahun 2025 mengatur
-  seluruh aspek akademik program sarjana di Universitas Sam Ratulangi,
-  mencakup sistem kredit semester (SKS), pengisian KRS, evaluasi, cuti
-  akademik, yudisium, dan wisuda. Berlaku bagi seluruh mahasiswa S1 dan
-  dosen mulai Februari 2025."
-chunk_strategy: "by_section"
-chunk_notes: "Unit atomik adalah Pasal. Jangan memotong di tengah Pasal."
-embedding_model: "gemini-embedding-001"
-priority: 1
-related_docs:
-  - "UNSRAT-CAL-2026-001"
-tags:
-  - peraturan_akademik
-  - kelulusan
-  - wisuda
-keywords:
-  - "SKS"
-  - "KRS"
-  - "IPK"
-  - "yudisium"
-entities:
-  - "Oktovian Berty Alexander Sompie"
-  - "Portal INSPIRE"
+content_type: "regulation" # Opsional
+status: "active"           # Opsional
 ---
 ```
 
@@ -447,15 +432,14 @@ entities:
 │  Dijalankan SEKALI per config via CLI           │
 │                                                 │
 │  1. Parse YAML frontmatter → ekstrak metadata   │
-│  2. Buat "summary chunk" dari retrieval_summary │
-│  3. MarkdownHeaderTextSplitter (struktural)     │
-│  4. RecursiveCharacterTextSplitter (ukuran)     │
-│  5. Filter: buang chunk < MIN_CHUNK_LENGTH      │
-│  6. Cek hash per chunk → skip jika duplikat     │
-│  7. Embed via gemini-embedding-001              │
+│  2. MarkdownHeaderTextSplitter (struktural)     │
+│  3. RecursiveCharacterTextSplitter (ukuran)     │
+│  4. Filter: buang chunk < MIN_CHUNK_LENGTH      │
+│  5. Cek hash per chunk → skip jika duplikat     │
+│  6. Embed via gemini-embedding-001              │
 │     (task_type = "retrieval_document")          │
-│  8. Simpan ke ChromaDB collection terpisah      │
-│  9. Log progress ke logger_manager              │
+│  7. Simpan ke ChromaDB collection terpisah      │
+│  8. Log progress ke logger_manager              │
 └─────────────────────────────────────────────────┘
           │
           ▼
@@ -694,8 +678,13 @@ Semua parameter sistem wajib didefinisikan di `src/config.py`.
 # src/config.py — CANONICAL CONFIGURATION FILE
 
 import os
+import warnings
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Suppress library deprecation and future warnings from underlying SDKs
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 load_dotenv()
 
@@ -735,8 +724,11 @@ AVAILABLE_MODELS: list[str] = [
     "gemini-3.1-flash-lite",
     "gemini-2.5-pro",
     "gemini-2.5-flash",
+    "gemini-2.5-flash-lite",
+    "llama-3.1-8b-instruct",
     "llama-3.1-nemotron-nano-8b-v1",
     "llama-3.3-nemotron-super-49b-v1.5",
+    "gemma-4-31b-it",
 ]
 
 # ── CHUNKING — CONFIG A ──────────────────────────────────────
@@ -919,7 +911,7 @@ user_input,reference,category,source_doc,notes
 ### 9.2 Skema CSV Hasil (`eval/results/hasil_config_*.csv`)
 
 ```csv
-user_input,reference,response,retrieved_contexts,citation_sources_count,faithfulness,answer_relevancy,context_precision,context_recall,response_time_seconds
+user_input,reference,response,retrieved_contexts,citation_sources_count,faithfulness,answer_relevancy,context_precision,context_recall,response_time_seconds,category,source_doc
 ```
 
 > **CATATAN KRITIS — `retrieved_contexts`:**
@@ -1057,7 +1049,7 @@ data: {"type": "error", "message": "Pesan error dalam Bahasa Indonesia"}
 - Tabel uji Wilcoxon (A vs B)
 - Bar chart perbandingan 3 config (di-render via JavaScript dari data API — BUKAN membaca file PNG)
 - Tabel live audit log (5 transaksi terakhir dari `transaksi_chat.csv`)
-- Instruksi CLI jika belum ada hasil evaluasi
+- Tampilan state kosong (empty state) yang informatif jika data evaluasi belum tersedia
 
 > **CATATAN `perbandingan_visual.png`:** File ini TETAP dihasilkan oleh
 > `python evaluation.py --visualize` untuk keperluan lampiran skripsi dan laporan.
@@ -1131,19 +1123,25 @@ hideThinkingIndicator();
 showErrorBubble(message); // tampilkan bubble error dengan warna/style berbeda
 ```
 
-### 11.6 Akuntabilitas Elemen UI Tab Evaluasi
+### 11.6 Akuntabilitas Elemen UI Seluruh Sistem
 
-Setiap elemen di Tab Evaluasi harus dapat dipertanggungjawabkan sumber data dan dampak interpretasinya:
+Setiap elemen yang tampil pada antarmuka pengguna (UI) harus dapat dipertanggungjawabkan dari segi alur data, fungsi operasionalnya, serta dampak ilmiah terhadap interpretasi hasil penelitian:
 
-| Elemen UI                      | Sumber Data                         | Fungsi                                            | Dampak Interpretasi Jika Salah                                             |
-| ------------------------------ | ----------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------- |
-| Tabel mean ± std metrik        | `hasil_config_*.csv`                | Menunjukkan performa rata-rata per config         | Mean tanpa std menyembunyikan inkonsistensi sistem                         |
-| Tabel Wilcoxon p-value         | `statistical_test.csv`              | Membuktikan perbedaan signifikan secara statistik | p-value tanpa konteks jumlah sampel bisa menyesatkan                       |
-| Bar chart 3 config             | Data dari `/api/evaluation`         | Visualisasi komparasi cepat antar config          | Skala Y yang tidak dimulai dari 0 bisa memperbesar kesan perbedaan         |
-| Audit log 5 transaksi terakhir | `transaksi_chat.csv`                | Debugging real-time dan monitoring sistem         | Bukan representasi statistik — hanya 5 transaksi terbaru                   |
-| `context_recall` score         | Ragas evaluate (retrieved_contexts) | Mengukur apakah semua info relevan ter-retrieve   | BIAS ke atas jika hanya citation_sources yang dimasukkan ke Ragas          |
-| `faithfulness` score           | Ragas evaluate                      | Mengukur apakah jawaban tidak mengarang           | Dipengaruhi kualitas model evaluator — dokumentasikan model yang digunakan |
-| `response_time_seconds`        | `time.time()` di evaluation.py      | Mengukur latensi end-to-end                       | Termasuk latensi jaringan API — bukan murni komputasi lokal                |
+| Kategori UI | Elemen UI | Sumber Data | Fungsi / Cara Kerja | Dampak Interpretasi / Validitas Ilmiah |
+| :--- | :--- | :--- | :--- | :--- |
+| **Sidebar & Navigasi** | Konfigurasi Retrieval (`config-select`) | Input manual pengguna (`a`, `b`, atau `c`) | Menentukan target ChromaDB collection (Config A/B) atau index BM25 (Config C) yang akan di-query. | Menentukan parameter utama komparasi ukuran chunk (500 vs 2000 char) dan jenis pencarian (vektor vs keyword). |
+| **Sidebar & Navigasi** | Model Generator LLM (`model-select`) | Route `/api/config` | Memilih model generator aktif yang didukung sistem (Gemini/NIM). | Menentukan kualitas penalaran jawaban. Jika diubah di tengah jalan, mempengaruhi objektivitas waktu respons dan evaluasi Ragas. |
+| **Sidebar & Navigasi** | Reset Percakapan (`reset-btn`) | Aksi client-side di [app.js](file:///D:/Kuliah/Skripsi%20Repository/unsrat-rag-v4-28.05.2026/static/js/app.js) | Mengosongkan array `chatHistory` di sisi browser. | Backend bersifat stateless, sehingga tombol ini memutus konteks percakapan secara absolut tanpa memanggil API database server. |
+| **Sidebar & Navigasi** | Status Koneksi (`status-info`) | Sensor fetch HTTP client | Menampilkan status kesiapan server (`Ready`, `Thinking`, atau `Offline`). | Memastikan sistem berada dalam keadaan responsif sebelum pengguna mengirimkan query baru. |
+| **Tab 1: Chatbot** | Welcome Panel & Quick Fill | HTML Statis | Menyediakan tombol pintas pertanyaan-pertanyaan dasar regulasi akademik. | Memandu pengguna baru untuk mengetes sistem dengan batasan scope yang relevan. |
+| **Tab 1: Chatbot** | Indikator Berpikir (Thinking Indicator) | SSE event `thinking` | Menampilkan animasi tiga titik berdenyut sebelum token jawaban pertama terkirim. | Memberikan umpan balik visual instan agar pengguna tidak menganggap sistem hang selama model LLM menyusun respons. |
+| **Tab 1: Chatbot** | Jawaban Asisten & Citation Inline `[N]` | SSE event `token` | Merender teks jawaban yang dilengkapi dengan marker rujukan sitasi. | Menjamin jawaban tidak mengalami halusinasi dan bersumber valid dari dokumen peraturan. |
+| **Tab 1: Chatbot** | Panel Citasi (Citation Card) | SSE event `citations` | Merender kartu referensi (judul file, bab, pasal, dan cuplikan paragraf asli). | Menyajikan bukti autentik kepada pengguna untuk cross-check kebenaran teks regulasi secara langsung. |
+| **Tab 2: Evaluasi** | Metadata Parameter Pengujian | Route `/api/evaluation` (key `metadata`) | Menampilkan tanggal evaluasi terakhir, ukuran dataset ground-truth, model generator, model evaluator, dan model embedding. | Menjamin integritas ilmiah dan reproduktibilitas pengujian komparatif (mencegah *self-evaluation bias*). |
+| **Tab 2: Evaluasi** | Tabel mean ± std metrik | File `hasil_config_*.csv` via API | Menampilkan skor rata-rata (*mean*) dan deviasi standar (*std*) dari 5 metrik utama. | Deviasi standar yang besar menunjukkan inkonsistensi performa generator di bawah konfigurasi tersebut. |
+| **Tab 2: Evaluasi** | Tabel Wilcoxon p-value | File `statistical_test.csv` via API | Menampilkan hasil uji signifikansi, p-value, signifikansi pada α=0.05, dan pemenang komparasi. | Menentukan apakah hipotesis perbedaan performa Config A vs B terbukti secara matematis atau hanya kebetulan. |
+| **Tab 2: Evaluasi** | Bar Chart 3 Config | Lib JavaScript Chart.js di-render dinamis | Visualisasi grafis perbandingan skor rata-rata kelima metrik. | Skala sumbu Y wajib terkunci dari 0 hingga 1.0 agar tidak memicu distorsi persepsi perbedaan skor yang sempit. |
+| **Tab 2: Evaluasi** | Live Audit Log (5 Transaksi Terakhir) | File `transaksi_chat.csv` via API | Menampilkan baris logs aktivitas query terakhir pengguna (config, best score, latency). | Digunakan sebagai utilitas debugging cepat untuk melihat performa sistem secara dinamis pada runtime. |
 
 ---
 
@@ -1423,10 +1421,12 @@ cited_indices = parse_cited_indices(answer_text, max_source_index=len(retrieved_
 
 ### 14.3 Aturan Commit Git
 
-Setiap commit HARUS menggunakan format pesan yang jelas:
+Setiap commit HARUS menggunakan format pesan yang jelas. Aturan penulisan pesan commit dapat menggunakan campuran Bahasa Indonesia dan Bahasa Inggris (mix):
+- Istilah teknis, nama file, parameter, atau kode yang secara default menggunakan Bahasa Inggris tidak perlu diterjemahkan ke Bahasa Indonesia (misal: *RAG chain*, *inline citation*, *streaming mode*, *double API call*, *setup environment*).
+- Bahasa Indonesia yang aman digunakan adalah untuk kalimat/kata deskriptif.
 
 ```
-<type>: <deskripsi singkat dalam bahasa Indonesia>
+<type>: <deskripsi singkat (campuran Indonesia + Inggris)>
 
 Tipe yang valid:
   feat     — fitur baru
@@ -1809,6 +1809,13 @@ Model embedding NVIDIA NIM yang tersedia dan telah diidentifikasi:
 3. Verifikasi dimensi vektor konsisten antara ingestion dan query di `chromadb` collection
 4. Untuk komparabilitas penelitian: **jangan ganti embedding model di tengah siklus evaluasi**
 
+### 18.4b Rencana Alternatif: Gemini Embedding v2 (Belum Diimplementasikan)
+
+> **Rencana Masa Depan:** Sebagai alternatif masa depan dari model embedding kanonik `gemini-embedding-001`, model **`text-embedding-004` (Gemini Embedding v2 / text-embedding-004)** direncanakan untuk digunakan jika membutuhkan akurasi pencarian semantik yang lebih tinggi dan dimensi vektor yang dapat disesuaikan.
+>
+> **Status:** Belum diimplementasikan (rencana alternatif).
+> **Konsekuensi Jika Diimplementasikan:** Sama seperti penggantian model embedding lainnya, jika model ini diaktifkan di masa mendatang, seluruh database ChromaDB wajib di-rebuild dari awal via `ingestion.py --rebuild` agar dimensi dan ruang vektor seluruh chunk seragam. Hal ini karena representasi dimensi vektor model embedding v2 berbeda dengan model v1.
+
 ### 18.5 Peringatan Komparabilitas Hasil Evaluasi
 
 > **⚠️ KRITIS UNTUK METODOLOGI PENELITIAN**
@@ -1969,7 +1976,7 @@ Config A vs B, menyimpan ke `statistical_test.csv`.
 ### FR-24: Model Switcher UI & Backend
 
 Frontend HARUS menyediakan selectbox model dari `AVAILABLE_MODELS`. Pilihan dikirim ke
-backend via request body `/api/chat`, diteruskan ke `reinitialize_llm(model_name)` di `chain.py`.
+backend via request body `/api/chat`, diteruskan ke `_get_llm(model_name)` secara stateless di `chain.py`.
 
 ### FR-25: Config C Evaluation Support
 
@@ -2034,6 +2041,18 @@ menyembunyikannya saat token pertama dari event `token` diterima. Lihat Section 
 metrik tersebut jika flag `--extra-metrics <nama_metrik>` diberikan. Kode HARUS disiapkan
 untuk mengakomodasi `context_entity_recall` dan metrik opsional lain di masa depan.
 
+### FR-35: Global Exception Handling Middleware
+
+FastAPI Backend (`app.py`) HARUS mengimplementasikan middleware penanganan kesalahan global (`@app.exception_handler(Exception)`) untuk menangkap pengecualian tidak terduga pada runtime, mencatat traceback lengkap ke file log sistem, dan mengembalikan respons HTTP 500 dalam format JSON standar demi keamanan.
+
+### FR-36: Log Rotation (RotatingFileHandler)
+
+Sistem logging pada `logger_manager.py` HARUS menggunakan `RotatingFileHandler` untuk file log utama `unsrat_rag.log` dengan pembatasan ukuran berkas maksimum 5 MB dan backup sebanyak 3 berkas guna mencegah penumpukan ruang penyimpanan disk.
+
+### FR-37: Evaluation Data API Endpoint
+
+FastAPI Backend (`app.py`) HARUS menyediakan endpoint GET `/api/evaluation` yang mem-parsing data CSV dari `hasil_config_*.csv`, `statistical_test.csv`, dan `transaksi_chat.csv` secara dinamis, lalu mengembalikannya dalam struktur JSON terpadu untuk dikonsumsi oleh dashboard UI Tab Evaluasi.
+
 ---
 
 ## 20. NON-FUNCTIONAL REQUIREMENTS (NFR)
@@ -2087,6 +2106,14 @@ Nomor referensi `[N]` dalam teks jawaban HARUS konsisten dengan nomor `index` di
 `citation_sources`. Tidak boleh ada referensi dalam teks yang tidak punya source, atau
 source yang tidak direferensikan dalam teks. Dijamin oleh parser `parse_cited_indices()`
 di Section 6.5.
+
+### NFR-11: Zero-Build Frontend Architecture
+
+Arsitektur kode frontend pada `static/` HARUS berjalan secara *stateless* menggunakan skema SPA murni berbasis Vanilla HTML, CSS (Tailwind CDN), dan Vanilla JS tanpa adanya *build step* (misal: transpiler, bundler, dsb.) guna menyederhanakan *deployment* lokal dan mempercepat *rendering*.
+
+### NFR-12: Thread-Safe Stateless LLM Caching
+
+Instansiasi objek LLM Generator pada `chain.py` HARUS bersifat *thread-safe* menggunakan teknik *dictionary caching* (`_llm_cache`) per *model name* secara *stateless*, guna mencegah pemborosan alokasi memori (*memory leak*) akibat inisialisasi ulang instansi LLM yang berulang-ulang pada *request* yang paralel.
 
 ---
 
@@ -2252,6 +2279,13 @@ Pengujian integrasi memvalidasi interaksi antarmuka HTTP backend:
 - `test_chat_api.py`: Menguji endpoint chat `/api/chat` dalam memancarkan event streaming SSE (thinking, token, citations, done) dan memvalidasi keandalan middleware eksepsi global.
 - `test_spa_serving.py`: Memastikan API root FastAPI menyajikan file `index.html` dan statis assets JavaScript dengan tipe konten (`mime-type`) yang tepat.
 
+### 23.5 Skrip Verifikasi Mandiri (tests/scripts/)
+
+Skrip mandiri digunakan untuk verifikasi cepat dan diagnostik sistem secara terisolasi tanpa melalui test runner Pytest:
+- `test_nvidia_nim_api.py`: Memverifikasi secara langsung konektivitas, parameter request, penanganan API key, dan kepatuhan rate-limiting (RPM) terhadap endpoint NVIDIA NIM.
+- `verify_ingestion.py`: Membaca dan menampilkan jumlah chunk, struktur metadata, serta keutuhan koleksi dokumen yang tersimpan di database ChromaDB secara visual.
+- `verify_retriever.py`: Melakukan query simulasi langsung ke retriever (A/B/C) untuk memverifikasi cosine distance score (Config A/B) dan skor BM25 (Config C) tanpa melalui REST API.
+
 ---
 
-_Dokumen terakhir direvisi: 4 Juni 2026 | Versi: 10.0_
+_Dokumen terakhir direvisi: 4 Juni 2026 | Versi: 11.0_
