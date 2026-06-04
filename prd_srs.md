@@ -1811,7 +1811,7 @@ Model embedding NVIDIA NIM yang tersedia dan telah diidentifikasi:
 
 ### 18.4b Rencana Alternatif: Gemini Embedding v2 (Belum Diimplementasikan)
 
-> **Rencana Masa Depan:** Sebagai alternatif masa depan dari model embedding kanonik `gemini-embedding-001`, model **`text-embedding-004` (Gemini Embedding v2 / text-embedding-004)** direncanakan untuk digunakan jika membutuhkan akurasi pencarian semantik yang lebih tinggi dan dimensi vektor yang dapat disesuaikan.
+> **Rencana Masa Depan:** Sebagai alternatif masa depan dari model embedding kanonik `gemini-embedding-001`, model **`gemini-embedding-2` (Gemini Embedding v2 / gemini-embedding-2)** direncanakan untuk digunakan jika membutuhkan akurasi pencarian semantik yang lebih tinggi dan dimensi vektor yang dapat disesuaikan.
 >
 > **Status:** Belum diimplementasikan (rencana alternatif).
 > **Konsekuensi Jika Diimplementasikan:** Sama seperti penggantian model embedding lainnya, jika model ini diaktifkan di masa mendatang, seluruh database ChromaDB wajib di-rebuild dari awal via `ingestion.py --rebuild` agar dimensi dan ruang vektor seluruh chunk seragam. Hal ini karena representasi dimensi vektor model embedding v2 berbeda dengan model v1.
