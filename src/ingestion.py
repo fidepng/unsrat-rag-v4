@@ -4,6 +4,7 @@
 
 import argparse
 import hashlib
+import sys
 import time
 from pathlib import Path
 
@@ -272,7 +273,10 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ingestion pipeline UNSRAT RAG")
-    parser.add_argument("--config", choices=["a", "b"], required=True, help="Config A atau B")
+    parser.add_argument("--config", choices=["a", "b"], default="b", help="Config A atau B (default: b)")
     parser.add_argument("--rebuild", action="store_true", help="Hapus collection dan rebuild dari nol")
     args = parser.parse_args()
+    if args.config == "a":
+        print("Config A is deprecated and archived for backup purposes.")
+        sys.exit(0)
     run_ingestion(args.config, args.rebuild)
