@@ -743,12 +743,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderRagasChart(configs) {
         const ctx = document.getElementById("metricsChart");
-        if (!ctx) return;
+        if (!ctx || !configs) return;
 
         const metrics = ["faithfulness", "answer_relevancy", "context_precision", "context_recall"];
         const labels = ["Faithfulness", "Answer Relevancy", "Context Precision", "Context Recall"];
 
-        const dataA = metrics.map(m => configs.a && configs.a[m] ? (configs.a[m].mean !== null && configs.a[m].mean !== undefined ? configs.a[m].mean : 0.0) : 0.0);
+        // [BACKUP/DEPRECATED - ARCHIVED]
+        // const dataA = metrics.map(m => configs.a && configs.a[m] ? (configs.a[m].mean !== null && configs.a[m].mean !== undefined ? configs.a[m].mean : 0.0) : 0.0);
         const dataB = metrics.map(m => configs.b && configs.b[m] ? (configs.b[m].mean !== null && configs.b[m].mean !== undefined ? configs.b[m].mean : 0.0) : 0.0);
         const dataC = metrics.map(m => configs.c && configs.c[m] ? (configs.c[m].mean !== null && configs.c[m].mean !== undefined ? configs.c[m].mean : 0.0) : 0.0);
 
@@ -761,14 +762,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data: {
                 labels: labels,
                 datasets: [
-                    {
-                        label: "Config A (500 char)",
-                        data: dataA,
-                        backgroundColor: "rgba(123, 45, 45, 0.4)",
-                        borderColor: "rgb(123, 45, 45)",
-                        borderWidth: 1.5,
-                        borderRadius: 6
-                    },
+                    // Config A is archived/deprecated. Only plotting Config B and Config C.
                     {
                         label: "Config B (2000 char)",
                         data: dataB,
