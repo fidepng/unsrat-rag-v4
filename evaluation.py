@@ -4,6 +4,7 @@
 
 import argparse
 import csv
+import sys
 import time
 from pathlib import Path
 
@@ -323,12 +324,13 @@ def run_statistical_test() -> None:
 
 def run_visualization() -> None:
     """
-    Buat grouped bar chart perbandingan 3 config.
+    Buat grouped bar chart perbandingan 2 config (Config B vs C).
 
     Output: eval/results/perbandingan_visual.png (untuk lampiran skripsi).
     BUKAN dikonsumsi UI — UI render dari /api/evaluation. (D-A9, FR-17)
     """
-    configs = {"a": "Config A (500)", "b": "Config B (2000)", "c": "Config C (BM25)"}
+    # Config A is archived. Exclusively plotting Config B vs C.
+    configs = {"b": "Config B (2000)", "c": "Config C (BM25)"}
     metrics = METRICS_COLS
 
     data = {}
@@ -343,8 +345,8 @@ def run_visualization() -> None:
 
     fig, ax = plt.subplots(figsize=(12, 6))
     x      = range(len(metrics))
-    width  = 0.25
-    colors = ["#800000", "#c9a227", "#4a4a4a"]
+    width  = 0.35
+    colors = ["#c9a227", "#4a4a4a"]
 
     for i, (label, scores) in enumerate(data.items()):
         offset = (i - len(data) / 2) * width + width / 2
@@ -356,7 +358,7 @@ def run_visualization() -> None:
 
     ax.set_xlabel("Metrik Evaluasi")
     ax.set_ylabel("Skor")
-    ax.set_title("Perbandingan Kinerja Config A vs B vs C — UNSRAT RAG")
+    ax.set_title("Perbandingan Kinerja Config B vs C — UNSRAT RAG")
     ax.set_xticks(list(x))
     ax.set_xticklabels(metrics, rotation=15)
     ax.set_ylim(0, 1.1)
@@ -382,8 +384,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.config:
+        if args.config == "a":
+            print("Config A is deprecated and archived for backup purposes.")
+            sys.exit(0)
         run_evaluation(args.config, extra_metrics=args.extra_metrics)
     elif args.stats:
-        run_statistical_test()
+        # --- ARCHIVED WILCOXON TEST ---
+        print("Wilcoxon statistical test is deprecated and archived for backup purposes.")
+        # run_statistical_test()
     elif args.visualize:
         run_visualization()
