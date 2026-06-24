@@ -257,10 +257,10 @@
               </div>
 
               <!-- Grid Dashboard Utama -->
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   
                   <!-- Card Grafik Metrik Ragas -->
-                  <div class="bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm space-y-4 flex flex-col">
+                  <div class="lg:col-span-2 bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm space-y-4 flex flex-col">
                       <div class="flex items-center justify-between">
                           <h3 class="font-bold text-xs md:text-sm text-gray-800 flex items-center space-x-2">
                               <span class="w-2.5 h-2.5 rounded-full bg-[#7B2D2D]"></span>
@@ -268,8 +268,40 @@
                           </h3>
                           <span class="text-[9px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold border border-amber-100">Nilai Lebih Tinggi = Lebih Baik</span>
                       </div>
-                      <div class="relative h-72 flex-1 flex items-center justify-center">
+                      <div class="relative h-80 flex-1 flex items-center justify-center">
                           <canvas id="metricsChart"></canvas>
+                      </div>
+                  </div>
+
+                  <!-- Card Ringkasan Statistik Perbandingan (Config B vs C) -->
+                  <div class="lg:col-span-1 bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                      <div class="space-y-3">
+                          <div class="flex items-center justify-between">
+                              <h3 class="font-bold text-xs md:text-sm text-gray-800 flex items-center space-x-2">
+                                  <span class="w-2.5 h-2.5 rounded-full bg-[#7B2D2D]"></span>
+                                  <span>Ringkasan Metrik (Config B vs C)</span>
+                              </h3>
+                              <span class="text-[9px] bg-[#7B2D2D]/10 text-[#7B2D2D] px-2 py-0.5 rounded-full font-bold border border-[#7B2D2D]/15">Rataan (Mean)</span>
+                          </div>
+                          
+                          <div class="overflow-x-auto border border-gray-100 rounded-xl">
+                              <table class="w-full text-xs text-left text-gray-600" id="table-comparison">
+                                  <thead class="bg-[#FAF9F6] text-gray-800 font-bold uppercase text-[9px] border-b border-gray-100">
+                                      <tr>
+                                          <th class="px-3 py-2.5">Metrik</th>
+                                          <th class="px-3 py-2.5 text-center">Config B (RAG)</th>
+                                          <th class="px-3 py-2.5 text-center">Config C (BM25)</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody id="comparison-table-body" class="divide-y divide-gray-100">
+                                      <!-- Dimuat dinamis via JS -->
+                                      <tr><td colspan="3" class="px-3 py-4 text-center text-gray-400">Loading data...</td></tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                      <div class="bg-[#FAF9F6] border border-gray-150 rounded-xl p-3 text-[10px] text-[#6B6661] leading-relaxed">
+                          <strong>Analisis Deskriptif Bab IV:</strong> Config B menggunakan pencarian vektor semantik (Dense Retrieval) dengan konteks 2000 karakter, sedangkan Config C menggunakan model pencarian kata kunci BM25 (Sparse Retrieval).
                       </div>
                   </div>
 
@@ -357,6 +389,6 @@
           </div>
       </main>
       
-      <script src="/static/js/app.js"></script>
+      <script src="/static/js/app.js?v=1.0.1"></script>
 </body>
 </html>

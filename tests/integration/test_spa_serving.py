@@ -15,7 +15,7 @@ def test_root_serves_index_html():
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
     assert "Asisten Informasi Akademik UNSRAT" in response.text
-    assert '<script src="/static/js/app.js"></script>' in response.text
+    assert '/static/js/app.js' in response.text
 
 @pytest.mark.offline
 def test_static_files_js_app_served():

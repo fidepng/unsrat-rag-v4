@@ -6,9 +6,14 @@ from src.retriever import retrieve_chunks
 @pytest.mark.offline
 class TestRetriever:
     @pytest.fixture(autouse=True)
-    def clear_cache(self):
+    def mock_dependencies(self):
         src.retriever._chroma_collections.clear()
         src.retriever._chroma_clients.clear()
+        with patch("src.retriever._get_embedding_fn") as mock_get_fn:
+            mock_emb = MagicMock()
+            mock_emb.embed_query.return_value = [0.1, 0.2, 0.3]
+            mock_get_fn.return_value = mock_emb
+            yield
 
     @patch("src.retriever.CHROMA_DIR_B")
     @patch("src.retriever.chromadb.PersistentClient")

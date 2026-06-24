@@ -732,6 +732,46 @@ document.addEventListener("DOMContentLoaded", () => {
                 auditTable.innerHTML = `<tr><td colspan="8" class="px-4 py-4 text-center text-gray-400">Belum ada transaksi terekam di logs/transaksi_chat.csv.</td></tr>`;
             }
 
+            // D. Populasi Tabel Ringkasan Metrik (Config B vs C)
+            const comparisonTable = document.getElementById("comparison-table-body");
+            if (comparisonTable && data.configs) {
+                const metricsToCompare = [
+                    { key: "faithfulness", name: "Faithfulness" },
+                    { key: "answer_relevancy", name: "Answer Relevancy" },
+                    { key: "context_precision", name: "Context Precision" },
+                    { key: "context_recall", name: "Context Recall" },
+                    { key: "response_time_seconds", name: "Response Time", isTime: true }
+                ];
+                
+                comparisonTable.innerHTML = metricsToCompare.map(m => {
+                    const valB = data.configs.b && data.configs.b[m.key] ? data.configs.b[m.key].mean : null;
+                    const valC = data.configs.c && data.configs.c[m.key] ? data.configs.c[m.key].mean : null;
+                    
+                    const displayB = valB !== null ? (m.isTime ? `${parseFloat(valB).toFixed(2)}s` : parseFloat(valB).toFixed(4)) : "-";
+                    const displayC = valC !== null ? (m.isTime ? `${parseFloat(valC).toFixed(2)}s` : parseFloat(valC).toFixed(4)) : "-";
+                    
+                    // Highlight the better score (lower is better for response time, higher for Ragas metrics)
+                    let classB = "font-medium text-gray-600";
+                    let classC = "font-medium text-gray-600";
+                    if (valB !== null && valC !== null) {
+                        const isBBetter = m.isTime ? (valB < valC) : (valB > valC);
+                        if (isBBetter) {
+                            classB = "font-bold text-[#7B2D2D]";
+                        } else if (valB !== valC) {
+                            classC = "font-bold text-gray-800";
+                        }
+                    }
+                    
+                    return `
+                        <tr class="hover:bg-gray-50 transition duration-150 text-xs">
+                            <td class="px-3 py-2.5 font-bold text-gray-850">${m.name}</td>
+                            <td class="px-3 py-2.5 text-center ${classB}">${displayB}</td>
+                            <td class="px-3 py-2.5 text-center ${classC}">${displayC}</td>
+                        </tr>
+                    `;
+                }).join("");
+            }
+
             renderRagasChart(data.configs);
             safeCreateIcons();
         } catch (err) {
