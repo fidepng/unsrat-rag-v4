@@ -15,7 +15,7 @@ load_dotenv()
 ROOT_DIR          = Path(__file__).parent.parent
 CORPUS_DIR        = ROOT_DIR / "data" / "corpus"
 CHROMA_BASE_DIR   = ROOT_DIR / "chroma_db"
-CHROMA_DIR_A      = CHROMA_BASE_DIR / "config_a"
+CHROMA_DIR_A      = CHROMA_BASE_DIR / "config_a"  # [BACKUP/DEPRECATED - ARCHIVED]
 CHROMA_DIR_B      = CHROMA_BASE_DIR / "config_b"
 BM25_INDEX_DIR    = ROOT_DIR / "bm25_index"
 BM25_INDEX_PATH   = BM25_INDEX_DIR / "bm25_index.pkl"
@@ -27,7 +27,9 @@ CHAT_LOG_PATH        = LOGS_DIR / "transaksi_chat.csv"
 INGESTION_LOG_PATH   = LOGS_DIR / "ingestion_report.csv"
 
 # ── CHROMADB COLLECTIONS ────────────────────────────────────
+# [BACKUP/DEPRECATED - ARCHIVED]
 CHROMA_COLLECTION_A = "unsrat_rag_config_a"
+
 CHROMA_COLLECTION_B = "unsrat_rag_config_b"
 CHROMA_DISTANCE_FN  = "cosine"
 
@@ -56,6 +58,7 @@ AVAILABLE_MODELS: list[str] = [
 ]
 
 # ── CHUNKING — CONFIG A ──────────────────────────────────────
+# [BACKUP/DEPRECATED - ARCHIVED]
 CHUNK_SIZE_A    = 500
 CHUNK_OVERLAP_A = 100
 
