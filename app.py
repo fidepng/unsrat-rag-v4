@@ -55,7 +55,8 @@ async def get_config():
     return JSONResponse({
         "available_models": AVAILABLE_MODELS,
         "active_model":     LLM_MODEL_NAME,
-        "configs":          ["a", "b", "c"],
+        # Config A is archived for backup. Restricting API output to B and C.
+        "configs":          ["b", "c"],
     })
 
 
