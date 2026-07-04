@@ -219,12 +219,23 @@
 
               <!-- PANEL METADATA EVALUASI (Section 5.A) -->
               <div class="bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-5 gap-4">
-                  <div class="space-y-1">
+                  <div class="space-y-1.5">
                       <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
                           <i data-lucide="calendar" class="w-3 h-3"></i>
-                          <span>Terakhir Dijalankan</span>
+                          <span>Status Evaluasi Terbaru</span>
                       </div>
-                      <div class="text-xs font-bold text-gray-800" id="meta-last-run">-</div>
+                      <div class="flex flex-col space-y-1 text-[10px]">
+                          <div class="flex items-center space-x-1.5">
+                              <span id="dot-run-b" class="w-2 h-2 rounded-full bg-gray-300"></span>
+                              <span class="text-gray-500 font-medium">B (Dense):</span>
+                              <span class="font-bold text-gray-700" id="meta-last-run-b">-</span>
+                          </div>
+                          <div class="flex items-center space-x-1.5">
+                              <span id="dot-run-c" class="w-2 h-2 rounded-full bg-gray-300"></span>
+                              <span class="text-gray-500 font-medium">C (Sparse):</span>
+                              <span class="font-bold text-gray-700" id="meta-last-run-c">-</span>
+                          </div>
+                      </div>
                   </div>
                   <div class="space-y-1 border-l border-gray-100 pl-3">
                       <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
