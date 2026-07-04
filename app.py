@@ -117,16 +117,39 @@ async def get_evaluation():
             pass
 
     last_run = "-"
-    wilcoxon_path = EVAL_RESULTS_DIR / "statistical_test.csv"
-    if wilcoxon_path.exists():
+    last_run_b = "-"
+    last_run_c = "-"
+    latest_mtime = 0.0
+
+    # Config B timestamp
+    path_b = EVAL_RESULTS_DIR / "hasil_config_b.csv"
+    if path_b.exists():
         try:
-            mtime = os.path.getmtime(wilcoxon_path)
-            last_run = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M")
+            mtime_b = os.path.getmtime(path_b)
+            last_run_b = datetime.fromtimestamp(mtime_b).strftime("%Y-%m-%d %H:%M")
+            if mtime_b > latest_mtime:
+                latest_mtime = mtime_b
         except Exception:
             pass
 
+    # Config C timestamp
+    path_c = EVAL_RESULTS_DIR / "hasil_config_c.csv"
+    if path_c.exists():
+        try:
+            mtime_c = os.path.getmtime(path_c)
+            last_run_c = datetime.fromtimestamp(mtime_c).strftime("%Y-%m-%d %H:%M")
+            if mtime_c > latest_mtime:
+                latest_mtime = mtime_c
+        except Exception:
+            pass
+
+    if latest_mtime > 0:
+        last_run = datetime.fromtimestamp(latest_mtime).strftime("%Y-%m-%d %H:%M")
+
     result["metadata"] = {
         "last_run":        last_run,
+        "last_run_b":      last_run_b,
+        "last_run_c":      last_run_c,
         "dataset_size":    f"{dataset_size} Pertanyaan",
         "generator_model":  LLM_MODEL_NAME,
         "evaluator_model":  EVALUATOR_MODEL_NAME,
@@ -155,6 +178,7 @@ async def get_evaluation():
             result["configs"][config_label] = stats
 
     # Wilcoxon results
+    wilcoxon_path = EVAL_RESULTS_DIR / "statistical_test.csv"
     if wilcoxon_path.exists():
         df_w = pd.read_csv(wilcoxon_path)
         for _, row in df_w.iterrows():
