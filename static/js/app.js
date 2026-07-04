@@ -47,7 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnDownloadAudit = document.getElementById("btn-download-audit");
 
     // Metadata Panel Selectors
-    const metaLastRun = document.getElementById("meta-last-run");
+    const metaLastRunB = document.getElementById("meta-last-run-b");
+    const metaLastRunC = document.getElementById("meta-last-run-c");
+    const dotRunB = document.getElementById("dot-run-b");
+    const dotRunC = document.getElementById("dot-run-c");
     const metaDatasetSize = document.getElementById("meta-dataset-size");
     const metaGenerator = document.getElementById("meta-generator-model");
     const metaEvaluator = document.getElementById("meta-evaluator-model");
@@ -670,7 +673,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // A. Render Metadata Panel (Section 5.A)
             if (data.metadata) {
-                metaLastRun.innerText     = data.metadata.last_run || "-";
+                metaLastRunB.innerText     = data.metadata.last_run_b || "-";
+                metaLastRunC.innerText     = data.metadata.last_run_c || "-";
+                
+                // Update indicator dots depending on status (evaluated or not)
+                if (data.metadata.last_run_b && data.metadata.last_run_b !== "-") {
+                    dotRunB.className = "w-2 h-2 rounded-full bg-green-500 shadow-sm shadow-green-500/50";
+                } else {
+                    dotRunB.className = "w-2 h-2 rounded-full bg-gray-300";
+                }
+
+                if (data.metadata.last_run_c && data.metadata.last_run_c !== "-") {
+                    dotRunC.className = "w-2 h-2 rounded-full bg-green-500 shadow-sm shadow-green-500/50";
+                } else {
+                    dotRunC.className = "w-2 h-2 rounded-full bg-gray-300";
+                }
                 metaDatasetSize.innerText = data.metadata.dataset_size || "-";
                 metaGenerator.innerText   = data.metadata.generator_model || "-";
                 metaEvaluator.innerText   = data.metadata.evaluator_model || "-";
