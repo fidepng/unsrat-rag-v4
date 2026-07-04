@@ -156,11 +156,7 @@ Jawab dalam Bahasa Indonesia yang ramah dan mudah dipahami."""
 # ── FALLBACK RESPONSE ────────────────────────────────────────
 FALLBACK_RESPONSE = (
     "Maaf, saya tidak menemukan informasi yang relevan mengenai "
-    "pertanyaan Anda dalam dokumen yang tersedia. "
-    "Untuk informasi lebih lanjut, silakan hubungi:\n\n"
-    "• Bagian Akademik UNSRAT\n"
-    "• Portal INSPIRE: inspire.unsrat.ac.id\n"
-    "• Atau datang langsung ke Gedung Rektorat UNSRAT"
+    "pertanyaan Anda dalam dokumen regulasi yang tersedia."
 )
 
 # ── API ──────────────────────────────────────────────────────
