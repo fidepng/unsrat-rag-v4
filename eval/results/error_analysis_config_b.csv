@@ -1,4 +1,34 @@
 ﻿rank,user_input,reference,response,avg_metric_score,failure_type,failure_notes
-1,Berapa SKS maksimal per semester untuk mahasiswa sarjana?,"Mahasiswa program sarjana dapat mengambil maksimum 24 SKS per semester. Namun jika IPS semester sebelumnya di bawah 2.00, batas maksimalnya adalah 18 SKS.",Mahasiswa sarjana dapat mengambil maksimal 24 SKS per semester [1].,0.7910883700739557,,
-2,Kapan semester genap 2025/2026 dimulai?,Semester genap 2025/2026 dimulai pada awal Februari 2026 sesuai kalender akademik yang ditetapkan.,Semester genap 2025/2026 Universitas Sam Ratulangi dimulai pada tanggal 09 Februari 2026 [Sumber 2: Kalender Akademik UNSRAT Semester Genap 2025/2026 — I. Administrasi Awal Semester & Perkuliahan I.B. Perkuliahan].,0.8310973534427841,,
-3,Apa visi Universitas Sam Ratulangi?,Visi UNSRAT adalah menjadi universitas unggulan dalam pengembangan ilmu pengetahuan teknologi dan seni yang berbudaya dan humanis.,"Visi Universitas Sam Ratulangi adalah menjadi universitas yang unggul, berbudaya, dan berdaya saing global menuju universitas riset yang berlandaskan Pancasila [3].",0.8711482221502032,,
+1,Semboyan 'Si Tou Timou Tumou Tou' di Unsrat itu maknanya apa?,"Semboyan resmi yang dipegang oleh UNSRAT adalah 'Si Tou Timou Tumou Tou', yang artinya manusia hidup untuk memanusiakan orang lain.","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen yang tersedia. Untuk informasi lebih lanjut, silakan hubungi:
+
+• Bagian Akademik UNSRAT
+• Portal INSPIRE: inspire.unsrat.ac.id
+• Atau datang langsung ke Gedung Rektorat UNSRAT",0.0625,,
+2,Berapa depe harga tiket pesawat Garuda dari Manado ka Jakarta hari ini?,"Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen yang tersedia. Untuk informasi lebih lanjut, silakan hubungi:\n\n• Bagian Akademik UNSRAT\n• Portal INSPIRE: inspire.unsrat.ac.id\n• Atau datang langsung ke Gedung Rektorat UNSRAT","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen yang tersedia. Untuk informasi lebih lanjut, silakan hubungi:
+
+• Bagian Akademik UNSRAT
+• Portal INSPIRE: inspire.unsrat.ac.id
+• Atau datang langsung ke Gedung Rektorat UNSRAT",0.1875,,
+3,Bagaimana prosedur permohonan pembuatan Surat Izin Mengemudi (SIM) di Kepolisian Manado?,"Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen yang tersedia. Untuk informasi lebih lanjut, silakan hubungi:\n\n• Bagian Akademik UNSRAT\n• Portal INSPIRE: inspire.unsrat.ac.id\n• Atau datang langsung ke Gedung Rektorat UNSRAT","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen yang tersedia. Untuk informasi lebih lanjut, silakan hubungi:
+
+• Bagian Akademik UNSRAT
+• Portal INSPIRE: inspire.unsrat.ac.id
+• Atau datang langsung ke Gedung Rektorat UNSRAT",0.1875,,
+4,Siapa sih pemenang turnamen Piala Dunia Sepak Bola kemarin?,"Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen yang tersedia. Untuk informasi lebih lanjut, silakan hubungi:\n\n• Bagian Akademik UNSRAT\n• Portal INSPIRE: inspire.unsrat.ac.id\n• Atau datang langsung ke Gedung Rektorat UNSRAT","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen yang tersedia. Untuk informasi lebih lanjut, silakan hubungi:
+
+• Bagian Akademik UNSRAT
+• Portal INSPIRE: inspire.unsrat.ac.id
+• Atau datang langsung ke Gedung Rektorat UNSRAT",0.1875,,
+5,Kapan depe yudisium KKT genap mo mulai?,"Evaluasi dan yudisium KKT genap dijadwalkan berlangsung pada bulan Februari hingga Maret 2026, serta April hingga Mei 2026 tergantung pada angkatan KKT.","Maaf, saya tidak menemukan informasi tentang kapan yudisium KKT genap mulai. Anda mungkin perlu menghubungi bagian administrasi kampus untuk mendapatkan informasi yang lebih akurat.",0.25,,
+6,"Kalo mahasiswa sarjana so DO, boleh mo maso kuliah ulang di Unsrat?",Mahasiswa yang telah dinyatakan putus studi (drop out) dari UNSRAT tidak diperbolehkan kembali untuk menempuh studi di universitas ini.,"Mohon maaf, saya tidak menemukan informasi tentang kebijakan penerimaan mahasiswa yang telah putus studi (DO) di Universitas Sam Ratulangi (UNSRAT) dalam dokumen konteks yang disediakan.",0.333333333325,,
+7,Ada nilai ulang mata kuliah bole dapa predikat cumlaude?,Tidak bisa. Salah satu syarat untuk memperoleh predikat Cum Laude bagi program sarjana adalah tidak pernah mengulang mata kuliah selama masa studi.,"Maaf, saya tidak menemukan informasi tentang nilai ulang mata kuliah dan predikat Cum Laude dalam dokumen konteks yang disediakan.",0.4513888888821759,,
+8,Apa visi dari Universitas Sam Ratulangi?,"Visi UNSRAT adalah menjadi universitas unggulan dalam pengembangan ilmu pengetahuan, teknologi, dan seni yang berbudaya dan humanis.","Visi dari Universitas Sam Ratulangi adalah menjadi universitas yang unggul, berbudaya, dan berdaya saing global menuju universitas riset yang berlandaskan Pancasila [4].",0.46240875956962146,,
+9,KKT angkatan 146 sampai 148 itu jadwalnya kapan?,"KKT angkatan 146, 147, dan 148 dijadwalkan berjalan selama periode semester genap 2025/2026.","Berikut adalah jadwal KKT angkatan 146, 147, dan 148 berdasarkan informasi yang tersedia:
+
+- KKT Angkatan 146: Februari – Maret 2026 [2]
+- KKT Angkatan 147: April – Mei 2026 [3]
+- KKT Angkatan 148: Juli 2026 [1]",0.4691311613815182,,
+10,Berapa SKS maksimal per semester untuk mahasiswa sarjana?,"Mahasiswa program sarjana dapat mengambil maksimum 24 SKS per semester. Namun, jika IPS semester sebelumnya di bawah 2.00, batas maksimalnya adalah 18 SKS.","Menurut Pasal 27 (1) Peraturan Rektor UNSRAT Nomor 01 Tahun 2025 tentang Peraturan Akademik, distribusi beban belajar program sarjana adalah sebagai berikut:
+
+- Semester 1 dan 2: **maksimal 20 sks**
+- Semester 3 dan seterusnya: **maksimal 24 sks** [1]",0.4944844693200393,,
