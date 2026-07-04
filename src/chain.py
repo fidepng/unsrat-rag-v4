@@ -41,7 +41,7 @@ def _get_llm(model_name: str) -> Any:
     if model_name not in _llm_cache:
         import os
         nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
-        if nvidia_api_key and ("llama" in model_name or "qwen" in model_name or "nvidia" in model_name or "gemma" in model_name or os.getenv("FORCE_NIM_GENERATOR") == "true"):
+        if nvidia_api_key and ("llama" in model_name or "qwen" in model_name or "nvidia" in model_name or "gemma" in model_name or "z-ai" in model_name or "glm" in model_name or "deepseek" in model_name or os.getenv("FORCE_NIM_GENERATOR") == "true"):
             logger.info(f"Menggunakan NVIDIA NIM untuk generator model: {model_name}")
             from langchain_openai import ChatOpenAI
             
@@ -56,6 +56,10 @@ def _get_llm(model_name: str) -> Any:
                 nim_model = "meta/llama-3.1-70b-instruct"
             elif model_name == "llama-3.1-8b-instruct":
                 nim_model = "meta/llama-3.1-8b-instruct"
+            elif model_name == "deepseek-v4-flash":
+                nim_model = "deepseek-ai/deepseek-v4-flash"
+            elif model_name == "deepseek-v4-pro":
+                nim_model = "deepseek-ai/deepseek-v4-pro"
                 
             _llm_cache[model_name] = ChatOpenAI(
                 model=nim_model,
