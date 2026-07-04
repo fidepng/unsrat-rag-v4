@@ -1,7 +1,6 @@
 # evaluation.py — Pipeline Evaluasi Ragas + Wilcoxon + Error Analysis + Chart
 # PRD Reference: Section 12, FR-15–FR-17, FR-21–FR-25, FR-31
 
-
 import argparse
 import csv
 import sys
@@ -30,6 +29,100 @@ from src.logger_manager import get_logger
 
 logger = get_logger("evaluation")
 
+# --- Monkeypatch ChatOpenAI for NVIDIA NIM Rate Limiting (40 RPM Shared Limit) ---
+try:
+    import langchain_openai
+    import threading
+    import asyncio
+
+    _LAST_REQUEST_TIME = 0.0
+    _MIN_REQUEST_INTERVAL = 3.0  # 3.0s interval (~20 RPM) guarantees robustness against shared user traffic
+
+    _RATE_LIMIT_LOCK = threading.Lock()
+
+    _orig_generate = langchain_openai.ChatOpenAI._generate
+    _orig_agenerate = langchain_openai.ChatOpenAI._agenerate
+
+    def _rate_limited_generate(self, *args, **kwargs):
+        global _LAST_REQUEST_TIME
+        is_nim = "nvidia" in getattr(self, "openai_api_base", "") or "nvidia" in getattr(self, "model_name", "") or "z-ai" in getattr(self, "model_name", "") or "deepseek" in getattr(self, "model_name", "")
+        if is_nim:
+            # Atomic reservation of time slot across all threads
+            with _RATE_LIMIT_LOCK:
+                now = time.time()
+                elapsed = now - _LAST_REQUEST_TIME
+                sleep_time = 0.0
+                if elapsed < _MIN_REQUEST_INTERVAL:
+                    sleep_time = _MIN_REQUEST_INTERVAL - elapsed
+                _LAST_REQUEST_TIME = now + sleep_time
+
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+
+            # Request execution with robust local retry
+            retries = 5
+            backoff = 4.0
+            for attempt in range(retries):
+                try:
+                    res = _orig_generate(self, *args, **kwargs)
+                    return res
+                except Exception as e:
+                    if "429" in str(e) or "rate limit" in str(e).lower() or "throttle" in str(e).lower():
+                        logger.warning(f"NIM Throttling terdeteksi (429). Menunggu {backoff:.1f}s sebelum mencoba kembali (Percobaan {attempt+1}/{retries})...")
+                        time.sleep(backoff)
+                        with _RATE_LIMIT_LOCK:
+                            _LAST_REQUEST_TIME = time.time() + backoff
+                        backoff *= 2.0
+                    else:
+                        raise e
+            raise Exception("Exhausted retries due to persistent NVIDIA NIM 429 throttling.")
+        else:
+            return _orig_generate(self, *args, **kwargs)
+
+    async def _rate_limited_agenerate(self, *args, **kwargs):
+        global _LAST_REQUEST_TIME
+        is_nim = "nvidia" in getattr(self, "openai_api_base", "") or "nvidia" in getattr(self, "model_name", "") or "z-ai" in getattr(self, "model_name", "") or "deepseek" in getattr(self, "model_name", "")
+        if is_nim:
+            # Atomic reservation of time slot across all threads
+            with _RATE_LIMIT_LOCK:
+                now = time.time()
+                elapsed = now - _LAST_REQUEST_TIME
+                sleep_time = 0.0
+                if elapsed < _MIN_REQUEST_INTERVAL:
+                    sleep_time = _MIN_REQUEST_INTERVAL - elapsed
+                _LAST_REQUEST_TIME = now + sleep_time
+
+            # Sleep asynchronously to avoid blocking the event loop
+            if sleep_time > 0:
+                await asyncio.sleep(sleep_time)
+
+            # Request execution with robust local retry
+            retries = 5
+            backoff = 4.0
+            for attempt in range(retries):
+                try:
+                    res = await _orig_agenerate(self, *args, **kwargs)
+                    return res
+                except Exception as e:
+                    if "429" in str(e) or "rate limit" in str(e).lower() or "throttle" in str(e).lower():
+                        logger.warning(f"NIM Throttling terdeteksi (429, Async). Menunggu {backoff:.1f}s sebelum mencoba kembali (Percobaan {attempt+1}/{retries})...")
+                        await asyncio.sleep(backoff)
+                        with _RATE_LIMIT_LOCK:
+                            _LAST_REQUEST_TIME = time.time() + backoff
+                        backoff *= 2.0
+                    else:
+                        raise e
+            raise Exception("Exhausted retries due to persistent NVIDIA NIM 429 throttling.")
+        else:
+            return await _orig_agenerate(self, *args, **kwargs)
+
+    langchain_openai.ChatOpenAI._generate = _rate_limited_generate
+    langchain_openai.ChatOpenAI._agenerate = _rate_limited_agenerate
+    logger.info("Monkeypatch ChatOpenAI dengan Timeline Queueing + Autoretry (429) untuk NVIDIA NIM berhasil diaktifkan.")
+except Exception as e:
+    logger.warning(f"Gagal mengaktifkan monkeypatch rate limit ChatOpenAI: {e}")
+
+
 
 def _load_ground_truth() -> pd.DataFrame:
     """Load ground_truth.csv. Raise FileNotFoundError jika tidak ada."""
@@ -47,7 +140,7 @@ def _load_ground_truth() -> pd.DataFrame:
     return df
 
 
-def run_evaluation(config: str, extra_metrics: list[str] | None = None) -> None:
+def run_evaluation(config: str, extra_metrics: list[str] | None = None, limit: int | None = None) -> None:
     """
     Jalankan evaluasi Ragas untuk config tertentu.
 
@@ -61,6 +154,9 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None) -> None:
     logger.info("PERINGATAN: Pastikan model evaluator sama untuk semua config! (Section 18.5)")
 
     df = _load_ground_truth()
+    if limit is not None:
+        df = df.head(limit)
+        logger.info(f"Evaluasi dibatasi ke {limit} baris pertama untuk pengujian.")
     EVAL_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
     results = []
@@ -84,7 +180,7 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None) -> None:
 
         # NVIDIA NIM Rate Limit Compliance (40 RPM limit)
         # 1.5 seconds delay between requests prevents quota exhaustion on NIM integrate endpoints.
-        if any(m in LLM_MODEL_NAME.lower() for m in ["llama", "qwen", "gemma"]):
+        if any(m in LLM_MODEL_NAME.lower() for m in ["llama", "qwen", "gemma", "z-ai", "glm", "deepseek"]):
             logger.info("Jeda 1.5s untuk mematuhi rate limit NVIDIA NIM (40 RPM)...")
             time.sleep(1.5)
 
@@ -150,7 +246,7 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None) -> None:
             api_key=nvidia_api_key,
             openai_api_base="https://integrate.api.nvidia.com/v1",
             temperature=0.0,
-            max_tokens=1024,
+            max_tokens=4096,
         ))
         logger.info("Menggunakan Google Gemini (models/gemini-embedding-001) sebagai evaluator embeddings untuk menghindari error 500 NIM.")
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -381,13 +477,15 @@ if __name__ == "__main__":
 
     parser.add_argument("--extra-metrics", nargs="+", default=None,
                         help="Metrik opsional, contoh: context_entity_recall")
+    parser.add_argument("--limit", type=int, default=None,
+                        help="Batasi jumlah baris dataset yang dievaluasi")
     args = parser.parse_args()
 
     if args.config:
         if args.config == "a":
             print("Config A is deprecated and archived for backup purposes.")
             sys.exit(0)
-        run_evaluation(args.config, extra_metrics=args.extra_metrics)
+        run_evaluation(args.config, extra_metrics=args.extra_metrics, limit=args.limit)
     elif args.stats:
         # --- ARCHIVED WILCOXON TEST ---
         print("Wilcoxon statistical test is deprecated and archived for backup purposes.")
