@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             
             modelSelect.innerHTML = data.available_models.map(model => 
-                `<option value="${model}" ${model === data.active_model ? 'selected' : ''} class="text-gray-800">${model}</option>`
+                `<option value="${escapeHtml(model)}" ${model === data.active_model ? 'selected' : ''} class="text-gray-800">${escapeHtml(model)}</option>`
             ).join("");
             
             configSelect.value = "b"; // default Config B
@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="inline-block bg-[#7B2D2D]/10 border border-[#7B2D2D]/15 text-[#7B2D2D] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">Selamat Datang</span>
                     <div class="bg-white border border-[#EBE7E1] rounded-2xl rounded-tl-none px-5 py-4 shadow-sm text-gray-700 leading-relaxed text-sm">
                         <p class="font-semibold text-gray-900 mb-1">Halo civitas akademika Universitas Sam Ratulangi!</p>
-                        <p class="text-gray-600 text-xs md:text-sm">Saya adalah asisten virtual akademik resmi Anda. Silakan tanyakan hal-hal terkait Peraturan Akademik (beban SKS, cuti kuliah, KRS, DO, drop-out, yudisium), kalender akademik, visi misi universitas, sejarah, akreditasi, maupun profil institut. Konfigurasi ${configSelect.value.toUpperCase()} saat ini aktif.</p>
+                        <p class="text-gray-600 text-xs md:text-sm">Saya adalah asisten virtual akademik resmi Anda. Silakan tanyakan hal-hal terkait Peraturan Akademik (beban SKS, cuti kuliah, KRS, DO, drop-out, yudisium), kalender akademik, visi misi universitas, sejarah, akreditasi, maupun profil institut. Konfigurasi ${escapeHtml(configSelect.value.toUpperCase())} saat ini aktif.</p>
                         <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
                             <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Syarat dan batas pengambilan cuti akademik di UNSRAT?')">
                                 <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
@@ -215,7 +215,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function escapeHtml(str) {
-        return str.replace(/[&<>'"]/g, 
+        if (str === null || str === undefined) return "";
+        return String(str).replace(/[&<>'"]/g, 
             tag => ({
                 '&': '&amp;',
                 '<': '&lt;',
@@ -313,8 +314,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         return `
                             <div class="pt-3 first:pt-0 space-y-1.5 w-full">
                                 <div class="flex flex-wrap items-center justify-between gap-1 text-[11px] text-[#7B2D2D] font-semibold w-full">
-                                    <span>[${idx}] ${title}</span>
-                                    <span class="bg-gray-100 border border-gray-200 text-gray-500 px-1.5 py-0.5 rounded text-[10px] font-mono">ID: ${docId}${bab}${pasal}</span>
+                                    <span>[${escapeHtml(idx)}] ${escapeHtml(title)}</span>
+                                    <span class="bg-gray-100 border border-gray-200 text-gray-500 px-1.5 py-0.5 rounded text-[10px] font-mono">ID: ${escapeHtml(docId)}${escapeHtml(bab)}${escapeHtml(pasal)}</span>
                                 </div>
                                 <div class="text-[11px] text-gray-600 italic font-mono bg-gray-50 p-2.5 rounded-lg border border-gray-100 leading-relaxed break-words w-full">
                                     "${escapeHtml(src.content)}"
@@ -695,6 +696,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("[RAG Client] Dynamic metadata panel populated successfully.");
             }
 
+            // Consistency Warning Banner
+            const warningBanner = document.getElementById("consistency-warning-banner");
+            if (warningBanner) {
+                if (data.consistency_warning && data.consistency_warning.has_warning) {
+                    const msg = data.consistency_warning.message || "Model generator/evaluator antara Config B dan C tidak identik. Perbandingan mungkin tidak sebanding secara ilmiah.";
+                    const detailsList = (data.consistency_warning.details && data.consistency_warning.details.length) 
+                        ? `<ul class="list-disc list-inside text-[11px] text-amber-700 space-y-0.5 mt-1 font-mono">${data.consistency_warning.details.map(d => `<li>${escapeHtml(d)}</li>`).join("")}</ul>` 
+                        : "";
+                    warningBanner.className = "bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-800 flex items-start space-x-3 shadow-sm";
+                    warningBanner.innerHTML = `
+                        <div class="p-1.5 bg-amber-100 text-amber-700 rounded-xl flex-shrink-0 mt-0.5">
+                            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                        </div>
+                        <div class="space-y-0.5 flex-1">
+                            <div class="font-bold">
+                                <span>⚠️ Perhatian: ${escapeHtml(msg)}</span>
+                            </div>
+                            ${detailsList}
+                        </div>
+                    `;
+                    warningBanner.classList.remove("hidden");
+                } else {
+                    warningBanner.classList.add("hidden");
+                }
+            }
+
             // B. Populasi Tabel Wilcoxon
             if (data.wilcoxon && Object.keys(data.wilcoxon).length > 0) {
                 wilcoxonTable.innerHTML = Object.entries(data.wilcoxon).map(([metric, row]) => {
@@ -711,10 +738,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     return `
                         <tr class="hover:bg-gray-50 transition duration-150 text-xs">
-                            <td class="px-4 py-3 font-bold text-gray-800">${formatMetric}</td>
-                            <td class="px-4 py-3 font-mono text-[10px] text-gray-500">${parseFloat(row.p_value).toFixed(5)}</td>
+                            <td class="px-4 py-3 font-bold text-gray-800">${escapeHtml(formatMetric)}</td>
+                            <td class="px-4 py-3 font-mono text-[10px] text-gray-500">${escapeHtml(parseFloat(row.p_value).toFixed(5))}</td>
                             <td class="px-4 py-3">${sigBadge}</td>
-                            <td class="px-4 py-3 text-right"><span class="font-extrabold text-[#7B2D2D]">${winnerStr}</span></td>
+                            <td class="px-4 py-3 text-right"><span class="font-extrabold text-[#7B2D2D]">${escapeHtml(winnerStr)}</span></td>
                         </tr>
                     `;
                 }).join("");
@@ -732,12 +759,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     return `
                         <tr class="hover:bg-gray-50/50 transition duration-150 text-xs">
-                            <td class="px-4 py-2.5 text-gray-400 font-mono text-[10px]">${timestampStr}</td>
+                            <td class="px-4 py-2.5 text-gray-400 font-mono text-[10px]">${escapeHtml(timestampStr)}</td>
                             <td class="px-4 py-2.5">
-                                <span class="bg-[#7B2D2D]/10 text-[#7B2D2D] px-2 py-0.5 rounded text-[8px] font-extrabold border border-[#7B2D2D]/15">${configName}</span>
+                                <span class="bg-[#7B2D2D]/10 text-[#7B2D2D] px-2 py-0.5 rounded text-[8px] font-extrabold border border-[#7B2D2D]/15">${escapeHtml(configName)}</span>
                             </td>
-                            <td class="px-4 py-2.5 font-mono text-[9px] text-gray-400 truncate max-w-[80px]" title="${row.model_llm || ''}">${row.model_llm || '-'}</td>
-                            <td class="px-4 py-2.5 font-semibold text-gray-700 truncate max-w-[150px]" title="${row.user_query || ''}">${row.user_query || ''}</td>
+                            <td class="px-4 py-2.5 font-mono text-[9px] text-gray-400 truncate max-w-[80px]" title="${escapeHtml(row.model_llm || '')}">${escapeHtml(row.model_llm || '-')}</td>
+                            <td class="px-4 py-2.5 font-semibold text-gray-700 truncate max-w-[150px]" title="${escapeHtml(row.user_query || '')}">${escapeHtml(row.user_query || '')}</td>
                             <td class="px-4 py-2.5 text-center font-mono font-bold text-gray-600">${row.chunks_retrieved_count !== null && row.chunks_retrieved_count !== undefined ? row.chunks_retrieved_count : 0}</td>
                             <td class="px-4 py-2.5 font-mono font-bold text-[#7B2D2D]">${row.best_similarity_score !== null && row.best_similarity_score !== undefined ? parseFloat(row.best_similarity_score).toFixed(4) : "0.0000"}</td>
                             <td class="px-4 py-2.5 font-mono text-amber-600 font-bold">${row.response_time_seconds !== null && row.response_time_seconds !== undefined ? parseFloat(row.response_time_seconds).toFixed(2) + "s" : "-"}</td>
@@ -781,9 +808,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     return `
                         <tr class="hover:bg-gray-50 transition duration-150 text-xs">
-                            <td class="px-3 py-2.5 font-bold text-gray-850">${m.name}</td>
-                            <td class="px-3 py-2.5 text-center ${classB}">${displayB}</td>
-                            <td class="px-3 py-2.5 text-center ${classC}">${displayC}</td>
+                            <td class="px-3 py-2.5 font-bold text-gray-850">${escapeHtml(m.name)}</td>
+                            <td class="px-3 py-2.5 text-center ${classB}">${escapeHtml(displayB)}</td>
+                            <td class="px-3 py-2.5 text-center ${classC}">${escapeHtml(displayC)}</td>
                         </tr>
                     `;
                 }).join("");

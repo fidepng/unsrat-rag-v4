@@ -55,3 +55,38 @@ class TestChatAPI:
         json_data = response.json()
         assert "detail" in json_data
         assert "Terjadi kesalahan internal pada server" in json_data["detail"]
+
+
+@pytest.mark.offline
+class TestDevAPI:
+    def test_dev_status_endpoint(self):
+        response = client.get("/api/dev/status")
+        assert response.status_code == 200
+        data = response.json()
+        assert "active_generator" in data
+        assert "google_api_key_present" in data
+
+    @patch("app.preflight_check")
+    def test_dev_preflight_endpoint(self, mock_preflight):
+        mock_preflight.return_value = {"status": "ok", "google_api": True}
+        response = client.get("/api/dev/preflight")
+        assert response.status_code == 200
+        assert response.json()["status"] == "ok"
+
+    def test_dev_runs_endpoint(self):
+        response = client.get("/api/dev/runs")
+        assert response.status_code == 200
+        assert "runs" in response.json()
+
+    def test_dev_activate_run_not_found(self):
+        response = client.post("/api/dev/runs/activate", json={"run_id": "nonexistent_run_999"})
+        assert response.status_code == 404
+        assert "tidak ditemukan" in response.json()["detail"]
+
+    def test_dev_logs_endpoint(self):
+        response = client.get("/api/dev/logs?lines=10")
+        assert response.status_code == 200
+        data = response.json()
+        assert "log_path" in data
+        assert "lines" in data
+

@@ -4,21 +4,24 @@
 
 import argparse
 import hashlib
+import json
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
-import frontmatter
 import chromadb
+import frontmatter
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
+
 from src.config import (
-    CORPUS_DIR, CHROMA_DIR_A, CHROMA_DIR_B,
+    CORPUS_DIR, CHROMA_BASE_DIR, CHROMA_DIR_A, CHROMA_DIR_B,
     CHROMA_COLLECTION_A, CHROMA_COLLECTION_B, CHROMA_DISTANCE_FN,
     CHUNK_SIZE_A, CHUNK_OVERLAP_A, CHUNK_SIZE_B, CHUNK_OVERLAP_B,
     CHUNK_SEPARATORS, MIN_CHUNK_LENGTH, REQUIRED_YAML_FIELDS,
     EMBEDDING_MODEL_NAME, GOOGLE_API_KEY,
 )
-from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from src.logger_manager import get_logger, log_ingestion_report
 
 logger = get_logger("ingestion")
@@ -91,11 +94,11 @@ def _parse_and_chunk(
         logger.warning(f"SKIP {md_file.name} — field wajib kosong: {missing}")
         return []
 
-    doc_id       = meta["doc_id"]
-    title        = meta["title"]
-    category     = meta["category"]
-    content_type = meta.get("content_type", "")
-    status       = meta.get("status", "active")
+    doc_id       = str(meta["doc_id"])
+    title        = str(meta["title"])
+    category     = str(meta["category"])
+    content_type = str(meta.get("content_type", ""))
+    status       = str(meta.get("status", "active"))
     body         = post.content
 
     # Two-stage split: Stage 1 — structural (Markdown headers)
@@ -201,56 +204,53 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
     total_too_short     = 0
     files_processed     = 0
 
-    all_chunks = []
     for md_file in md_files:
         logger.info(f"Memproses: {md_file.name}")
         chunks = _parse_and_chunk(md_file, chunk_size, chunk_overlap)
+
         if not chunks:
             continue
-        all_chunks.extend(chunks)
+
         files_processed += 1
+
+        # Hitung chunk yang terlalu pendek di tahap sebelumnya
+        # (sudah di-filter di _parse_and_chunk, tapi kita track via generated vs returned)
+        # Untuk akurasi, kita generate ulang tanpa filter untuk hitung generated:
+        # (Simplified: anggap generated = len(chunks) + chunks_filtered_in_parse)
+        # Dalam implementasi aktual, pass counter ke _parse_and_chunk
         total_generated += len(chunks)
 
-    # Filter out duplicates
-    if all_chunks:
-        chunk_ids = [c["chunk_id"] for c in all_chunks]
-        existing = collection.get(ids=chunk_ids, include=[])
-        existing_ids = set(existing["ids"])
-    else:
-        existing_ids = set()
+        for chunk in chunks:
+            chunk_id = chunk["chunk_id"]
 
-    new_chunks = []
-    for chunk in all_chunks:
-        if chunk["chunk_id"] in existing_ids:
-            total_duplicate += 1
-            logger.debug(f"SKIP duplikat: {chunk['chunk_id'][:8]}...")
-        else:
-            new_chunks.append(chunk)
+            # FR-06: Idempotency check — skip jika sudah ada
+            existing = collection.get(ids=[chunk_id], include=[])
+            if existing["ids"]:
+                total_duplicate += 1
+                logger.debug(f"SKIP duplikat: {chunk_id[:8]}...")
+                continue
 
-    logger.info(f"Ditemukan {len(new_chunks)} chunk baru untuk di-embed (Total duplicate skip: {total_duplicate}).")
+            # Embed dengan retry
+            try:
+                embeddings = _embed_with_retry(embedding_fn, [chunk["content"]])
+            except RuntimeError as e:
+                logger.error(f"Embedding gagal untuk chunk {chunk_id[:8]}: {e}")
+                continue
 
-    # Batch embed and insert
-    batch_size = 50
-    for i in range(0, len(new_chunks), batch_size):
-        batch = new_chunks[i:i+batch_size]
-        batch_texts = [c["content"] for c in batch]
-        batch_ids = [c["chunk_id"] for c in batch]
-        batch_metadatas = [c["metadata"] for c in batch]
-
-        try:
-            embeddings = _embed_with_retry(embedding_fn, batch_texts)
             collection.add(
-                ids=batch_ids,
+                ids=[chunk_id],
                 embeddings=embeddings,
-                documents=batch_texts,
-                metadatas=batch_metadatas,
+                documents=[chunk["content"]],
+                metadatas=[chunk["metadata"]],
             )
-            total_inserted += len(batch)
-            logger.info(f"✓ Batch {i//batch_size + 1} ({len(batch)} chunk) berhasil dimasukkan.")
-            # Rate limit compliance: sleep 1 second between batches
-            time.sleep(1.0)
-        except RuntimeError as e:
-            logger.error(f"Gagal meng-embed batch {i//batch_size + 1}: {e}")
+            total_inserted += 1
+            logger.debug(f"INSERT: {chunk_id[:8]}... ({len(chunk['content'])} char)")
+            time.sleep(INTER_CHUNK_SLEEP)
+
+        logger.info(
+            f"✓ {md_file.name}: {len(chunks)} chunk diproses | "
+            f"{total_inserted} inserted sejauh ini"
+        )
 
     execution_time = time.time() - start_time
 
@@ -272,6 +272,20 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
     )
 
     logger.info(f"ChromaDB {collection_name}: {collection.count()} total chunks.")
+
+    meta_path = CHROMA_BASE_DIR / f"config_{config}" / ".ingestion_meta.json"
+    meta = {
+        "config": config,
+        "embedding_model": EMBEDDING_MODEL_NAME,
+        "ingested_at": datetime.now(timezone.utc).isoformat(),
+        "total_chunks": collection.count(),
+        "corpus_files": len(md_files),
+        "chunk_size": CHUNK_SIZE_B if config == "b" else CHUNK_SIZE_A,
+        "chunk_overlap": CHUNK_OVERLAP_B if config == "b" else CHUNK_OVERLAP_A,
+    }
+    meta_path.parent.mkdir(parents=True, exist_ok=True)
+    meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False))
+    logger.info(f"Ingestion metadata disimpan: {meta_path}")
 
 
 if __name__ == "__main__":

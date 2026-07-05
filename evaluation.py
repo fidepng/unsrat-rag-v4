@@ -3,8 +3,13 @@
 
 import argparse
 import csv
+import hashlib
+import json
+import re
+import shutil
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -12,9 +17,10 @@ import matplotlib.pyplot as plt
 from scipy.stats import wilcoxon as scipy_wilcoxon
 
 from src.config import (
-    EVAL_DATASET_PATH, EVAL_RESULTS_DIR,
+    ROOT_DIR, EVAL_DATASET_PATH, EVAL_RESULTS_DIR,
     METRICS_COLS, OPTIONAL_METRICS_COLS, ERROR_ANALYSIS_N,
     EVALUATOR_MODEL_NAME, LLM_MODEL_NAME, EMBEDDING_MODEL_NAME, GOOGLE_API_KEY,
+    EVAL_QUERY_DELAY_GOOGLE, EVAL_QUERY_DELAY_NIM,
 )
 # Ragas imports — VERIFIKASI dengan `use context7` sebelum implementasi
 from ragas import evaluate
@@ -26,8 +32,20 @@ from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmb
 
 from src.chain import get_response
 from src.logger_manager import get_logger
+from src.preflight import preflight_check
 
 logger = get_logger("evaluation")
+
+NIM_MODEL_MAP = {
+    "gemma-4-31b-it": "google/gemma-4-31b-it",
+    "llama-3.3-nemotron-super-49b-v1.5": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+    "llama-3.1-nemotron-nano-8b-v1": "nvidia/llama-3.1-nemotron-nano-8b-v1",
+    "llama-3.1-70b-instruct": "meta/llama-3.1-70b-instruct",
+    "llama-3.1-8b-instruct": "meta/llama-3.1-8b-instruct",
+    "deepseek-v4-flash": "deepseek-ai/deepseek-v4-flash",
+    "deepseek-v4-pro": "deepseek-ai/deepseek-v4-pro",
+}
+
 
 # --- Monkeypatch ChatOpenAI for NVIDIA NIM Rate Limiting (40 RPM Shared Limit) ---
 try:
@@ -124,6 +142,80 @@ except Exception as e:
 
 
 
+def _backup_ground_truth() -> tuple[str, Path]:
+    """
+    Hitung hash SHA256 dari ground_truth.csv (12 karakter pertama).
+    Simpan salinan ke eval/dataset/archive/ground_truth_{gt_hash}.csv jika belum ada.
+    Return (gt_hash, archive_gt_path).
+    """
+    if not EVAL_DATASET_PATH.exists():
+        raise FileNotFoundError(f"Ground truth tidak ditemukan: {EVAL_DATASET_PATH}")
+
+    content = EVAL_DATASET_PATH.read_bytes()
+    gt_hash = hashlib.sha256(content).hexdigest()[:12]
+
+    archive_dir = EVAL_DATASET_PATH.parent / "archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+
+    archive_gt_path = archive_dir / f"ground_truth_{gt_hash}.csv"
+    if not archive_gt_path.exists():
+        archive_gt_path.write_bytes(content)
+        logger.info(f"Ground truth di-backup ke {archive_gt_path}")
+
+    return gt_hash, archive_gt_path
+
+
+def _load_manifest() -> dict:
+    """
+    Muat run_manifest.json dari EVAL_RESULTS_DIR / "archive".
+    Buat direktori jika belum ada. Jika file belum ada, return {"runs": []}.
+    """
+    archive_dir = EVAL_RESULTS_DIR / "archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = archive_dir / "run_manifest.json"
+
+    if manifest_path.exists():
+        try:
+            with open(manifest_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            corrupt_path = archive_dir / f"run_manifest.json.corrupt_{timestamp}"
+            try:
+                shutil.copy2(manifest_path, corrupt_path)
+            except Exception as copy_err:
+                logger.error(f"Gagal membuat backup manifest corrupt: {copy_err}")
+            logger.error(f"Gagal membaca manifest file: {e}. Backup dibuat di {corrupt_path}. Menggunakan manifest baru.")
+            return {"runs": []}
+    return {"runs": []}
+
+
+def _save_manifest(manifest: dict) -> None:
+    """
+    Tulis JSON ke EVAL_RESULTS_DIR / "archive" / "run_manifest.json" secara atomik dengan indentasi.
+    """
+    archive_dir = EVAL_RESULTS_DIR / "archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = archive_dir / "run_manifest.json"
+    tmp_path = archive_dir / "run_manifest.json.tmp"
+
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=False)
+
+    tmp_path.replace(manifest_path)
+
+
+def _slugify_model(model_name: str) -> str:
+    name = model_name.split("/")[-1].lower()
+    return re.sub(r'[^a-z0-9]', '', name)
+
+
+def _make_model_slug(generator_model: str, evaluator_model: str) -> str:
+    gen_slug = _slugify_model(generator_model)
+    eval_slug = _slugify_model(evaluator_model)
+    return f"{gen_slug}_{eval_slug}"
+
+
 def _load_ground_truth() -> pd.DataFrame:
     """Load ground_truth.csv. Raise FileNotFoundError jika tidak ada."""
     if not EVAL_DATASET_PATH.exists():
@@ -140,7 +232,13 @@ def _load_ground_truth() -> pd.DataFrame:
     return df
 
 
-def run_evaluation(config: str, extra_metrics: list[str] | None = None, limit: int | None = None) -> None:
+def run_evaluation(
+    config: str,
+    extra_metrics: list[str] | None = None,
+    limit: int | None = None,
+    generator_model: str | None = None,
+    evaluator_model: str | None = None,
+) -> None:
     """
     Jalankan evaluasi Ragas untuk config tertentu.
 
@@ -149,8 +247,34 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None, limit: i
 
     (FR-15, FR-16, FR-21, FR-23, FR-25, FR-31)
     """
+    llm_model = generator_model if generator_model else LLM_MODEL_NAME
+    eval_model = evaluator_model if evaluator_model else EVALUATOR_MODEL_NAME
+
+    # Preflight Health Check API Readiness
+    pf_res = preflight_check(
+        require_google=True,
+        require_nim=False,
+        generator_model=llm_model,
+        evaluator_model=eval_model,
+    )
+    if not pf_res.get("overall_ok", False):
+        print("\n" + "=" * 60)
+        print("PERINGATAN PRE-FLIGHT HEALTH CHECK")
+        print("=" * 60)
+        for svc_name, status in pf_res.get("services", {}).items():
+            if not status.get("ok"):
+                print(f" - [{svc_name}]: GAGAL -> {status.get('error')}")
+            else:
+                print(f" - [{svc_name}]: OK ({status.get('latency_ms')} ms)")
+        print("=" * 60)
+
+        user_choice = input("PERINGATAN PRE-FLIGHT: Beberapa API mengalami kendala. Lanjutkan evaluasi? (y/n): ")
+        if user_choice.strip().lower() != "y":
+            logger.warning("Evaluasi dibatalkan oleh pengguna karena kendala pre-flight check.")
+            sys.exit(1)
+
     logger.info(f"=== Evaluasi Config {config.upper()} dimulai ===")
-    logger.info(f"Generator: {LLM_MODEL_NAME} | Evaluator: {EVALUATOR_MODEL_NAME}")
+    logger.info(f"Generator: {llm_model} | Evaluator: {eval_model}")
     logger.info("PERINGATAN: Pastikan model evaluator sama untuk semua config! (Section 18.5)")
 
     df = _load_ground_truth()
@@ -159,168 +283,242 @@ def run_evaluation(config: str, extra_metrics: list[str] | None = None, limit: i
         logger.info(f"Evaluasi dibatasi ke {limit} baris pertama untuk pengujian.")
     EVAL_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    results = []
+    gt_hash, _ = _backup_ground_truth()
 
-    for idx, row in df.iterrows():
-        query     = str(row["user_input"])
-        reference = str(row["reference"])
-        logger.info(f"[{idx+1}/{len(df)}] Evaluasi: '{query[:60]}'")
+    start_dt = datetime.now(timezone.utc)
+    run_id = f"{config}_{start_dt.strftime('%Y%m%d_%H%M%S')}"
 
-        start_time = time.time()
-
-        # FR-14: Reset chat_history untuk setiap query evaluasi
-        resp = get_response(
-            query=query,
-            config=config,
-            chat_history=[],   # stateless per query
-            model_name=LLM_MODEL_NAME,
-            streaming=False,
-        )
-        elapsed = time.time() - start_time
-
-        # NVIDIA NIM Rate Limit Compliance (40 RPM limit)
-        # 1.5 seconds delay between requests prevents quota exhaustion on NIM integrate endpoints.
-        if any(m in LLM_MODEL_NAME.lower() for m in ["llama", "qwen", "gemma", "z-ai", "glm", "deepseek"]):
-            logger.info("Jeda 1.5s untuk mematuhi rate limit NVIDIA NIM (40 RPM)...")
-            time.sleep(1.5)
-
-        results.append({
-            "user_input":           query,
-            "reference":            reference,
-            "response":             resp["answer"],
-            # FR-31: retrieved_contexts = SEMUA chunk lolos threshold (bukan hanya citation_sources)
-            "retrieved_contexts":   resp["retrieved_contexts"],
-            "citation_sources_count": len(resp["citation_sources"]),
-            "response_time_seconds": round(elapsed, 4),
-            "category":             row.get("category", ""),
-            "source_doc":           row.get("source_doc", ""),
-        })
-
-    # Ragas evaluation
-    logger.info("Menjalankan Ragas evaluate()...")
-
-    # Bangun dataset untuk Ragas
-    eval_data = {
-        "question":           [r["user_input"]           for r in results],
-        "answer":             [r["response"]             for r in results],
-        "contexts":           [r["retrieved_contexts"]   for r in results],
-        "ground_truth":       [r["reference"]            for r in results],
+    run_entry = {
+        "run_id": run_id,
+        "config": config,
+        "timestamp_start": start_dt.isoformat(),
+        "timestamp_end": None,
+        "status": "running",
+        "generator_model": llm_model,
+        "generator_provider": "google" if "gemini" in llm_model.lower() else "nvidia_nim",
+        "evaluator_model": eval_model,
+        "evaluator_provider": "google" if "gemini" in eval_model.lower() else "nvidia_nim",
+        "embedding_model": EMBEDDING_MODEL_NAME,
+        "ground_truth_hash": gt_hash,
+        "total_queries": len(df),
+        "success_count": 0,
+        "error_count": 0,
+        "metrics": {},
+        "archive_file": None,
+        "is_active": False,
     }
 
-    # Konfigurasi sequential untuk stabilitas (Section 12.2)
-    run_config = RunConfig(max_workers=1, timeout=300, max_retries=10)
-
-    # Metrik yang dijalankan
-    base_metrics = [faithfulness, answer_relevancy, context_precision, context_recall]
-    # Tambah metrik opsional jika diminta
-    if extra_metrics:
-        for m_name in extra_metrics:
-            if m_name in OPTIONAL_METRICS_COLS:
-                try:
-                    # context_entity_recall — verifikasi import dengan `use context7`
-                    from ragas.metrics import context_entity_recall
-                    base_metrics.append(context_entity_recall)
-                    logger.info(f"Metrik opsional ditambahkan: {m_name}")
-                except ImportError:
-                    logger.warning(f"Metrik opsional {m_name} tidak tersedia di versi Ragas ini.")
-
-    # Initialize custom LLM and Embeddings wrappers for Gemini / NVIDIA NIM
-    import os
-    nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
-    if nvidia_api_key:
-        evaluator_model = EVALUATOR_MODEL_NAME
-        if evaluator_model == "gemma-4-31b-it":
-            evaluator_model = "google/gemma-4-31b-it"
-        elif evaluator_model == "llama-3.3-nemotron-super-49b-v1.5":
-            evaluator_model = "nvidia/llama-3.3-nemotron-super-49b-v1.5"
-        elif evaluator_model == "llama-3.1-nemotron-nano-8b-v1":
-            evaluator_model = "nvidia/llama-3.1-nemotron-nano-8b-v1"
-        elif evaluator_model == "llama-3.1-70b-instruct":
-            evaluator_model = "meta/llama-3.1-70b-instruct"
-        elif evaluator_model == "llama-3.1-8b-instruct":
-            evaluator_model = "meta/llama-3.1-8b-instruct"
-        logger.info(f"NVIDIA_NIM_API_KEY ditemukan. Menggunakan NVIDIA NIM ({evaluator_model}) sebagai evaluator.")
-        from langchain_openai import ChatOpenAI
-        evaluator_llm = LangchainLLMWrapper(ChatOpenAI(
-            model=evaluator_model,
-            api_key=nvidia_api_key,
-            openai_api_base="https://integrate.api.nvidia.com/v1",
-            temperature=0.0,
-            max_tokens=4096,
-        ))
-        logger.info("Menggunakan Google Gemini (models/gemini-embedding-001) sebagai evaluator embeddings untuk menghindari error 500 NIM.")
-        from langchain_google_genai import GoogleGenerativeAIEmbeddings
-        evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
-            model=EMBEDDING_MODEL_NAME,
-            google_api_key=GOOGLE_API_KEY,
-        ))
-    else:
-        logger.info(f"NVIDIA_NIM_API_KEY tidak ditemukan. Menggunakan Google Gemini ({EVALUATOR_MODEL_NAME}) sebagai evaluator.")
-        evaluator_llm = LangchainLLMWrapper(ChatGoogleGenerativeAI(
-            model=EVALUATOR_MODEL_NAME,
-            google_api_key=GOOGLE_API_KEY,
-            temperature=0.0,
-        ))
-        evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
-            model=EMBEDDING_MODEL_NAME,
-            google_api_key=GOOGLE_API_KEY,
-        ))
-
-    # Assign custom LLM and Embeddings to each metric
-    for metric in base_metrics:
-        if hasattr(metric, "llm"):
-            metric.llm = evaluator_llm
-        if hasattr(metric, "embeddings"):
-            metric.embeddings = evaluator_embeddings
+    manifest = _load_manifest()
+    manifest["runs"].append(run_entry)
+    _save_manifest(manifest)
 
     try:
-        from datasets import Dataset
-        ragas_dataset = Dataset.from_dict(eval_data)
+        results = []
+        success_cnt = 0
+        err_cnt = 0
 
-        ragas_result = evaluate(
-            dataset=ragas_dataset,
-            metrics=base_metrics,
-            run_config=run_config,
-        )
-        ragas_df = ragas_result.to_pandas()
-    except Exception as e:
-        logger.error(f"Ragas evaluate() gagal: {e}")
-        logger.error("Jalankan `use context7` untuk verifikasi API Ragas yang terinstall.")
-        raise
+        for idx, row in df.iterrows():
+            query     = str(row["user_input"])
+            reference = str(row["reference"])
+            logger.info(f"[{idx+1}/{len(df)}] Evaluasi: '{query[:60]}'")
 
-    # Gabungkan hasil Ragas dengan metadata
-    for i, row in ragas_df.iterrows():
-        results[i]["faithfulness"]       = row.get("faithfulness",       None)
-        results[i]["answer_relevancy"]   = row.get("answer_relevancy",   None)
-        results[i]["context_precision"]  = row.get("context_precision",  None)
-        results[i]["context_recall"]     = row.get("context_recall",     None)
+            start_time = time.time()
+
+            # FR-14: Reset chat_history untuk setiap query evaluasi
+            resp = get_response(
+                query=query,
+                config=config,
+                chat_history=[],   # stateless per query
+                model_name=llm_model,
+                streaming=False,
+            )
+            elapsed = time.time() - start_time
+
+            answer_str = resp.get("answer", "")
+            if "Terjadi gangguan" in answer_str:
+                err_cnt += 1
+            else:
+                success_cnt += 1
+
+            # Rate Limit Compliance (Dynamic delay based on generator model)
+            if "gemini" in llm_model.lower():
+                delay = EVAL_QUERY_DELAY_GOOGLE
+            else:
+                delay = EVAL_QUERY_DELAY_NIM
+
+            logger.info(f"Jeda {delay:.1f}s untuk mematuhi rate limit model generator ({llm_model})...")
+            time.sleep(delay)
+
+            results.append({
+                "user_input":           query,
+                "reference":            reference,
+                "response":             answer_str,
+                # FR-31: retrieved_contexts = SEMUA chunk lolos threshold (bukan hanya citation_sources)
+                "retrieved_contexts":   resp["retrieved_contexts"],
+                "citation_sources_count": len(resp["citation_sources"]),
+                "response_time_seconds": round(elapsed, 4),
+                "category":             row.get("category", ""),
+                "source_doc":           row.get("source_doc", ""),
+            })
+
+        # Ragas evaluation
+        logger.info("Menjalankan Ragas evaluate()...")
+
+        # Bangun dataset untuk Ragas
+        eval_data = {
+            "question":           [r["user_input"]           for r in results],
+            "answer":             [r["response"]             for r in results],
+            "contexts":           [r["retrieved_contexts"]   for r in results],
+            "ground_truth":       [r["reference"]            for r in results],
+        }
+
+        # Konfigurasi sequential untuk stabilitas (Section 12.2)
+        run_config = RunConfig(max_workers=1, timeout=300, max_retries=10)
+
+        # Metrik yang dijalankan
+        base_metrics = [faithfulness, answer_relevancy, context_precision, context_recall]
+        # Tambah metrik opsional jika diminta
+        if extra_metrics:
+            for m_name in extra_metrics:
+                if m_name in OPTIONAL_METRICS_COLS:
+                    try:
+                        # context_entity_recall — verifikasi import dengan `use context7`
+                        from ragas.metrics import context_entity_recall
+                        base_metrics.append(context_entity_recall)
+                        logger.info(f"Metrik opsional ditambahkan: {m_name}")
+                    except ImportError:
+                        logger.warning(f"Metrik opsional {m_name} tidak tersedia di versi Ragas ini.")
+
+        # Initialize custom LLM and Embeddings wrappers for Gemini / NVIDIA NIM
+        import os
+        nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
+        if nvidia_api_key:
+            evaluator_model_name = NIM_MODEL_MAP.get(eval_model, eval_model)
+            logger.info(f"NVIDIA_NIM_API_KEY ditemukan. Menggunakan NVIDIA NIM ({evaluator_model_name}) sebagai evaluator.")
+            from langchain_openai import ChatOpenAI
+            evaluator_llm = LangchainLLMWrapper(ChatOpenAI(
+                model=evaluator_model_name,
+                api_key=nvidia_api_key,
+                openai_api_base="https://integrate.api.nvidia.com/v1",
+                temperature=0.0,
+                max_tokens=4096,
+            ))
+            logger.info("Menggunakan Google Gemini (models/gemini-embedding-001) sebagai evaluator embeddings untuk menghindari error 500 NIM.")
+            from langchain_google_genai import GoogleGenerativeAIEmbeddings
+            evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
+                model=EMBEDDING_MODEL_NAME,
+                google_api_key=GOOGLE_API_KEY,
+            ))
+        else:
+            logger.info(f"NVIDIA_NIM_API_KEY tidak ditemukan. Menggunakan Google Gemini ({eval_model}) sebagai evaluator.")
+            evaluator_llm = LangchainLLMWrapper(ChatGoogleGenerativeAI(
+                model=eval_model,
+                google_api_key=GOOGLE_API_KEY,
+                temperature=0.0,
+            ))
+            evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
+                model=EMBEDDING_MODEL_NAME,
+                google_api_key=GOOGLE_API_KEY,
+            ))
+
+        # Assign custom LLM and Embeddings to each metric
+        for metric in base_metrics:
+            if hasattr(metric, "llm"):
+                metric.llm = evaluator_llm
+            if hasattr(metric, "embeddings"):
+                metric.embeddings = evaluator_embeddings
+
+        try:
+            from datasets import Dataset
+            ragas_dataset = Dataset.from_dict(eval_data)
+
+            ragas_result = evaluate(
+                dataset=ragas_dataset,
+                metrics=base_metrics,
+                run_config=run_config,
+            )
+            ragas_df = ragas_result.to_pandas()
+        except Exception as e:
+            logger.error(f"Ragas evaluate() gagal: {e}")
+            logger.error("Jalankan `use context7` untuk verifikasi API Ragas yang terinstall.")
+            raise
+
+        # Gabungkan hasil Ragas dengan metadata
+        for i, row in ragas_df.iterrows():
+            results[i]["faithfulness"]       = row.get("faithfulness",       None)
+            results[i]["answer_relevancy"]   = row.get("answer_relevancy",   None)
+            results[i]["context_precision"]  = row.get("context_precision",  None)
+            results[i]["context_recall"]     = row.get("context_recall",     None)
+            if extra_metrics and "context_entity_recall" in extra_metrics:
+                results[i]["context_entity_recall"] = row.get("context_entity_recall", None)
+
+        # Simpan hasil utama
+        output_path = EVAL_RESULTS_DIR / f"hasil_config_{config}.csv"
+        fieldnames = [
+            "user_input", "reference", "response", "retrieved_contexts",
+            "citation_sources_count", "faithfulness", "answer_relevancy",
+            "context_precision", "context_recall", "response_time_seconds",
+            "category", "source_doc",
+        ]
         if extra_metrics and "context_entity_recall" in extra_metrics:
-            results[i]["context_entity_recall"] = row.get("context_entity_recall", None)
+            fieldnames.append("context_entity_recall")
 
-    # Simpan hasil utama
-    output_path = EVAL_RESULTS_DIR / f"hasil_config_{config}.csv"
-    fieldnames = [
-        "user_input", "reference", "response", "retrieved_contexts",
-        "citation_sources_count", "faithfulness", "answer_relevancy",
-        "context_precision", "context_recall", "response_time_seconds",
-        "category", "source_doc",
-    ]
-    if extra_metrics and "context_entity_recall" in extra_metrics:
-        fieldnames.append("context_entity_recall")
+        with open(output_path, "w", newline="", encoding="utf-8-sig") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(results)
 
-    with open(output_path, "w", newline="", encoding="utf-8-sig") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(results)
+        logger.info(f"Hasil disimpan: {output_path}")
 
-    logger.info(f"Hasil disimpan: {output_path}")
+        # Agregasi
+        df_result = pd.DataFrame(results)
+        _print_summary(df_result, config)
 
-    # Agregasi
-    df_result = pd.DataFrame(results)
-    _print_summary(df_result, config)
+        # FR-23: Error analysis — N sampel dengan skor terendah
+        _export_error_analysis(df_result, config)
 
-    # FR-23: Error analysis — N sampel dengan skor terendah
-    _export_error_analysis(df_result, config)
+        # Archive & Run Manifest recording
+        slug = _make_model_slug(llm_model, eval_model)
+        archive_dir = EVAL_RESULTS_DIR / "archive"
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        archive_csv_name = f"hasil_config_{config}_{start_dt.strftime('%Y%m%d_%H%M%S')}_{slug}.csv"
+        archive_csv_path = archive_dir / archive_csv_name
+        shutil.copy2(output_path, archive_csv_path)
+        logger.info(f"Hasil evaluasi di-archive ke: {archive_csv_path}")
+
+        # Compute mean of all available metrics columns from Ragas results
+        mean_metrics_dict = {}
+        possible_metrics = METRICS_COLS + (extra_metrics or []) + ["response_time_seconds"]
+        for m_col in possible_metrics:
+            if m_col in df_result.columns:
+                mean_val = df_result[m_col].mean()
+                if pd.notna(mean_val):
+                    mean_metrics_dict[m_col] = round(float(mean_val), 4)
+
+        manifest = _load_manifest()
+        for r in manifest["runs"]:
+            if r["run_id"] == run_id:
+                r["status"] = "completed"
+                r["timestamp_end"] = datetime.now(timezone.utc).isoformat()
+                r["success_count"] = success_cnt
+                r["error_count"] = err_cnt
+                r["metrics"] = mean_metrics_dict
+                r["archive_file"] = archive_csv_path.relative_to(ROOT_DIR).as_posix()
+                r["is_active"] = True
+            elif r.get("config") == config:
+                r["is_active"] = False
+
+        _save_manifest(manifest)
+
+    except BaseException as e:
+        logger.error(f"Evaluasi run {run_id} gagal dengan error: {e}")
+        manifest = _load_manifest()
+        for r in manifest["runs"]:
+            if r["run_id"] == run_id:
+                r["status"] = "failed"
+                r["timestamp_end"] = datetime.now(timezone.utc).isoformat()
+        _save_manifest(manifest)
+        raise
 
 
 def _print_summary(df: pd.DataFrame, config: str) -> None:
@@ -479,13 +677,23 @@ if __name__ == "__main__":
                         help="Metrik opsional, contoh: context_entity_recall")
     parser.add_argument("--limit", type=int, default=None,
                         help="Batasi jumlah baris dataset yang dievaluasi")
+    parser.add_argument("--model", type=str, default=None,
+                        help="Override LLM generator model")
+    parser.add_argument("--evaluator", type=str, default=None,
+                        help="Override Ragas evaluator model")
     args = parser.parse_args()
 
     if args.config:
         if args.config == "a":
             print("Config A is deprecated and archived for backup purposes.")
             sys.exit(0)
-        run_evaluation(args.config, extra_metrics=args.extra_metrics, limit=args.limit)
+        run_evaluation(
+            args.config,
+            extra_metrics=args.extra_metrics,
+            limit=args.limit,
+            generator_model=args.model,
+            evaluator_model=args.evaluator,
+        )
     elif args.stats:
         # --- ARCHIVED WILCOXON TEST ---
         print("Wilcoxon statistical test is deprecated and archived for backup purposes.")

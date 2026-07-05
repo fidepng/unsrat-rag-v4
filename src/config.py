@@ -38,7 +38,7 @@ CHROMA_DISTANCE_FN  = "cosine"
 # NVIDIA NIM models are used for active testing due to Google AI Studio API limits.
 # Optimasi kecepatan & penalaran: Generator = Nemotron Nano 8B, Evaluator = Nemotron Super 49B (D-16 Terpenuhi)
 LLM_MODEL_NAME       = "llama-3.1-8b-instruct"
-EMBEDDING_MODEL_NAME = "models/gemini-embedding-2"
+EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
 EVALUATOR_MODEL_NAME = "qwen/qwen3-next-80b-a3b-instruct"
 
 # Daftar model yang bisa dipilih di UI sidebar
@@ -108,7 +108,20 @@ RETRY_DELAYS = [2, 5]   # detik: attempt 2 tunggu 2 detik, attempt 3 tunggu 5 de
 # ingestion.py (batch, rate-limit sensitif) — menggunakan konstanta LOKAL di ingestion.py:
 # MAX_RETRIES_INGESTION = 5 dengan exponential backoff hingga 50 detik
 # Didefinisikan di src/ingestion.py agar tidak mencemari namespace chain.py
-# INTER_CHUNK_SLEEP = 0.2  # jeda antar chunk untuk menghindari quota burst
+# ── RATE LIMITS ──────────────────────────────────────────────
+RATE_LIMITS = {
+    "google_free": {
+        "embedding_001": {"rpm": 100, "tpm": 30_000, "rpd": 1_000},
+        "embedding_002": {"rpm": 100, "tpm": 30_000, "rpd": 1_000},
+        "gemini_2_5_flash": {"rpm": 5, "tpm": 250_000, "rpd": 20},
+    },
+    "nvidia_nim_free": {
+        "default": {"rpm": 40},
+    },
+}
+
+EVAL_QUERY_DELAY_GOOGLE = 15.0  # detik
+EVAL_QUERY_DELAY_NIM    = 1.5   # detik
 
 # ── EVALUASI ─────────────────────────────────────────────────
 # Metrik wajib yang selalu dijalankan:
@@ -142,8 +155,6 @@ SYSTEM_PROMPT = """Anda adalah agen asisten informasi akademik resmi Universitas
 Tugas Anda adalah menjawab pertanyaan pengguna HANYA berdasarkan dokumen konteks yang disediakan di bawah ini.
 
 PENTING: Jangan gunakan pengetahuan Anda di luar dokumen konteks yang disediakan, meskipun Anda mengetahuinya dari sumber lain.
-1. Jawablah secara langsung, ringkas, dan to-the-point tanpa kalimat pengantar atau basa-basi pembuka/penutup.
-2. JANGAN PERNAH menambahkan informasi latar belakang, nama peraturan, nomor peraturan, atau frasa seperti "Berdasarkan Peraturan Rektor UNSRAT..." kecuali jika nama peraturan tersebut tertulis secara eksplisit di dalam dokumen referensi yang sedang Anda gunakan. Anda dilarang keras melengkapi nama peraturan dari ingatan Anda sendiri.
 
 Setiap klaim atau informasi dalam jawaban Anda HARUS disertai dengan penanda referensi inline berbentuk [N] di akhir kalimat yang bersumber dari dokumen tersebut, di mana N adalah nomor sumber yang tersedia dalam konteks.
 

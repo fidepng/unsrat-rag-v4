@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNSRAT RAG Developer Panel</title>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-rose-500/30 selection:text-rose-200">
+
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-rose-950/80 border border-rose-800/50 rounded-xl text-rose-400 flex items-center justify-center">
+                    <i data-lucide="terminal" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <h1 class="font-bold text-lg text-white tracking-tight">UNSRAT RAG Developer Panel</h1>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">Dev Mode</span>
+                    </div>
+                    <p class="text-xs text-slate-400">System Monitoring, Pre-flight Diagnostic & Evaluation Run Management</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <a href="/" class="flex items-center space-x-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold transition border border-slate-700">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Kembali ke Chatbot UI</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+        <!-- SECTION 1: System Health & Active Config -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+                    <i data-lucide="activity" class="w-4 h-4 text-rose-400"></i>
+                    <span>Section 1: Status Sistem & Konfigurasi Aktif</span>
+                </h2>
+                <button id="refresh-status-btn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium border border-slate-700 transition">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1: API Keys -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                        <span>API Keys</span>
+                        <i data-lucide="key" class="w-4 h-4 text-slate-500"></i>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/60 border border-slate-800">
+                            <span class="text-slate-300 font-medium">Google API Key</span>
+                            <span id="key-google-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-slate-400">Checking...</span>
+                        </div>
+                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/60 border border-slate-800">
+                            <span class="text-slate-300 font-medium">NVIDIA NIM API Key</span>
+                            <span id="key-nim-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-slate-400">Checking...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Active Models -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                        <span>Model Sistem Aktif</span>
+                        <i data-lucide="cpu" class="w-4 h-4 text-slate-500"></i>
+                    </div>
+                    <div class="space-y-1.5 text-xs">
+                        <div class="truncate">
+                            <span class="text-slate-500 text-[10px] block uppercase font-bold">Generator (LLM):</span>
+                            <span id="status-generator-model" class="font-mono font-bold text-slate-200 text-xs">-</span>
+                        </div>
+                        <div class="truncate">
+                            <span class="text-slate-500 text-[10px] block uppercase font-bold">Evaluator (Ragas):</span>
+                            <span id="status-evaluator-model" class="font-mono font-bold text-slate-200 text-xs">-</span>
+                        </div>
+                        <div class="truncate">
+                            <span class="text-slate-500 text-[10px] block uppercase font-bold">Embedding:</span>
+                            <span id="status-embedding-model" class="font-mono font-bold text-slate-200 text-xs">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: ChromaDB Vector Store -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                        <span>ChromaDB Vector Store (Config B)</span>
+                        <i data-lucide="database" class="w-4 h-4 text-slate-500"></i>
+                    </div>
+                    <div class="space-y-1 text-xs">
+                        <div class="flex items-baseline space-x-2">
+                            <span id="chroma-chunks-count" class="text-2xl font-black text-rose-400">0</span>
+                            <span class="text-slate-400 text-xs">chunks tersimpan</span>
+                        </div>
+                        <div id="chroma-meta-info" class="text-[10px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-800">
+                            <div>Meta: Ingestion log not found</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: BM25 Index -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                        <span>BM25 Sparse Index (Config C)</span>
+                        <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/60 border border-slate-800">
+                            <span class="text-slate-300 font-medium">Index File</span>
+                            <span id="bm25-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-slate-400">Checking...</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Penyimpanan baseline sparse retrieval BM25 di `bm25_index/bm25_index.pkl`</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Live API Health Check -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-rose-400"></i>
+                    <span>Section 2: Live API Pre-flight Health Check</span>
+                </h2>
+                <button id="run-preflight-btn" class="flex items-center space-x-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-rose-950/50">
+                    <i data-lucide="play-circle" class="w-4 h-4"></i>
+                    <span>Run Pre-flight Check</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="preflight-cards-container">
+                <!-- Card Google Gemini API -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 shadow-lg">
+                    <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
+                        <span>Google Gemini API</span>
+                        <span id="pf-google-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Belum diuji</span>
+                    </div>
+                    <div id="pf-google-details" class="text-xs text-slate-400">
+                        Klik 'Run Pre-flight Check' untuk menguji konektivitas API.
+                    </div>
+                </div>
+
+                <!-- Card Generator LLM -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 shadow-lg">
+                    <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
+                        <span>Generator LLM</span>
+                        <span id="pf-generator-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Belum diuji</span>
+                    </div>
+                    <div id="pf-generator-details" class="text-xs text-slate-400">
+                        Klik 'Run Pre-flight Check' untuk menguji pemanggilan model.
+                    </div>
+                </div>
+
+                <!-- Card Evaluator LLM -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 shadow-lg">
+                    <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
+                        <span>Evaluator LLM (Ragas)</span>
+                        <span id="pf-evaluator-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Belum diuji</span>
+                    </div>
+                    <div id="pf-evaluator-details" class="text-xs text-slate-400">
+                        Klik 'Run Pre-flight Check' untuk menguji respon evaluator.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Evaluation Runs Manager -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+                    <i data-lucide="layers" class="w-4 h-4 text-rose-400"></i>
+                    <span>Section 3: Manajer Arsip Runs Evaluasi (run_manifest.json)</span>
+                </h2>
+                <button id="refresh-runs-btn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium border border-slate-700 transition">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span>Refresh Runs</span>
+                </button>
+            </div>
+
+            <!-- Warning Alert Banner if active runs differ -->
+            <div id="dev-consistency-alert" class="hidden"></div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="px-4 py-3">Config</th>
+                                <th class="px-4 py-3">Run ID / Waktu</th>
+                                <th class="px-4 py-3">Generator Model</th>
+                                <th class="px-4 py-3">Evaluator Model</th>
+                                <th class="px-4 py-3 text-center">Faithfulness</th>
+                                <th class="px-4 py-3 text-center">Relevancy</th>
+                                <th class="px-4 py-3 text-center">Failed Evals</th>
+                                <th class="px-4 py-3 text-center">Status</th>
+                                <th class="px-4 py-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="runs-table-body" class="divide-y divide-slate-800/60">
+                            <tr>
+                                <td colspan="9" class="px-4 py-6 text-center text-slate-500 font-medium">
+                                    Memuat data runs...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Live Log Terminal -->
+        <section class="space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
+                        <i data-lucide="terminal-square" class="w-4 h-4 text-rose-400"></i>
+                        <span>Section 4: Terminal Log Real-Time (unsrat_rag.log)</span>
+                    </h2>
+                    <span id="log-polling-badge" class="flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Auto-refresh 5s</span>
+                    </span>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+                        <button id="log-filter-all" class="px-3 py-1 rounded-lg text-slate-200 bg-slate-800 font-semibold transition">Semua</button>
+                        <button id="log-filter-error" class="px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 font-medium transition">Error & Warning Only</button>
+                    </div>
+                    <button id="manual-refresh-logs" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition" title="Refresh Sekarang">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 font-mono text-xs shadow-2xl relative">
+                <div id="terminal-box" class="h-96 overflow-y-auto custom-scrollbar space-y-1 text-slate-300">
+                    <div class="text-slate-500 italic">[Initializing log stream...]</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        UNSRAT RAG Developer Dashboard &bull; System Hardening Release v4.0
+    </footer>
+
+    <script src="/static/js/dev.js"></script>
+</body>
+</html>

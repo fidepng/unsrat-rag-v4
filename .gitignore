@@ -23,6 +23,7 @@ context-mode/
 .vscode/
 .pytest_cache/
 *.html
+!static/*.html
 
 reference/
 .playwright-mcp/
