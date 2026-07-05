@@ -38,7 +38,7 @@ CHROMA_DISTANCE_FN  = "cosine"
 # NVIDIA NIM models are used for active testing due to Google AI Studio API limits.
 # Optimasi kecepatan & penalaran: Generator = Nemotron Nano 8B, Evaluator = Nemotron Super 49B (D-16 Terpenuhi)
 LLM_MODEL_NAME       = "llama-3.1-8b-instruct"
-EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
+EMBEDDING_MODEL_NAME = "models/gemini-embedding-2"
 EVALUATOR_MODEL_NAME = "qwen/qwen3-next-80b-a3b-instruct"
 
 # Daftar model yang bisa dipilih di UI sidebar
@@ -142,6 +142,8 @@ SYSTEM_PROMPT = """Anda adalah agen asisten informasi akademik resmi Universitas
 Tugas Anda adalah menjawab pertanyaan pengguna HANYA berdasarkan dokumen konteks yang disediakan di bawah ini.
 
 PENTING: Jangan gunakan pengetahuan Anda di luar dokumen konteks yang disediakan, meskipun Anda mengetahuinya dari sumber lain.
+1. Jawablah secara langsung, ringkas, dan to-the-point tanpa kalimat pengantar atau basa-basi pembuka/penutup.
+2. JANGAN PERNAH menambahkan informasi latar belakang, nama peraturan, nomor peraturan, atau frasa seperti "Berdasarkan Peraturan Rektor UNSRAT..." kecuali jika nama peraturan tersebut tertulis secara eksplisit di dalam dokumen referensi yang sedang Anda gunakan. Anda dilarang keras melengkapi nama peraturan dari ingatan Anda sendiri.
 
 Setiap klaim atau informasi dalam jawaban Anda HARUS disertai dengan penanda referensi inline berbentuk [N] di akhir kalimat yang bersumber dari dokumen tersebut, di mana N adalah nomor sumber yang tersedia dalam konteks.
 

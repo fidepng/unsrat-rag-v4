@@ -201,53 +201,56 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
     total_too_short     = 0
     files_processed     = 0
 
+    all_chunks = []
     for md_file in md_files:
         logger.info(f"Memproses: {md_file.name}")
         chunks = _parse_and_chunk(md_file, chunk_size, chunk_overlap)
-
         if not chunks:
             continue
-
+        all_chunks.extend(chunks)
         files_processed += 1
-
-        # Hitung chunk yang terlalu pendek di tahap sebelumnya
-        # (sudah di-filter di _parse_and_chunk, tapi kita track via generated vs returned)
-        # Untuk akurasi, kita generate ulang tanpa filter untuk hitung generated:
-        # (Simplified: anggap generated = len(chunks) + chunks_filtered_in_parse)
-        # Dalam implementasi aktual, pass counter ke _parse_and_chunk
         total_generated += len(chunks)
 
-        for chunk in chunks:
-            chunk_id = chunk["chunk_id"]
+    # Filter out duplicates
+    if all_chunks:
+        chunk_ids = [c["chunk_id"] for c in all_chunks]
+        existing = collection.get(ids=chunk_ids, include=[])
+        existing_ids = set(existing["ids"])
+    else:
+        existing_ids = set()
 
-            # FR-06: Idempotency check — skip jika sudah ada
-            existing = collection.get(ids=[chunk_id], include=[])
-            if existing["ids"]:
-                total_duplicate += 1
-                logger.debug(f"SKIP duplikat: {chunk_id[:8]}...")
-                continue
+    new_chunks = []
+    for chunk in all_chunks:
+        if chunk["chunk_id"] in existing_ids:
+            total_duplicate += 1
+            logger.debug(f"SKIP duplikat: {chunk['chunk_id'][:8]}...")
+        else:
+            new_chunks.append(chunk)
 
-            # Embed dengan retry
-            try:
-                embeddings = _embed_with_retry(embedding_fn, [chunk["content"]])
-            except RuntimeError as e:
-                logger.error(f"Embedding gagal untuk chunk {chunk_id[:8]}: {e}")
-                continue
+    logger.info(f"Ditemukan {len(new_chunks)} chunk baru untuk di-embed (Total duplicate skip: {total_duplicate}).")
 
+    # Batch embed and insert
+    batch_size = 50
+    for i in range(0, len(new_chunks), batch_size):
+        batch = new_chunks[i:i+batch_size]
+        batch_texts = [c["content"] for c in batch]
+        batch_ids = [c["chunk_id"] for c in batch]
+        batch_metadatas = [c["metadata"] for c in batch]
+
+        try:
+            embeddings = _embed_with_retry(embedding_fn, batch_texts)
             collection.add(
-                ids=[chunk_id],
+                ids=batch_ids,
                 embeddings=embeddings,
-                documents=[chunk["content"]],
-                metadatas=[chunk["metadata"]],
+                documents=batch_texts,
+                metadatas=batch_metadatas,
             )
-            total_inserted += 1
-            logger.debug(f"INSERT: {chunk_id[:8]}... ({len(chunk['content'])} char)")
-            time.sleep(INTER_CHUNK_SLEEP)
-
-        logger.info(
-            f"✓ {md_file.name}: {len(chunks)} chunk diproses | "
-            f"{total_inserted} inserted sejauh ini"
-        )
+            total_inserted += len(batch)
+            logger.info(f"✓ Batch {i//batch_size + 1} ({len(batch)} chunk) berhasil dimasukkan.")
+            # Rate limit compliance: sleep 1 second between batches
+            time.sleep(1.0)
+        except RuntimeError as e:
+            logger.error(f"Gagal meng-embed batch {i//batch_size + 1}: {e}")
 
     execution_time = time.time() - start_time
 
