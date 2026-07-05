@@ -137,10 +137,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!res.ok) throw new Error("Gagal menjalankan preflight check");
             const data = await res.json();
 
-            // Google API
-            if (data.google_api) {
-                const g = data.google_api;
-                if (g.status === "ok") {
+            const services = data.services || {};
+
+            // Google Embedding API
+            if (services.google_embedding && pfGoogleBadge && pfGoogleDetails) {
+                const g = services.google_embedding;
+                if (g.ok) {
                     pfGoogleBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
                     pfGoogleBadge.innerText = "OK (" + (g.latency_ms || 0) + "ms)";
                     pfGoogleDetails.innerHTML = `<span class="text-emerald-400 font-medium">Respon normal.</span> Latensi: <span class="font-mono font-bold text-slate-200">${escapeHtml(g.latency_ms || 0)}ms</span>`;
@@ -152,30 +154,32 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Generator LLM
-            if (data.generator_model) {
-                const gen = data.generator_model;
-                if (gen.status === "ok") {
+            if (services.generator && pfGeneratorBadge && pfGeneratorDetails) {
+                const gen = services.generator;
+                const activeModel = (systemStatus && systemStatus.active_generator) ? systemStatus.active_generator : '';
+                if (gen.ok) {
                     pfGeneratorBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
                     pfGeneratorBadge.innerText = "OK (" + (gen.latency_ms || 0) + "ms)";
-                    pfGeneratorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(gen.model || '')}</div><div class="text-emerald-400 text-[11px]">Respon normal. Latensi: ${escapeHtml(gen.latency_ms || 0)}ms</div>`;
+                    pfGeneratorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(activeModel)}</div><div class="text-emerald-400 text-[11px]">Respon normal. Latensi: ${escapeHtml(gen.latency_ms || 0)}ms</div>`;
                 } else {
                     pfGeneratorBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20";
                     pfGeneratorBadge.innerText = "ERROR";
-                    pfGeneratorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(gen.model || '')}</div><div class="text-rose-400 text-[11px]">${escapeHtml(gen.error || "Gagal menguji generator LLM")}</div>`;
+                    pfGeneratorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(activeModel)}</div><div class="text-rose-400 text-[11px]">${escapeHtml(gen.error || "Gagal menguji generator LLM")}</div>`;
                 }
             }
 
             // Evaluator LLM
-            if (data.evaluator_model) {
-                const ev = data.evaluator_model;
-                if (ev.status === "ok") {
+            if (services.evaluator && pfEvaluatorBadge && pfEvaluatorDetails) {
+                const ev = services.evaluator;
+                const activeEvalModel = (systemStatus && systemStatus.active_evaluator) ? systemStatus.active_evaluator : '';
+                if (ev.ok) {
                     pfEvaluatorBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
                     pfEvaluatorBadge.innerText = "OK (" + (ev.latency_ms || 0) + "ms)";
-                    pfEvaluatorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(ev.model || '')}</div><div class="text-emerald-400 text-[11px]">Respon normal. Latensi: ${escapeHtml(ev.latency_ms || 0)}ms</div>`;
+                    pfEvaluatorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(activeEvalModel)}</div><div class="text-emerald-400 text-[11px]">Respon normal. Latensi: ${escapeHtml(ev.latency_ms || 0)}ms</div>`;
                 } else {
                     pfEvaluatorBadge.className = "px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20";
                     pfEvaluatorBadge.innerText = "ERROR";
-                    pfEvaluatorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(ev.model || '')}</div><div class="text-rose-400 text-[11px]">${escapeHtml(ev.error || "Gagal menguji evaluator LLM")}</div>`;
+                    pfEvaluatorDetails.innerHTML = `<div class="font-mono text-slate-300 font-bold truncate">${escapeHtml(activeEvalModel)}</div><div class="text-rose-400 text-[11px]">${escapeHtml(ev.error || "Gagal menguji evaluator LLM")}</div>`;
                 }
             }
 
