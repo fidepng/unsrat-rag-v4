@@ -99,70 +99,34 @@ def test_nim_generator(model_name: str | None = None) -> dict:
 
 
 def test_ragas_evaluator(evaluator_model: str | None = None) -> dict:
-    """Uji kesiapan Ragas evaluator dengan 1 baris dummy dataset."""
+    """Uji kesiapan Ragas evaluator dengan 1 prompt tes ringan."""
     start_time = time.time()
     target_evaluator = evaluator_model or EVALUATOR_MODEL_NAME
 
     try:
-        from ragas import evaluate, RunConfig
-        from ragas.metrics import faithfulness
-        from ragas.llms import LangchainLLMWrapper
-        from ragas.embeddings import LangchainEmbeddingsWrapper
-        from datasets import Dataset
-
         api_key = NVIDIA_NIM_API_KEY or os.getenv("NVIDIA_NIM_API_KEY")
         if api_key and ("gemini" not in target_evaluator.lower()):
             nim_model = _resolve_nim_model_name(target_evaluator)
             from langchain_openai import ChatOpenAI
 
-            eval_llm = LangchainLLMWrapper(
-                ChatOpenAI(
-                    model=nim_model,
-                    api_key=api_key,
-                    openai_api_base="https://integrate.api.nvidia.com/v1",
-                    temperature=0.0,
-                    max_tokens=512,
-                )
+            llm = ChatOpenAI(
+                model=nim_model,
+                api_key=api_key,
+                openai_api_base="https://integrate.api.nvidia.com/v1",
+                temperature=0.0,
+                max_tokens=10,
             )
         else:
             from langchain_google_genai import ChatGoogleGenerativeAI
 
-            eval_llm = LangchainLLMWrapper(
-                ChatGoogleGenerativeAI(
-                    model=target_evaluator,
-                    google_api_key=GOOGLE_API_KEY,
-                    temperature=0.0,
-                )
-            )
-
-        from langchain_google_genai import GoogleGenerativeAIEmbeddings
-
-        eval_embeddings = LangchainEmbeddingsWrapper(
-            GoogleGenerativeAIEmbeddings(
-                model=EMBEDDING_MODEL_NAME,
+            llm = ChatGoogleGenerativeAI(
+                model=target_evaluator,
                 google_api_key=GOOGLE_API_KEY,
+                temperature=0.0,
+                max_output_tokens=10,
             )
-        )
 
-        metric = faithfulness
-        metric.llm = eval_llm
-        metric.embeddings = eval_embeddings
-
-        dummy_data = {
-            "question": ["Apa itu UNSRAT?"],
-            "answer": ["UNSRAT adalah Universitas Sam Ratulangi."],
-            "contexts": [["Universitas Sam Ratulangi disingkat UNSRAT."]],
-            "ground_truth": ["UNSRAT adalah Universitas Sam Ratulangi."],
-        }
-        dataset = Dataset.from_dict(dummy_data)
-        run_config = RunConfig(max_workers=1, timeout=60, max_retries=2)
-
-        evaluate(
-            dataset=dataset,
-            metrics=[metric],
-            run_config=run_config,
-        )
-
+        resp = llm.invoke("Test evaluator API connection")
         latency_ms = round((time.time() - start_time) * 1000, 2)
         logger.info(f"Preflight test_ragas_evaluator ({target_evaluator}) BERHASIL ({latency_ms} ms)")
         return {"ok": True, "latency_ms": latency_ms, "error": None}

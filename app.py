@@ -377,7 +377,7 @@ async def dev_status():
 
 
 @app.get("/api/dev/preflight")
-async def dev_preflight():
+def dev_preflight():
     """
     Menjalankan preflight check untuk memastikan ketersediaan API Google, Generator, dan Evaluator.
     """
