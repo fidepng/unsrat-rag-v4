@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let logInterval = null;
     let runsData = [];
     let logLinesData = [];
+    let systemStatus = null;
 
     // Selectors
     const keyGoogleStatus = document.getElementById("key-google-status");
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const res = await fetch("/api/dev/status");
             if (!res.ok) throw new Error("Gagal mengambil status sistem");
             const data = await res.json();
+            systemStatus = data;
 
             // API Keys
             if (keyGoogleStatus) {

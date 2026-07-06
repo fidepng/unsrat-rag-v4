@@ -1,3 +1,102 @@
 {
-  "runs": []
+  "runs": [
+    {
+      "run_id": "b_legacy_20260705_011907",
+      "config": "b",
+      "timestamp_start": "2026-07-05T01:19:07+08:00",
+      "timestamp_end": "2026-07-05T01:25:00+08:00",
+      "status": "completed",
+      "generator_model": "gemini-2.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "qwen/qwen3-next-80b-a3b-instruct",
+      "evaluator_provider": "nvidia_nim",
+      "embedding_model": "models/gemini-embedding-001",
+      "ground_truth_hash": "a50397b786e0",
+      "total_queries": 30,
+      "success_count": 1,
+      "error_count": 29,
+      "metrics": {
+        "faithfulness": 0.03333333333333333,
+        "answer_relevancy": 0.03224988055660308,
+        "context_precision": 0.655555555499722,
+        "context_recall": 0.7916666666666666
+      },
+      "archive_file": "eval/results/hasil_config_b.csv",
+      "is_active": false
+    },
+    {
+      "run_id": "c_legacy_20260705_090050",
+      "config": "c",
+      "timestamp_start": "2026-07-05T09:00:50+08:00",
+      "timestamp_end": "2026-07-05T09:06:00+08:00",
+      "status": "completed",
+      "generator_model": "llama-3.1-8b-instruct",
+      "generator_provider": "nvidia_nim",
+      "evaluator_model": "qwen/qwen3-next-80b-a3b-instruct",
+      "evaluator_provider": "nvidia_nim",
+      "embedding_model": "models/gemini-embedding-001",
+      "ground_truth_hash": "a50397b786e0",
+      "total_queries": 30,
+      "success_count": 30,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.7122222222222222,
+        "answer_relevancy": 0.7155212851440859,
+        "context_precision": 0.7277777777105553,
+        "context_recall": 0.8416666666666667
+      },
+      "archive_file": "eval/results/hasil_config_c.csv",
+      "is_active": false
+    },
+    {
+      "run_id": "b_20260705_161926",
+      "config": "b",
+      "timestamp_start": "2026-07-05T16:19:26.146704+00:00",
+      "timestamp_end": "2026-07-05T17:11:41.802462+00:00",
+      "status": "completed",
+      "generator_model": "llama-3.1-8b-instruct",
+      "generator_provider": "nvidia_nim",
+      "evaluator_model": "qwen/qwen3-next-80b-a3b-instruct",
+      "evaluator_provider": "nvidia_nim",
+      "embedding_model": "models/gemini-embedding-001",
+      "ground_truth_hash": "a50397b786e0",
+      "total_queries": 30,
+      "success_count": 30,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.5708,
+        "answer_relevancy": 0.6658,
+        "context_precision": 0.7278,
+        "context_recall": 0.7917,
+        "response_time_seconds": 1.6442
+      },
+      "archive_file": "eval/results/archive/hasil_config_b_20260705_161926_llama318binstruct_qwen3next80ba3binstruct.csv",
+      "is_active": true
+    },
+    {
+      "run_id": "c_20260705_171206",
+      "config": "c",
+      "timestamp_start": "2026-07-05T17:12:06.567564+00:00",
+      "timestamp_end": "2026-07-05T17:39:46.255060+00:00",
+      "status": "completed",
+      "generator_model": "llama-3.1-8b-instruct",
+      "generator_provider": "nvidia_nim",
+      "evaluator_model": "qwen/qwen3-next-80b-a3b-instruct",
+      "evaluator_provider": "nvidia_nim",
+      "embedding_model": "models/gemini-embedding-001",
+      "ground_truth_hash": "a50397b786e0",
+      "total_queries": 30,
+      "success_count": 30,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.6611,
+        "answer_relevancy": 0.6764,
+        "context_precision": 0.7222,
+        "context_recall": 0.8083,
+        "response_time_seconds": 1.5453
+      },
+      "archive_file": "eval/results/archive/hasil_config_c_20260705_171206_llama318binstruct_qwen3next80ba3binstruct.csv",
+      "is_active": true
+    }
+  ]
 }
