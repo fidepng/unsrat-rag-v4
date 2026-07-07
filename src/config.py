@@ -120,7 +120,7 @@ RATE_LIMITS = {
     },
 }
 
-EVAL_QUERY_DELAY_GOOGLE = 15.0  # detik
+EVAL_QUERY_DELAY_GOOGLE = 1.0  # detik (Dioptimalkan untuk paid tier)
 EVAL_QUERY_DELAY_NIM    = 1.5   # detik
 
 # ── EVALUASI ─────────────────────────────────────────────────

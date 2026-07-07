@@ -5,7 +5,24 @@ from dotenv import load_dotenv
 import frontmatter
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_core.documents import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# --- BEGIN RAGAS COMPATIBILITY HACK ---
+# Ragas (even in 0.4.3) mistakenly tries to import ChatVertexAI and VertexAI from langchain_community
+# which were removed in LangChain 1.x. We mock them here to prevent ModuleNotFoundError.
+import sys, types
+if 'langchain_community.chat_models' not in sys.modules:
+    sys.modules['langchain_community.chat_models'] = types.ModuleType('langchain_community.chat_models')
+if 'langchain_community.chat_models.vertexai' not in sys.modules:
+    dummy_cv = types.ModuleType('langchain_community.chat_models.vertexai')
+    dummy_cv.ChatVertexAI = None
+    sys.modules['langchain_community.chat_models.vertexai'] = dummy_cv
+if 'langchain_community.llms' not in sys.modules:
+    dummy_llms = types.ModuleType('langchain_community.llms')
+    dummy_llms.VertexAI = None
+    sys.modules['langchain_community.llms'] = dummy_llms
+# --- END RAGAS COMPATIBILITY HACK ---
+
 from ragas.testset import TestsetGenerator
 from ragas import RunConfig
 
@@ -17,7 +34,7 @@ if env_path.exists():
 def generate_synthetic_data():
     print("Initializing LLMs...")
     # Best practice: max_retries=10 untuk meredam 429 API Limit
-    kwargs_llm = {"model": "gemini-3-flash-preview", "max_retries": 10}
+    kwargs_llm = {"model": "gemini-3.1-pro-preview", "max_retries": 10}
     kwargs_emb = {"model": "models/gemini-embedding-001"}
     
     import sys
@@ -71,15 +88,15 @@ def generate_synthetic_data():
     docs = text_splitter.split_documents(raw_docs)
     print(f"Split into {len(docs)} chunks for stable Ragas processing.")
     
-    # Konfigurasi Anti-Limit: Batasi eksekusi menjadi strictly sequential (1 worker)
-    # Ragas akan mengantri request satu per satu. Jika kena limit 5 RPM, Langchain akan melakukan exponential backoff.
-    run_config = RunConfig(max_workers=16, timeout=300, max_retries=3)
+    # Konfigurasi Anti-Limit (Sudah Dioptimalkan untuk Paid Tier):
+    # Menggunakan 16 workers paralel untuk mempercepat proses generasi hingga 10x-16x lipat.
+    run_config = RunConfig(max_workers=16, timeout=300, max_retries=10)
     
     # Generate testset
     print("Generating synthetic testset. This may take a while...")
     testset = generator.generate_with_langchain_docs(
         docs, 
-        testset_size=5,
+        testset_size=20,
         run_config=run_config
     )
     

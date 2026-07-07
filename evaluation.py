@@ -364,8 +364,8 @@ def run_evaluation(
         # Ragas evaluation
         logger.info("Menjalankan Ragas evaluate()...")
 
-        # Konfigurasi sequential untuk stabilitas (Section 12.2)
-        run_config = RunConfig(max_workers=1, timeout=300, max_retries=10)
+        # Konfigurasi Paralel untuk Kecepatan (Paid Tier)
+        run_config = RunConfig(max_workers=16, timeout=300, max_retries=10)
 
         # Initialize custom LLM and Embeddings wrappers for Gemini / NVIDIA NIM
         import os
