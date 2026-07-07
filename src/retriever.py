@@ -27,11 +27,21 @@ def _get_embedding_fn() -> GoogleGenerativeAIEmbeddings:
     """Kembalikan embedding function. task_type='retrieval_query' (D-15, FR-07)."""
     global _embedding_fn
     if _embedding_fn is None:
-        _embedding_fn = GoogleGenerativeAIEmbeddings(
-            model=EMBEDDING_MODEL_NAME,
-            google_api_key=GOOGLE_API_KEY,
-            task_type="retrieval_query",
-        )
+        from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+        kwargs = {
+            "model": EMBEDDING_MODEL_NAME,
+            "task_type": "retrieval_query",
+        }
+        if GOOGLE_APPLICATION_CREDENTIALS:
+            from google.oauth2 import service_account
+            kwargs["credentials"] = service_account.Credentials.from_service_account_file(
+                GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+            )
+            kwargs["project"] = GCP_PROJECT_ID
+        else:
+            kwargs["google_api_key"] = GOOGLE_API_KEY
+            
+        _embedding_fn = GoogleGenerativeAIEmbeddings(**kwargs)
     return _embedding_fn
 
 

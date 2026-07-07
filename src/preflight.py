@@ -22,10 +22,19 @@ def test_google_embedding() -> dict:
     try:
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-        embeddings = GoogleGenerativeAIEmbeddings(
-            model=EMBEDDING_MODEL_NAME,
-            google_api_key=GOOGLE_API_KEY,
-        )
+        from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+        
+        kwargs = {"model": EMBEDDING_MODEL_NAME}
+        if GOOGLE_APPLICATION_CREDENTIALS:
+            from google.oauth2 import service_account
+            kwargs["credentials"] = service_account.Credentials.from_service_account_file(
+                GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+            )
+            kwargs["project"] = GCP_PROJECT_ID
+        else:
+            kwargs["google_api_key"] = GOOGLE_API_KEY
+
+        embeddings = GoogleGenerativeAIEmbeddings(**kwargs)
         embeddings.embed_query("test preflight")
         latency_ms = round((time.time() - start_time) * 1000, 2)
         logger.info(f"Preflight test_google_embedding BERHASIL ({latency_ms} ms)")
@@ -63,12 +72,22 @@ def test_nim_generator(model_name: str | None = None) -> dict:
             from langchain_google_genai import ChatGoogleGenerativeAI
             from langchain_core.messages import HumanMessage
 
-            llm = ChatGoogleGenerativeAI(
-                model=target_model,
-                google_api_key=GOOGLE_API_KEY,
-                temperature=0.0,
-                max_output_tokens=1,
-            )
+            from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+            kwargs = {
+                "model": target_model,
+                "temperature": 0.0,
+                "max_output_tokens": 1,
+            }
+            if GOOGLE_APPLICATION_CREDENTIALS:
+                from google.oauth2 import service_account
+                kwargs["credentials"] = service_account.Credentials.from_service_account_file(
+                    GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                kwargs["project"] = GCP_PROJECT_ID
+            else:
+                kwargs["google_api_key"] = GOOGLE_API_KEY
+                
+            llm = ChatGoogleGenerativeAI(**kwargs)
             llm.invoke([HumanMessage(content="hi")])
         else:
             api_key = NVIDIA_NIM_API_KEY or os.getenv("NVIDIA_NIM_API_KEY")
@@ -119,12 +138,22 @@ def test_ragas_evaluator(evaluator_model: str | None = None) -> dict:
         else:
             from langchain_google_genai import ChatGoogleGenerativeAI
 
-            llm = ChatGoogleGenerativeAI(
-                model=target_evaluator,
-                google_api_key=GOOGLE_API_KEY,
-                temperature=0.0,
-                max_output_tokens=10,
-            )
+            from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+            kwargs = {
+                "model": target_evaluator,
+                "temperature": 0.0,
+                "max_output_tokens": 10,
+            }
+            if GOOGLE_APPLICATION_CREDENTIALS:
+                from google.oauth2 import service_account
+                kwargs["credentials"] = service_account.Credentials.from_service_account_file(
+                    GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                kwargs["project"] = GCP_PROJECT_ID
+            else:
+                kwargs["google_api_key"] = GOOGLE_API_KEY
+                
+            llm = ChatGoogleGenerativeAI(**kwargs)
 
         resp = llm.invoke("Test evaluator API connection")
         latency_ms = round((time.time() - start_time) * 1000, 2)

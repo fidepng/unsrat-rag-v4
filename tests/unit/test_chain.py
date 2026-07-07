@@ -4,9 +4,10 @@ from src.chain import run_rag_chain
 
 @pytest.mark.offline
 class TestChain:
+    @patch("src.chain._get_llm")
     @patch("src.chain.retrieve_chunks")
     @patch("src.chain.log_chat_transaction")
-    def test_run_rag_chain_config_b(self, mock_log_chat, mock_retrieve):
+    def test_run_rag_chain_config_b(self, mock_log_chat, mock_retrieve, mock_get_llm):
         # Mock retrieval returning a single valid chunk
         mock_retrieve.return_value = [
             {
@@ -18,11 +19,16 @@ class TestChain:
             }
         ]
         
+        # Mock LLM to avoid real API calls in unit test
+        mock_llm_instance = MagicMock()
+        mock_llm_instance.invoke.return_value = MagicMock(content="Maksimal adalah 24 SKS per semester [1].")
+        mock_get_llm.return_value = mock_llm_instance
+        
         # Call run_rag_chain
         res = run_rag_chain(
             query="Berapa SKS maksimal?",
             config_choice="b",
-            model_name="nvidia/llama-3.1-nemotron-nano-8b-v1"
+            model_name="gemini-2.5-flash"
         )
         
         assert res["found_state"] is True

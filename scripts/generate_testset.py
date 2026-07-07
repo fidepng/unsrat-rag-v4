@@ -17,11 +17,28 @@ if env_path.exists():
 def generate_synthetic_data():
     print("Initializing LLMs...")
     # Best practice: max_retries=10 untuk meredam 429 API Limit
-    generator_llm = ChatGoogleGenerativeAI(
-        model="gemini-3-flash-preview",
-        max_retries=10
-    )
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+    kwargs_llm = {"model": "gemini-3-flash-preview", "max_retries": 10}
+    kwargs_emb = {"model": "models/gemini-embedding-001"}
+    
+    import sys
+    sys.path.append(str(Path(__file__).parent.parent))
+    from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID, GOOGLE_API_KEY
+    
+    if GOOGLE_APPLICATION_CREDENTIALS:
+        from google.oauth2 import service_account
+        creds = service_account.Credentials.from_service_account_file(
+            GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
+        kwargs_llm["credentials"] = creds
+        kwargs_llm["project"] = GCP_PROJECT_ID
+        kwargs_emb["credentials"] = creds
+        kwargs_emb["project"] = GCP_PROJECT_ID
+    else:
+        kwargs_llm["google_api_key"] = GOOGLE_API_KEY
+        kwargs_emb["google_api_key"] = GOOGLE_API_KEY
+
+    generator_llm = ChatGoogleGenerativeAI(**kwargs_llm)
+    embeddings = GoogleGenerativeAIEmbeddings(**kwargs_emb)
     
     print("Initializing TestsetGenerator...")
     generator = TestsetGenerator.from_langchain(

@@ -37,9 +37,9 @@ CHROMA_DISTANCE_FN  = "cosine"
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
 # NVIDIA NIM models are used for active testing due to Google AI Studio API limits.
 # Optimasi kecepatan & penalaran: Generator = Nemotron Nano 8B, Evaluator = Nemotron Super 49B (D-16 Terpenuhi)
-LLM_MODEL_NAME       = "llama-3.1-8b-instruct"
-EMBEDDING_MODEL_NAME = "models/gemini-embedding-001"
-EVALUATOR_MODEL_NAME = "qwen/qwen3-next-80b-a3b-instruct"
+LLM_MODEL_NAME       = "gemini-2.5-flash"
+EMBEDDING_MODEL_NAME = "gemini-embedding-001"
+EVALUATOR_MODEL_NAME = "gemini-2.5-flash"
 
 # Daftar model yang bisa dipilih di UI sidebar
 # Catatan: model NVIDIA NIM menggunakan provider "openai_compatible" (lihat Section 18)
@@ -178,10 +178,13 @@ API_PORT = 8501
 
 # ── API KEY ──────────────────────────────────────────────────
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-if not GOOGLE_API_KEY:
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
+
+if not GOOGLE_API_KEY and not GOOGLE_APPLICATION_CREDENTIALS:
     raise ValueError(
-        "GOOGLE_API_KEY tidak ditemukan!\n"
-        "Buat file .env di root proyek dan isi: GOOGLE_API_KEY=your_key_here"
+        "Kredensial Google tidak ditemukan!\n"
+        "Sediakan GOOGLE_API_KEY (untuk AI Studio) ATAU GOOGLE_APPLICATION_CREDENTIALS & GCP_PROJECT_ID (untuk Vertex AI)."
     )
 
 # NVIDIA NIM API Key (opsional — hanya dibutuhkan jika menggunakan provider NIM)

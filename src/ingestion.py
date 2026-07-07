@@ -188,12 +188,23 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
         metadata={"hnsw:space": CHROMA_DISTANCE_FN},
     )
 
+    from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+    
+    kwargs = {
+        "model": EMBEDDING_MODEL_NAME,
+        "task_type": "retrieval_document",
+    }
+    if GOOGLE_APPLICATION_CREDENTIALS:
+        from google.oauth2 import service_account
+        kwargs["credentials"] = service_account.Credentials.from_service_account_file(
+            GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
+        kwargs["project"] = GCP_PROJECT_ID
+    else:
+        kwargs["google_api_key"] = GOOGLE_API_KEY
+
     # Embedding function — task_type="retrieval_document" (FR-07, D-15)
-    embedding_fn = GoogleGenerativeAIEmbeddings(
-        model=EMBEDDING_MODEL_NAME,
-        google_api_key=GOOGLE_API_KEY,
-        task_type="retrieval_document",
-    )
+    embedding_fn = GoogleGenerativeAIEmbeddings(**kwargs)
 
     md_files = sorted(CORPUS_DIR.glob("*.md"))
     logger.info(f"Ingestion Config {config.upper()} — {len(md_files)} file ditemukan.")

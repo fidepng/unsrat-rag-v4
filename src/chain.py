@@ -69,14 +69,26 @@ def _get_llm(model_name: str) -> Any:
                 max_tokens=LLM_MAX_OUTPUT_TOKENS,
             )
         else:
+            from src.config import GOOGLE_API_KEY, GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
             logger.info(f"Menggunakan Google Gemini untuk generator model: {model_name}")
-            _llm_cache[model_name] = ChatGoogleGenerativeAI(
-                model=model_name,
-                google_api_key=GOOGLE_API_KEY,
-                temperature=LLM_TEMPERATURE,
-                max_output_tokens=LLM_MAX_OUTPUT_TOKENS,
-                top_p=LLM_TOP_P,
-            )
+            
+            kwargs = {
+                "model": model_name,
+                "temperature": LLM_TEMPERATURE,
+                "max_output_tokens": LLM_MAX_OUTPUT_TOKENS,
+                "top_p": LLM_TOP_P,
+            }
+            
+            if GOOGLE_APPLICATION_CREDENTIALS:
+                from google.oauth2 import service_account
+                kwargs["credentials"] = service_account.Credentials.from_service_account_file(
+                    GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                kwargs["project"] = GCP_PROJECT_ID
+            else:
+                kwargs["google_api_key"] = GOOGLE_API_KEY
+                
+            _llm_cache[model_name] = ChatGoogleGenerativeAI(**kwargs)
         logger.debug(f"LLM instance dibuat untuk model: {model_name}")
     return _llm_cache[model_name]
 
