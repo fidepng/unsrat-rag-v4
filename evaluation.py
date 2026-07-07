@@ -24,7 +24,7 @@ from src.config import (
 )
 # Ragas imports — VERIFIKASI dengan `use context7` sebelum implementasi
 from ragas import evaluate
-from ragas.metrics import faithfulness, answer_relevancy, context_precision, context_recall
+from ragas.metrics import Faithfulness, AnswerRelevancy, ContextPrecision, ContextRecall
 from ragas import RunConfig
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
@@ -364,30 +364,8 @@ def run_evaluation(
         # Ragas evaluation
         logger.info("Menjalankan Ragas evaluate()...")
 
-        # Bangun dataset untuk Ragas
-        eval_data = {
-            "question":           [r["user_input"]           for r in results],
-            "answer":             [r["response"]             for r in results],
-            "contexts":           [r["retrieved_contexts"]   for r in results],
-            "ground_truth":       [r["reference"]            for r in results],
-        }
-
         # Konfigurasi sequential untuk stabilitas (Section 12.2)
         run_config = RunConfig(max_workers=1, timeout=300, max_retries=10)
-
-        # Metrik yang dijalankan
-        base_metrics = [faithfulness, answer_relevancy, context_precision, context_recall]
-        # Tambah metrik opsional jika diminta
-        if extra_metrics:
-            for m_name in extra_metrics:
-                if m_name in OPTIONAL_METRICS_COLS:
-                    try:
-                        # context_entity_recall — verifikasi import dengan `use context7`
-                        from ragas.metrics import context_entity_recall
-                        base_metrics.append(context_entity_recall)
-                        logger.info(f"Metrik opsional ditambahkan: {m_name}")
-                    except ImportError:
-                        logger.warning(f"Metrik opsional {m_name} tidak tersedia di versi Ragas ini.")
 
         # Initialize custom LLM and Embeddings wrappers for Gemini / NVIDIA NIM
         import os
@@ -421,16 +399,40 @@ def run_evaluation(
                 google_api_key=GOOGLE_API_KEY,
             ))
 
-        # Assign custom LLM and Embeddings to each metric
-        for metric in base_metrics:
-            if hasattr(metric, "llm"):
-                metric.llm = evaluator_llm
-            if hasattr(metric, "embeddings"):
-                metric.embeddings = evaluator_embeddings
+        # Metrik yang dijalankan (Ragas v0.4 class-based initialization)
+        base_metrics = [
+            Faithfulness(llm=evaluator_llm),
+            AnswerRelevancy(llm=evaluator_llm, embeddings=evaluator_embeddings),
+            ContextPrecision(llm=evaluator_llm),
+            ContextRecall(llm=evaluator_llm)
+        ]
+        
+        # Tambah metrik opsional jika diminta
+        if extra_metrics:
+            for m_name in extra_metrics:
+                if m_name in OPTIONAL_METRICS_COLS:
+                    if m_name == "context_entity_recall":
+                        try:
+                            from ragas.metrics import ContextEntityRecall
+                            base_metrics.append(ContextEntityRecall(llm=evaluator_llm))
+                            logger.info(f"Metrik opsional ditambahkan: {m_name}")
+                        except ImportError:
+                            logger.warning(f"Metrik opsional {m_name} tidak tersedia di versi Ragas ini.")
 
         try:
-            from datasets import Dataset
-            ragas_dataset = Dataset.from_dict(eval_data)
+            from ragas import EvaluationDataset, SingleTurnSample
+            
+            samples = []
+            for r in results:
+                sample = SingleTurnSample(
+                    user_input=r["user_input"],
+                    response=r["response"],
+                    retrieved_contexts=r["retrieved_contexts"],
+                    reference=r["reference"]
+                )
+                samples.append(sample)
+                
+            ragas_dataset = EvaluationDataset(samples=samples)
 
             ragas_result = evaluate(
                 dataset=ragas_dataset,
@@ -440,7 +442,7 @@ def run_evaluation(
             ragas_df = ragas_result.to_pandas()
         except Exception as e:
             logger.error(f"Ragas evaluate() gagal: {e}")
-            logger.error("Jalankan `use context7` untuk verifikasi API Ragas yang terinstall.")
+            logger.error("Pastikan Ragas v0.4 terpasang. Error detail di atas.")
             raise
 
         # Gabungkan hasil Ragas dengan metadata

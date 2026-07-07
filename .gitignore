@@ -1,42 +1,55 @@
-# Git Ignore File for UNSRAT RAG Chatbot
-
-# Environment and secrets
+# Secrets & Configuration
 .env
+.env.*
+!.env.example
 
-# Database and indexes
+# Python - Compiled files & Virtual Environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.conda/
+*.egg-info/
+build/
+dist/
+
+# Database & Search Indices (Generated at runtime)
 chroma_db/
 bm25_index/
 
-# Python compiled files
-__pycache__/
-*.pyc
-.conda/
-*.egg-info/
+# Logs (Ignore log outputs but preserve directory structure via .gitkeep)
+logs/*
+!logs/.gitkeep
 
-# Logs and outputs
-logs/
-
-# Local tools
-context-mode/
-
-# Editor and cache
-.vscode/
+# Testing & Performance Benchmarks
 .pytest_cache/
-*.html
-!static/*.html
+.benchmarks/
 
-reference/
-.playwright-mcp/
+# IDEs & Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
 
-# Agent and Graph tools
-.understand-anything/
-GEMINI.md
-
-# Local AI / Developer Tooling
+# AI Agent & Developer Tooling
 .agents/
 .claude/
 .cursor/
 .gemini/
 .impeccable/
 .kiro/
+.playwright-mcp/
+.understand-anything/
 scratch/
+GEMINI.md
+
+# HTML Outputs (Exclude static directory)
+*.html
+!static/**/*.html
+!static/*.html

@@ -97,6 +97,25 @@
       },
       "archive_file": "eval/results/archive/hasil_config_c_20260705_171206_llama318binstruct_qwen3next80ba3binstruct.csv",
       "is_active": true
+    },
+    {
+      "run_id": "b_20260707_101735",
+      "config": "b",
+      "timestamp_start": "2026-07-07T10:17:35.948037+00:00",
+      "timestamp_end": "2026-07-07T10:33:23.766777+00:00",
+      "status": "failed",
+      "generator_model": "llama-3.1-8b-instruct",
+      "generator_provider": "nvidia_nim",
+      "evaluator_model": "qwen/qwen3-next-80b-a3b-instruct",
+      "evaluator_provider": "nvidia_nim",
+      "embedding_model": "models/gemini-embedding-001",
+      "ground_truth_hash": "768e1695ad31",
+      "total_queries": 45,
+      "success_count": 0,
+      "error_count": 0,
+      "metrics": {},
+      "archive_file": null,
+      "is_active": false
     }
   ]
 }
