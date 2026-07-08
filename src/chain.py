@@ -77,6 +77,8 @@ def _get_llm(model_name: str) -> Any:
                 "temperature": LLM_TEMPERATURE,
                 "max_output_tokens": LLM_MAX_OUTPUT_TOKENS,
                 "top_p": LLM_TOP_P,
+                "max_retries": 2,
+                "timeout": 60,
             }
             
             if GOOGLE_APPLICATION_CREDENTIALS:
@@ -230,6 +232,10 @@ def _get_response_sync(
         try:
             response = llm.invoke(messages)
             answer = response.content
+            if isinstance(answer, list):
+                answer = "".join(t.get("text", "") if isinstance(t, dict) else str(t) for t in answer)
+            elif not isinstance(answer, str):
+                answer = str(answer)
             break
         except Exception as e:
             if attempt == MAX_RETRIES:
@@ -321,6 +327,11 @@ def _get_response_streaming(
             try:
                 for token_chunk in llm.stream(messages):
                     token = token_chunk.content
+                    if isinstance(token, list):
+                        token = "".join(t.get("text", "") if isinstance(t, dict) else str(t) for t in token)
+                    elif not isinstance(token, str):
+                        token = str(token)
+
                     full_answer += token
                     yield f'data: {json.dumps({"type": "token", "content": token})}\n\n'
                 break

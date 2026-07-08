@@ -193,6 +193,8 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
     kwargs = {
         "model": EMBEDDING_MODEL_NAME,
         "task_type": "retrieval_document",
+        "max_retries": 2,
+        "timeout": 60,
     }
     if GOOGLE_APPLICATION_CREDENTIALS:
         from google.oauth2 import service_account
@@ -215,6 +217,9 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
     total_too_short     = 0
     files_processed     = 0
 
+    batch_size = 50
+    chunks_batch = []
+
     for md_file in md_files:
         logger.info(f"Memproses: {md_file.name}")
         chunks = _parse_and_chunk(md_file, chunk_size, chunk_overlap)
@@ -223,12 +228,6 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
             continue
 
         files_processed += 1
-
-        # Hitung chunk yang terlalu pendek di tahap sebelumnya
-        # (sudah di-filter di _parse_and_chunk, tapi kita track via generated vs returned)
-        # Untuk akurasi, kita generate ulang tanpa filter untuk hitung generated:
-        # (Simplified: anggap generated = len(chunks) + chunks_filtered_in_parse)
-        # Dalam implementasi aktual, pass counter ke _parse_and_chunk
         total_generated += len(chunks)
 
         for chunk in chunks:
@@ -240,28 +239,49 @@ def run_ingestion(config: str, rebuild: bool = False) -> None:
                 total_duplicate += 1
                 logger.debug(f"SKIP duplikat: {chunk_id[:8]}...")
                 continue
+            
+            chunks_batch.append(chunk)
 
-            # Embed dengan retry
-            try:
-                embeddings = _embed_with_retry(embedding_fn, [chunk["content"]])
-            except RuntimeError as e:
-                logger.error(f"Embedding gagal untuk chunk {chunk_id[:8]}: {e}")
-                continue
-
-            collection.add(
-                ids=[chunk_id],
-                embeddings=embeddings,
-                documents=[chunk["content"]],
-                metadatas=[chunk["metadata"]],
-            )
-            total_inserted += 1
-            logger.debug(f"INSERT: {chunk_id[:8]}... ({len(chunk['content'])} char)")
-            time.sleep(INTER_CHUNK_SLEEP)
+            if len(chunks_batch) >= batch_size:
+                # Embed batch
+                try:
+                    texts = [c["content"] for c in chunks_batch]
+                    embeddings = _embed_with_retry(embedding_fn, texts)
+                    
+                    collection.add(
+                        ids=[c["chunk_id"] for c in chunks_batch],
+                        embeddings=embeddings,
+                        documents=texts,
+                        metadatas=[c["metadata"] for c in chunks_batch],
+                    )
+                    total_inserted += len(chunks_batch)
+                    logger.info(f"INSERTED batch of {len(chunks_batch)} chunks.")
+                except RuntimeError as e:
+                    logger.error(f"Embedding batch gagal: {e}")
+                
+                chunks_batch = []
+                time.sleep(1.0) # Jeda antar batch untuk rate limit
 
         logger.info(
             f"✓ {md_file.name}: {len(chunks)} chunk diproses | "
             f"{total_inserted} inserted sejauh ini"
         )
+
+    # Process sisa batch terakhir
+    if chunks_batch:
+        try:
+            texts = [c["content"] for c in chunks_batch]
+            embeddings = _embed_with_retry(embedding_fn, texts)
+            collection.add(
+                ids=[c["chunk_id"] for c in chunks_batch],
+                embeddings=embeddings,
+                documents=texts,
+                metadatas=[c["metadata"] for c in chunks_batch],
+            )
+            total_inserted += len(chunks_batch)
+            logger.info(f"INSERTED final batch of {len(chunks_batch)} chunks.")
+        except RuntimeError as e:
+            logger.error(f"Embedding final batch gagal: {e}")
 
     execution_time = time.time() - start_time
 

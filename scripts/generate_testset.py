@@ -33,9 +33,9 @@ if env_path.exists():
 
 def generate_synthetic_data():
     print("Initializing LLMs...")
-    # Best practice: max_retries=10 untuk meredam 429 API Limit
-    kwargs_llm = {"model": "gemini-3.1-pro-preview", "max_retries": 10}
-    kwargs_emb = {"model": "models/gemini-embedding-001"}
+    # Best practice: max_retries=2 dan timeout untuk mencegah billing membengkak akibat hanging
+    kwargs_llm = {"model": "gemini-3.1-pro-preview", "max_retries": 2, "timeout": 120}
+    kwargs_emb = {"model": "models/gemini-embedding-001", "max_retries": 2, "timeout": 30}
     
     import sys
     sys.path.append(str(Path(__file__).parent.parent))

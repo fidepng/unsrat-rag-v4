@@ -77,6 +77,8 @@ def test_nim_generator(model_name: str | None = None) -> dict:
                 "model": target_model,
                 "temperature": 0.0,
                 "max_output_tokens": 1,
+                "max_retries": 1,
+                "timeout": 15,
             }
             if GOOGLE_APPLICATION_CREDENTIALS:
                 from google.oauth2 import service_account
@@ -104,6 +106,8 @@ def test_nim_generator(model_name: str | None = None) -> dict:
                 openai_api_base="https://integrate.api.nvidia.com/v1",
                 temperature=0.0,
                 max_tokens=1,
+                max_retries=1,
+                timeout=15,
             )
             llm.invoke([HumanMessage(content="hi")])
 
@@ -134,6 +138,8 @@ def test_ragas_evaluator(evaluator_model: str | None = None) -> dict:
                 openai_api_base="https://integrate.api.nvidia.com/v1",
                 temperature=0.0,
                 max_tokens=10,
+                timeout=5,
+                max_retries=1,
             )
         else:
             from langchain_google_genai import ChatGoogleGenerativeAI
@@ -143,6 +149,8 @@ def test_ragas_evaluator(evaluator_model: str | None = None) -> dict:
                 "model": target_evaluator,
                 "temperature": 0.0,
                 "max_output_tokens": 10,
+                "max_retries": 1,
+                "timeout": 15,
             }
             if GOOGLE_APPLICATION_CREDENTIALS:
                 from google.oauth2 import service_account

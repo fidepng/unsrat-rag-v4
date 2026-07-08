@@ -23,6 +23,20 @@ from src.config import (
     EVAL_QUERY_DELAY_GOOGLE, EVAL_QUERY_DELAY_NIM,
 )
 # Ragas imports — VERIFIKASI dengan `use context7` sebelum implementasi
+# --- BEGIN RAGAS COMPATIBILITY HACK ---
+import sys, types
+if 'langchain_community.chat_models' not in sys.modules:
+    sys.modules['langchain_community.chat_models'] = types.ModuleType('langchain_community.chat_models')
+if 'langchain_community.chat_models.vertexai' not in sys.modules:
+    dummy_cv = types.ModuleType('langchain_community.chat_models.vertexai')
+    dummy_cv.ChatVertexAI = None
+    sys.modules['langchain_community.chat_models.vertexai'] = dummy_cv
+if 'langchain_community.llms' not in sys.modules:
+    dummy_llms = types.ModuleType('langchain_community.llms')
+    dummy_llms.VertexAI = None
+    sys.modules['langchain_community.llms'] = dummy_llms
+# --- END RAGAS COMPATIBILITY HACK ---
+
 from ragas import evaluate
 from ragas.metrics import Faithfulness, AnswerRelevancy, ContextPrecision, ContextRecall
 from ragas import RunConfig
@@ -46,99 +60,6 @@ NIM_MODEL_MAP = {
     "deepseek-v4-pro": "deepseek-ai/deepseek-v4-pro",
 }
 
-
-# --- Monkeypatch ChatOpenAI for NVIDIA NIM Rate Limiting (40 RPM Shared Limit) ---
-try:
-    import langchain_openai
-    import threading
-    import asyncio
-
-    _LAST_REQUEST_TIME = 0.0
-    _MIN_REQUEST_INTERVAL = 3.0  # 3.0s interval (~20 RPM) guarantees robustness against shared user traffic
-
-    _RATE_LIMIT_LOCK = threading.Lock()
-
-    _orig_generate = langchain_openai.ChatOpenAI._generate
-    _orig_agenerate = langchain_openai.ChatOpenAI._agenerate
-
-    def _rate_limited_generate(self, *args, **kwargs):
-        global _LAST_REQUEST_TIME
-        is_nim = "nvidia" in getattr(self, "openai_api_base", "") or "nvidia" in getattr(self, "model_name", "") or "z-ai" in getattr(self, "model_name", "") or "deepseek" in getattr(self, "model_name", "")
-        if is_nim:
-            # Atomic reservation of time slot across all threads
-            with _RATE_LIMIT_LOCK:
-                now = time.time()
-                elapsed = now - _LAST_REQUEST_TIME
-                sleep_time = 0.0
-                if elapsed < _MIN_REQUEST_INTERVAL:
-                    sleep_time = _MIN_REQUEST_INTERVAL - elapsed
-                _LAST_REQUEST_TIME = now + sleep_time
-
-            if sleep_time > 0:
-                time.sleep(sleep_time)
-
-            # Request execution with robust local retry
-            retries = 5
-            backoff = 4.0
-            for attempt in range(retries):
-                try:
-                    res = _orig_generate(self, *args, **kwargs)
-                    return res
-                except Exception as e:
-                    if "429" in str(e) or "rate limit" in str(e).lower() or "throttle" in str(e).lower():
-                        logger.warning(f"NIM Throttling terdeteksi (429). Menunggu {backoff:.1f}s sebelum mencoba kembali (Percobaan {attempt+1}/{retries})...")
-                        time.sleep(backoff)
-                        with _RATE_LIMIT_LOCK:
-                            _LAST_REQUEST_TIME = time.time() + backoff
-                        backoff *= 2.0
-                    else:
-                        raise e
-            raise Exception("Exhausted retries due to persistent NVIDIA NIM 429 throttling.")
-        else:
-            return _orig_generate(self, *args, **kwargs)
-
-    async def _rate_limited_agenerate(self, *args, **kwargs):
-        global _LAST_REQUEST_TIME
-        is_nim = "nvidia" in getattr(self, "openai_api_base", "") or "nvidia" in getattr(self, "model_name", "") or "z-ai" in getattr(self, "model_name", "") or "deepseek" in getattr(self, "model_name", "")
-        if is_nim:
-            # Atomic reservation of time slot across all threads
-            with _RATE_LIMIT_LOCK:
-                now = time.time()
-                elapsed = now - _LAST_REQUEST_TIME
-                sleep_time = 0.0
-                if elapsed < _MIN_REQUEST_INTERVAL:
-                    sleep_time = _MIN_REQUEST_INTERVAL - elapsed
-                _LAST_REQUEST_TIME = now + sleep_time
-
-            # Sleep asynchronously to avoid blocking the event loop
-            if sleep_time > 0:
-                await asyncio.sleep(sleep_time)
-
-            # Request execution with robust local retry
-            retries = 5
-            backoff = 4.0
-            for attempt in range(retries):
-                try:
-                    res = await _orig_agenerate(self, *args, **kwargs)
-                    return res
-                except Exception as e:
-                    if "429" in str(e) or "rate limit" in str(e).lower() or "throttle" in str(e).lower():
-                        logger.warning(f"NIM Throttling terdeteksi (429, Async). Menunggu {backoff:.1f}s sebelum mencoba kembali (Percobaan {attempt+1}/{retries})...")
-                        await asyncio.sleep(backoff)
-                        with _RATE_LIMIT_LOCK:
-                            _LAST_REQUEST_TIME = time.time() + backoff
-                        backoff *= 2.0
-                    else:
-                        raise e
-            raise Exception("Exhausted retries due to persistent NVIDIA NIM 429 throttling.")
-        else:
-            return await _orig_agenerate(self, *args, **kwargs)
-
-    langchain_openai.ChatOpenAI._generate = _rate_limited_generate
-    langchain_openai.ChatOpenAI._agenerate = _rate_limited_agenerate
-    logger.info("Monkeypatch ChatOpenAI dengan Timeline Queueing + Autoretry (429) untuk NVIDIA NIM berhasil diaktifkan.")
-except Exception as e:
-    logger.warning(f"Gagal mengaktifkan monkeypatch rate limit ChatOpenAI: {e}")
 
 
 
@@ -364,13 +285,13 @@ def run_evaluation(
         # Ragas evaluation
         logger.info("Menjalankan Ragas evaluate()...")
 
-        # Konfigurasi Paralel untuk Kecepatan (Paid Tier)
-        run_config = RunConfig(max_workers=16, timeout=300, max_retries=10)
+        # Konfigurasi Paralel yang Aman untuk Menghindari Timeout
+        run_config = RunConfig(max_workers=4, timeout=600, max_retries=10)
 
         # Initialize custom LLM and Embeddings wrappers for Gemini / NVIDIA NIM
         import os
         nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
-        if nvidia_api_key:
+        if nvidia_api_key and ("gemini" not in eval_model.lower()):
             evaluator_model_name = NIM_MODEL_MAP.get(eval_model, eval_model)
             logger.info(f"NVIDIA_NIM_API_KEY ditemukan. Menggunakan NVIDIA NIM ({evaluator_model_name}) sebagai evaluator.")
             from langchain_openai import ChatOpenAI
@@ -380,12 +301,15 @@ def run_evaluation(
                 openai_api_base="https://integrate.api.nvidia.com/v1",
                 temperature=0.0,
                 max_tokens=4096,
+                max_retries=2,
+                timeout=120,
             ))
             logger.info("Menggunakan Google Gemini (models/gemini-embedding-001) sebagai evaluator embeddings untuk menghindari error 500 NIM.")
-            from langchain_google_genai import GoogleGenerativeAIEmbeddings
             evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
                 model=EMBEDDING_MODEL_NAME,
                 google_api_key=GOOGLE_API_KEY,
+                max_retries=2,
+                timeout=60,
             ))
         else:
             logger.info(f"NVIDIA_NIM_API_KEY tidak ditemukan. Menggunakan Google Gemini ({eval_model}) sebagai evaluator.")
@@ -393,10 +317,14 @@ def run_evaluation(
                 model=eval_model,
                 google_api_key=GOOGLE_API_KEY,
                 temperature=0.0,
+                max_retries=2,
+                timeout=120,
             ))
             evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
                 model=EMBEDDING_MODEL_NAME,
                 google_api_key=GOOGLE_API_KEY,
+                max_retries=2,
+                timeout=60,
             ))
 
         # Metrik yang dijalankan (Ragas v0.4 class-based initialization)
