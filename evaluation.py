@@ -20,6 +20,7 @@ from src.config import (
     ROOT_DIR, EVAL_DATASET_PATH, EVAL_RESULTS_DIR,
     METRICS_COLS, OPTIONAL_METRICS_COLS, ERROR_ANALYSIS_N,
     EVALUATOR_MODEL_NAME, LLM_MODEL_NAME, EMBEDDING_MODEL_NAME, GOOGLE_API_KEY,
+    GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID,
     EVAL_QUERY_DELAY_GOOGLE, EVAL_QUERY_DELAY_NIM,
 )
 # Ragas imports — VERIFIKASI dengan `use context7` sebelum implementasi
@@ -289,6 +290,32 @@ def run_evaluation(
         run_config = RunConfig(max_workers=4, timeout=600, max_retries=10)
 
         # Initialize custom LLM and Embeddings wrappers for Gemini / NVIDIA NIM
+        # Siapkan kwargs untuk Gemini agar mendukung GOOGLE_APPLICATION_CREDENTIALS (GCP Billed)
+        gemini_llm_kwargs = {
+            "model": eval_model,
+            "temperature": 0.0,
+            "max_retries": 2,
+            "timeout": 120,
+        }
+        gemini_emb_kwargs = {
+            "model": EMBEDDING_MODEL_NAME,
+            "max_retries": 2,
+            "timeout": 60,
+        }
+        
+        if GOOGLE_APPLICATION_CREDENTIALS:
+            from google.oauth2 import service_account
+            creds = service_account.Credentials.from_service_account_file(
+                GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+            )
+            gemini_llm_kwargs["credentials"] = creds
+            gemini_llm_kwargs["project"] = GCP_PROJECT_ID
+            gemini_emb_kwargs["credentials"] = creds
+            gemini_emb_kwargs["project"] = GCP_PROJECT_ID
+        else:
+            gemini_llm_kwargs["google_api_key"] = GOOGLE_API_KEY
+            gemini_emb_kwargs["google_api_key"] = GOOGLE_API_KEY
+
         import os
         nvidia_api_key = os.getenv("NVIDIA_NIM_API_KEY")
         if nvidia_api_key and ("gemini" not in eval_model.lower()):
@@ -305,27 +332,11 @@ def run_evaluation(
                 timeout=120,
             ))
             logger.info("Menggunakan Google Gemini (models/gemini-embedding-001) sebagai evaluator embeddings untuk menghindari error 500 NIM.")
-            evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
-                model=EMBEDDING_MODEL_NAME,
-                google_api_key=GOOGLE_API_KEY,
-                max_retries=2,
-                timeout=60,
-            ))
+            evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(**gemini_emb_kwargs))
         else:
             logger.info(f"NVIDIA_NIM_API_KEY tidak ditemukan. Menggunakan Google Gemini ({eval_model}) sebagai evaluator.")
-            evaluator_llm = LangchainLLMWrapper(ChatGoogleGenerativeAI(
-                model=eval_model,
-                google_api_key=GOOGLE_API_KEY,
-                temperature=0.0,
-                max_retries=2,
-                timeout=120,
-            ))
-            evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(
-                model=EMBEDDING_MODEL_NAME,
-                google_api_key=GOOGLE_API_KEY,
-                max_retries=2,
-                timeout=60,
-            ))
+            evaluator_llm = LangchainLLMWrapper(ChatGoogleGenerativeAI(**gemini_llm_kwargs))
+            evaluator_embeddings = LangchainEmbeddingsWrapper(GoogleGenerativeAIEmbeddings(**gemini_emb_kwargs))
 
         # Metrik yang dijalankan (Ragas v0.4 class-based initialization)
         base_metrics = [
