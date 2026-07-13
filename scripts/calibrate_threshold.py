@@ -14,7 +14,8 @@ from chromadb.config import Settings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from src.config import (
     CHROMA_DIR_B, CHROMA_COLLECTION_B,
-    EMBEDDING_MODEL_NAME, GOOGLE_API_KEY, RETRIEVAL_K, SIMILARITY_THRESHOLD
+    EMBEDDING_MODEL_NAME, GOOGLE_API_KEY, RETRIEVAL_K, SIMILARITY_THRESHOLD,
+    GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
 )
 from src.logger_manager import get_logger
 
@@ -61,11 +62,22 @@ except Exception as e:
 
 # Inisialisasi model embedding Google GenAI
 try:
-    embedding_fn = GoogleGenerativeAIEmbeddings(
-        model=EMBEDDING_MODEL_NAME,
-        google_api_key=GOOGLE_API_KEY,
-        task_type="retrieval_query",
-    )
+    gemini_emb_kwargs = {
+        "model": EMBEDDING_MODEL_NAME,
+        "task_type": "retrieval_query",
+    }
+    
+    if GOOGLE_APPLICATION_CREDENTIALS:
+        from google.oauth2 import service_account
+        creds = service_account.Credentials.from_service_account_file(
+            GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
+        gemini_emb_kwargs["credentials"] = creds
+        gemini_emb_kwargs["project"] = GCP_PROJECT_ID
+    else:
+        gemini_emb_kwargs["google_api_key"] = GOOGLE_API_KEY
+
+    embedding_fn = GoogleGenerativeAIEmbeddings(**gemini_emb_kwargs)
 except Exception as e:
     err_msg = (
         f"\n[FATAL ERROR] Gagal menginisialisasi Google GenAI Embeddings!\n"
