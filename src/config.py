@@ -37,9 +37,9 @@ CHROMA_DISTANCE_FN  = "cosine"
 # Generator dan evaluator HARUS BERBEDA (D-16 — mitigasi self-eval bias)
 # NVIDIA NIM models are used for active testing due to Google AI Studio API limits.
 # Optimasi kecepatan & penalaran: Generator = Nemotron Nano 8B, Evaluator = Nemotron Super 49B (D-16 Terpenuhi)
-LLM_MODEL_NAME       = "gemini-2.5-flash"
+LLM_MODEL_NAME       = "gemini-3.5-flash"
 EMBEDDING_MODEL_NAME = "gemini-embedding-001"
-EVALUATOR_MODEL_NAME = "gemini-2.5-flash"
+EVALUATOR_MODEL_NAME = "gemini-3.1-pro-preview"
 
 # Daftar model yang bisa dipilih di UI sidebar
 # Catatan: model NVIDIA NIM menggunakan provider "openai_compatible" (lihat Section 18)

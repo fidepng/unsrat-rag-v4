@@ -104,7 +104,7 @@ def generate_calibration_testset():
     print("Generating synthetic calibration testset. This may take a while...")
     testset = generator.generate_with_chunks(
         chunks=docs,
-        testset_size=25,
+        testset_size=35,
         run_config=run_config
     )
 
@@ -140,8 +140,21 @@ def generate_calibration_testset():
               f"Cek manual sebelum dipakai kalibrasi!")
 
     CALIBRATION_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(CALIBRATION_OUTPUT, index=False)
-    print(f"\nCalibration testset saved to {CALIBRATION_OUTPUT}")
+    if CALIBRATION_OUTPUT.exists():
+        existing_df = pd.read_csv(CALIBRATION_OUTPUT)
+        print(f"[APPEND] Ditemukan file lama dengan {len(existing_df)} pertanyaan.")
+        
+        # Gabungkan dan hapus duplikat (berdasarkan kolom user_input)
+        combined_df = pd.concat([existing_df, df]).drop_duplicates(subset=["user_input"])
+        
+        new_added = len(combined_df) - len(existing_df)
+        print(f"[APPEND] Berhasil menambahkan {new_added} pertanyaan baru yang unik.")
+        combined_df.to_csv(CALIBRATION_OUTPUT, index=False)
+        print(f"\nCalibration testset APPENDED to {CALIBRATION_OUTPUT} (Total: {len(combined_df)})")
+    else:
+        df.to_csv(CALIBRATION_OUTPUT, index=False)
+        print(f"\nCalibration testset saved to {CALIBRATION_OUTPUT}")
+        
     print("INGAT: file ini HANYA untuk kalibrasi threshold, JANGAN digabung ke ground_truth.csv.")
 
 

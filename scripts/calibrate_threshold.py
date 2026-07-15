@@ -89,23 +89,38 @@ except Exception as e:
     logger.error(f"Inisialisasi Embeddings Gagal: {str(e)}", exc_info=True)
     sys.exit(1)
 
-# 5 kueri RELEVAN akademik
-relevant_queries = [
-    "berapa SKS maksimal per semester",
-    "syarat yudisium sarjana",
-    "kalender akademik semester genap 2026",
-    "cuti akademik prosedur",
-    "visi misi universitas sam ratulangi",
-]
+import pandas as pd
+CALIBRATION_TESTSET_PATH = Path("eval/dataset/calibration_testset.csv")
+
+relevant_queries = []
+if CALIBRATION_TESTSET_PATH.exists():
+    try:
+        df_cal = pd.read_csv(CALIBRATION_TESTSET_PATH)
+        if "user_input" in df_cal.columns:
+            relevant_queries = df_cal["user_input"].dropna().astype(str).tolist()
+            logger.info(f"Berhasil memuat {len(relevant_queries)} kueri relevan dari {CALIBRATION_TESTSET_PATH}")
+    except Exception as e:
+        logger.error(f"Gagal memuat calibration set: {e}")
+
+# Fallback ke hardcoded jika gagal atau kosong
+if not relevant_queries:
+    logger.warning("Menggunakan kueri relevan hardcoded sebagai fallback.")
+    relevant_queries = [
+        "berapa SKS maksimal per semester", # Baku
+        "syarat yudisium sarjana", # Baku
+        "kalo mau cuti kuliah tuh gimana ya bang caranya?", # Slang / Gaul
+        "Who be the rector in records from Juli 2014?", # Bahasa inggris terjemahan
+        "kalo ketauan skripsinya nyontek/plagiat konsekuensinya apa", # Slang / Parafrase
+    ]
 
 # 5 kueri TIDAK RELEVAN umum
 irrelevant_queries = [
-    "harga makan siang di kantin",
-    "cuaca hari ini di Manado",
-    "tim sepak bola favorit",
-    "resep masak ayam goreng",
-    "cara membuat kue ulang tahun",
-]
+        "harga makan siang di kantin", # Out of domain mutlak
+        "resep masak ayam goreng", # Out of domain mutlak
+        "bagaimana cara daftar CPNS dosen kementerian pendidikan?", # Hard Negative (Akademik tapi bukan Unsrat)
+        "syarat lulus LPDP luar negeri", # Hard Negative (Akademik tapi bukan Unsrat)
+        "siapa rektor universitas indonesia tahun ini", # Hard Negative (Tebakan menjebak)
+    ]
 
 # Penampung data statistik
 relevant_top1 = []
@@ -197,10 +212,17 @@ if max_rev_top1 < min_irr_top1:
 else:
     # Terjadi overlap (jarak kueri relevan terjauh > kueri tidak relevan terdekat)
     overlap = max_rev_top1 - min_irr_top1
-    rec_threshold = (avg_rev_top1 + avg_irr_top1) / 2
-    analysis_log = f"[WARN] PERINGATAN: Terjadi tumpang tindih ruang vektor sebesar {overlap:.3f}. Batas keputusan rata-rata gabungan: {rec_threshold:.3f}"
+    # Pendekatan Berbasis Recall untuk RAG:
+    # Threshold harus lebih besar dari jarak relevan terjauh (max_rev_top1) agar kueri relevan tidak terbuang (False Negatives).
+    rec_threshold = max_rev_top1 + 0.01 
+    
+    analysis_log = f"[WARN] Terjadi tumpang tindih sebesar {overlap:.3f}. Menggunakan pendekatan Recall-Optimized. Rekomendasi: {rec_threshold:.3f}"
     print(f"  [WARN] PERINGATAN: Terjadi tumpang tindih (overlap) ruang vektor sebesar {overlap:.3f}.")
-    print(f"  [!] Batas Keputusan Rekomendasi (Rata-rata Gabungan): {rec_threshold:.3f}")
+    print(f"  -> Jarak Relevan Terjauh (Max): {max_rev_top1:.3f}")
+    print(f"  -> Jarak Irrelevan Terdekat (Min): {min_irr_top1:.3f}")
+    print(f"  [INFO] Analisis: Secara empiris, jika menggunakan nilai rata-rata, kueri relevan terjauh ({max_rev_top1:.3f}) akan tertolak.")
+    print(f"  [INFO] Memutuskan penggunaan metode 'Recall-Optimized Threshold' (Max Relevan + Margin 0.01).")
+    print(f"  [!] Batas Keputusan Rekomendasi: {rec_threshold:.3f}")
     logger.warning(analysis_log)
 
 # Berikan rekomendasi aksi konkret
@@ -210,14 +232,18 @@ logger.info(f"Rekomendasi threshold optimal hasil kalibrasi: {rec_threshold:.4f}
 
 # Hitung selisih dengan threshold saat ini
 diff = abs(SIMILARITY_THRESHOLD - rec_threshold)
-if diff <= 0.02:
+if SIMILARITY_THRESHOLD < max_rev_top1:
+    print(f"  [CRITICAL] Nilai saat ini ({SIMILARITY_THRESHOLD}) LEBIH KECIL dari kueri relevan terjauh ({max_rev_top1:.3f}).")
+    print(f"             Secara matematis, ini akan menolak pertanyaan valid dan menyebabkan skor Context Recall turun!")
+    print(f"  [ACTION] Harap edit manual berkas 'src/config.py' baris 80, ubah menjadi:")
+    print(f"           SIMILARITY_THRESHOLD = {rec_threshold:.3f}")
+elif diff <= 0.02:
     print(f"  [OK] Nilai saat ini ({SIMILARITY_THRESHOLD}) sudah sangat dekat dengan nilai optimal. Tidak perlu diubah.")
     logger.info(f"Threshold saat ini ({SIMILARITY_THRESHOLD}) dinyatakan valid dan optimal.")
 else:
     print(f"  [WARN] Nilai saat ini ({SIMILARITY_THRESHOLD}) kurang optimal (selisih {diff:.3f}).")
-    print(f"  [ACTION] Harap edit manual berkas 'src/config.py' line 80, ubah menjadi:")
+    print(f"  [ACTION] Harap edit manual berkas 'src/config.py' baris 80, ubah menjadi:")
     print(f"           SIMILARITY_THRESHOLD = {rec_threshold:.3f}")
-    logger.warning(f"Threshold saat ini ({SIMILARITY_THRESHOLD}) kurang optimal. Disarankan diubah ke {rec_threshold:.4f}.")
 
 print(f"{'='*70}\n")
 logger.info("Kalibrasi SIMILARITY_THRESHOLD selesai dikerjakan.")
