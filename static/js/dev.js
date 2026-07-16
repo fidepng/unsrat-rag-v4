@@ -13,6 +13,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     safeCreateIcons();
 
+    // ── SIDEBAR NAVIGATION ──────────────────────────────────────────────────
+    const sidebarLinks = document.querySelectorAll(".sidebar-link");
+    const viewSections = document.querySelectorAll(".view-section");
+    const currentViewTitle = document.getElementById("current-view-title");
+    const headerActions = document.getElementById("header-actions");
+    const refreshStatusBtn = document.getElementById("refresh-status-btn");
+    
+    sidebarLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            // Remove active from all links
+            sidebarLinks.forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+            
+            const viewId = link.getAttribute("data-view");
+            const title = link.querySelector("span").innerText;
+            
+            // Hide all sections
+            viewSections.forEach(sec => sec.classList.remove("active"));
+            
+            // Show target section
+            document.getElementById(`view-${viewId}`).classList.add("active");
+            
+            // Update Title
+            currentViewTitle.innerText = title;
+            
+            // Toggle header actions (like Refresh btn)
+            if (viewId === "status") {
+                refreshStatusBtn.style.display = "flex";
+            } else if (viewId === "runs") {
+                // hide global refresh, specific one is inside the view
+                refreshStatusBtn.style.display = "none";
+            } else {
+                refreshStatusBtn.style.display = "none";
+            }
+        });
+    });
+
     // ── STATE ────────────────────────────────────────────────────────────────
     let logFilter = "all"; // "all" | "error"
     let logInterval = null;
@@ -31,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const chromaChunksCount = document.getElementById("chroma-chunks-count");
     const chromaMetaInfo = document.getElementById("chroma-meta-info");
     const bm25Status = document.getElementById("bm25-status");
-    const refreshStatusBtn = document.getElementById("refresh-status-btn");
 
     // Selectors Section 2 (Model Tester)
     const modelSelect = document.getElementById("model-select");
@@ -143,7 +179,32 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Update model select if active matches options
-            if (modelSelect && data.active_generator) {
+            if (modelSelect && data.available_models && Array.isArray(data.available_models)) {
+                // Keep the current selection if possible
+                const currentVal = modelSelect.value || data.active_generator;
+                modelSelect.innerHTML = ""; // Clear existing options
+                
+                data.available_models.forEach(model => {
+                    const opt = document.createElement("option");
+                    opt.value = model;
+                    opt.text = model;
+                    modelSelect.appendChild(opt);
+                });
+                
+                // Add active generator if it's not in the list (fallback)
+                if (data.active_generator && !data.available_models.includes(data.active_generator)) {
+                    const opt = document.createElement("option");
+                    opt.value = data.active_generator;
+                    opt.text = data.active_generator;
+                    modelSelect.appendChild(opt);
+                }
+
+                if (currentVal && Array.from(modelSelect.options).some(o => o.value === currentVal)) {
+                    modelSelect.value = currentVal;
+                } else if (data.active_generator) {
+                    modelSelect.value = data.active_generator;
+                }
+            } else if (modelSelect && data.active_generator) {
                 let found = false;
                 for (let i=0; i<modelSelect.options.length; i++) {
                     if (modelSelect.options[i].value === data.active_generator) {
@@ -386,13 +447,21 @@ document.addEventListener("DOMContentLoaded", () => {
                         const content = r.content || r.text || "";
                         
                         return `
-                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-slate-300 transition">
-                                <div class="flex justify-between items-start mb-2 gap-4">
-                                    <h4 class="font-bold text-slate-800 text-sm line-clamp-1 flex-1" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
-                                    <span class="px-2 py-0.5 bg-rose-50 text-rose-600 rounded text-[10px] font-mono border border-rose-100 whitespace-nowrap">${scoreLabel}: ${escapeHtml(score)}</span>
+                            <details class="group bg-slate-50 border border-slate-200 rounded-xl hover:border-slate-300 transition overflow-hidden">
+                                <summary class="p-4 cursor-pointer select-none flex justify-between items-start gap-4 list-none [&::-webkit-details-marker]:hidden relative">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-open:rotate-90 transition-transform"></i>
+                                            <h4 class="font-bold text-slate-800 text-sm line-clamp-1" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
+                                        </div>
+                                        <p class="text-xs text-slate-500 font-mono line-clamp-1 ml-6">${escapeHtml(content.substring(0, 100))}...</p>
+                                    </div>
+                                    <span class="px-2.5 py-1 bg-white text-rose-600 rounded-md text-[10px] font-mono font-bold border border-rose-100 shadow-sm whitespace-nowrap">${scoreLabel}: ${escapeHtml(score)}</span>
+                                </summary>
+                                <div class="px-4 pb-4 pt-2 ml-6">
+                                    <div class="text-xs text-slate-700 font-mono bg-white p-4 border border-slate-200 rounded-xl whitespace-pre-wrap leading-relaxed shadow-inner max-h-[300px] overflow-y-auto custom-scrollbar">${escapeHtml(content)}</div>
                                 </div>
-                                <p class="text-xs text-slate-600 font-mono line-clamp-3 bg-white p-2 border border-slate-100 rounded">${escapeHtml(content)}</p>
-                            </div>
+                            </details>
                         `;
                     }).join("");
                 }

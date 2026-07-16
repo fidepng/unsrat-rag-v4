@@ -377,6 +377,7 @@ async def dev_status():
 
     global _ACTIVE_DEV_MODEL
     return JSONResponse({
+        "available_models": AVAILABLE_MODELS,
         "active_generator": _ACTIVE_DEV_MODEL if _ACTIVE_DEV_MODEL else LLM_MODEL_NAME,
         "active_evaluator": EVALUATOR_MODEL_NAME,
         "active_embedding": EMBEDDING_MODEL_NAME,
@@ -535,7 +536,15 @@ async def dev_chunks(index: int = 1, config: str = "b"):
             import chromadb
             client = chromadb.PersistentClient(path=str(CHROMA_DIR_B))
             collection = client.get_collection(name=CHROMA_COLLECTION_B)
-            results = collection.get(limit=1, offset=index-1)
+            # Deterministic ordering by sorting IDs
+            all_ids = collection.get(include=[])["ids"]
+            sorted_ids = sorted(all_ids, key=lambda x: int(x.split('_')[-1]) if '_' in x and x.split('_')[-1].isdigit() else x)
+            if index > len(sorted_ids):
+                raise HTTPException(status_code=404, detail="Chunk not found")
+            
+            target_id = sorted_ids[index-1]
+            results = collection.get(ids=[target_id])
+            
             if not results["documents"]:
                 raise HTTPException(status_code=404, detail="Chunk not found")
             return JSONResponse({
