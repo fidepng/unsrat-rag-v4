@@ -129,6 +129,17 @@ class ActivateRunRequest(BaseModel):
     run_id: str
 
 
+class ModelTestRequest(BaseModel):
+    model_name: str
+
+
+class ModelSetRequest(BaseModel):
+    model_name: str
+
+
+_ACTIVE_DEV_MODEL = None
+
+
 # ── API Endpoints ──────────────────────────────────────────────────────────────
 
 @app.get("/api/config")
@@ -364,8 +375,9 @@ async def dev_status():
 
     bm25_present = BM25_INDEX_PATH.exists()
 
+    global _ACTIVE_DEV_MODEL
     return JSONResponse({
-        "active_generator": LLM_MODEL_NAME,
+        "active_generator": _ACTIVE_DEV_MODEL if _ACTIVE_DEV_MODEL else LLM_MODEL_NAME,
         "active_evaluator": EVALUATOR_MODEL_NAME,
         "active_embedding": EMBEDDING_MODEL_NAME,
         "google_api_key_present": google_key_present,
@@ -474,6 +486,102 @@ async def dev_logs(lines: int = Query(default=50, ge=1)):
         "total_lines_returned": len(log_lines),
         "lines": log_lines,
     })
+
+
+@app.post("/api/dev/test_model")
+async def dev_test_model(request: ModelTestRequest):
+    """Test model dengan get_response dan ukur latency."""
+    import time
+    start = time.time()
+    try:
+        res = get_response(
+            query="Halo, ini tes.",
+            config="b",
+            chat_history=[],
+            model_name=request.model_name,
+            streaming=False
+        )
+        res_text = res.get("answer", "")
+    except Exception as e:
+        logger.error(f"Error dev_test_model: {e}")
+        return JSONResponse(status_code=500, content={"error": str(e)})
+    
+    latency_ms = int((time.time() - start) * 1000)
+    return JSONResponse({
+        "model": request.model_name,
+        "response": res_text,
+        "latency_ms": latency_ms
+    })
+
+
+@app.post("/api/dev/set_model")
+async def dev_set_model(request: ModelSetRequest):
+    """Set active dev model di memory (app.py)."""
+    global _ACTIVE_DEV_MODEL
+    _ACTIVE_DEV_MODEL = request.model_name
+    logger.info(f"Set active dev model to: {_ACTIVE_DEV_MODEL}")
+    return JSONResponse({"status": "success", "active_model": _ACTIVE_DEV_MODEL})
+
+
+@app.get("/api/dev/chunks")
+async def dev_chunks(index: int = 1, config: str = "b"):
+    """Lihat raw chunk dari ChromaDB atau BM25."""
+    import pickle
+    if index < 1:
+        raise HTTPException(status_code=400, detail="Index must be >= 1")
+        
+    if config == "b":
+        try:
+            import chromadb
+            client = chromadb.PersistentClient(path=str(CHROMA_DIR_B))
+            collection = client.get_collection(name=CHROMA_COLLECTION_B)
+            results = collection.get(limit=1, offset=index-1)
+            if not results["documents"]:
+                raise HTTPException(status_code=404, detail="Chunk not found")
+            return JSONResponse({
+                "index": index,
+                "content": results["documents"][0],
+                "metadata": results["metadatas"][0] if results["metadatas"] else {}
+            })
+        except Exception as e:
+            logger.error(f"Error fetching chunk from ChromaDB: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
+    elif config == "c":
+        try:
+            if not BM25_INDEX_PATH.exists():
+                raise HTTPException(status_code=404, detail="BM25 index not found")
+            with open(BM25_INDEX_PATH, "rb") as f:
+                data = pickle.load(f)
+            chunks = data.get("chunks", [])
+            if index > len(chunks):
+                raise HTTPException(status_code=404, detail="Chunk not found")
+            chunk = chunks[index-1]
+            return JSONResponse({
+                "index": index,
+                "content": chunk.get("content", ""),
+                "metadata": {k: v for k, v in chunk.items() if k != "content"}
+            })
+        except Exception as e:
+            logger.error(f"Error fetching chunk from BM25: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
+    else:
+        raise HTTPException(status_code=400, detail="Invalid config. Use 'b' or 'c'.")
+
+
+@app.get("/api/dev/retrieval_test")
+async def dev_retrieval_test(query: str, config: str = "b"):
+    """Coba fungsi retrieval tanpa memanggil LLM."""
+    from src.retriever import retrieve_chunks
+    try:
+        chunks = retrieve_chunks(query, config)
+        return JSONResponse({
+            "query": query,
+            "config": config,
+            "results": chunks
+        })
+    except Exception as e:
+        logger.error(f"Error dev_retrieval_test: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ── Static Files & Root ────────────────────────────────────────────────────────
