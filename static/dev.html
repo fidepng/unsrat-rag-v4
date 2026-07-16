@@ -1,18 +1,15 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNSRAT RAG Developer Panel</title>
-    <!-- Google Fonts Inter -->
+    <!-- Google Fonts Inter & Fira Code -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -29,37 +26,51 @@
             height: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1e293b;
+            background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: #cbd5e1;
             border-radius: 999px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .terminal-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .terminal-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .terminal-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 999px;
+        }
+        .terminal-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased selection:bg-rose-500/30 selection:text-rose-200">
+<body class="bg-slate-50 text-slate-900 min-h-screen font-sans antialiased selection:bg-rose-500/30 selection:text-rose-900">
 
     <!-- Top Navigation Header -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-30">
+    <header class="border-b border-slate-200 bg-white/80 backdrop-blur sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="p-2 bg-rose-950/80 border border-rose-800/50 rounded-xl text-rose-400 flex items-center justify-center">
+                <div class="p-2 bg-rose-50 border border-rose-100 rounded-xl text-rose-600 flex items-center justify-center">
                     <i data-lucide="terminal" class="w-6 h-6"></i>
                 </div>
                 <div>
                     <div class="flex items-center space-x-2">
-                        <h1 class="font-bold text-lg text-white tracking-tight">UNSRAT RAG Developer Panel</h1>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase">Dev Mode</span>
+                        <h1 class="font-bold text-lg text-slate-900 tracking-tight">UNSRAT RAG Developer Panel</h1>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-600 border border-rose-200 uppercase">Dev Mode</span>
                     </div>
-                    <p class="text-xs text-slate-400">System Monitoring, Pre-flight Diagnostic & Evaluation Run Management</p>
+                    <p class="text-xs text-slate-500">System Monitoring, Diagnostic & Developer Tools</p>
                 </div>
             </div>
 
             <div class="flex items-center space-x-4">
-                <a href="/" class="flex items-center space-x-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold transition border border-slate-700">
+                <a href="/" class="flex items-center space-x-2 px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold transition border border-slate-200 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>Kembali ke Chatbot UI</span>
                 </a>
@@ -72,11 +83,11 @@
         <!-- SECTION 1: System Health & Active Config -->
         <section class="space-y-4">
             <div class="flex items-center justify-between">
-                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
-                    <i data-lucide="activity" class="w-4 h-4 text-rose-400"></i>
+                <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-2">
+                    <i data-lucide="activity" class="w-4 h-4 text-rose-500"></i>
                     <span>Section 1: Status Sistem & Konfigurasi Aktif</span>
                 </h2>
-                <button id="refresh-status-btn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium border border-slate-700 transition">
+                <button id="refresh-status-btn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 shadow-sm transition">
                     <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                     <span>Refresh</span>
                 </button>
@@ -84,199 +95,269 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Card 1: API Keys -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
-                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 shadow-sm hover:shadow transition">
+                    <div class="flex items-center justify-between text-xs text-slate-600 font-semibold">
                         <span>API Keys</span>
-                        <i data-lucide="key" class="w-4 h-4 text-slate-500"></i>
+                        <i data-lucide="key" class="w-4 h-4 text-slate-400"></i>
                     </div>
                     <div class="space-y-2 text-xs">
-                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/60 border border-slate-800">
-                            <span class="text-slate-300 font-medium">Google API Key</span>
-                            <span id="key-google-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-slate-400">Checking...</span>
+                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                            <span class="text-slate-700 font-medium">Google API Key</span>
+                            <span id="key-google-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-200 text-slate-600">Checking...</span>
                         </div>
-                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/60 border border-slate-800">
-                            <span class="text-slate-300 font-medium">NVIDIA NIM API Key</span>
-                            <span id="key-nim-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-slate-400">Checking...</span>
+                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                            <span class="text-slate-700 font-medium">NVIDIA NIM API Key</span>
+                            <span id="key-nim-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-200 text-slate-600">Checking...</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 2: Active Models -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
-                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 shadow-sm hover:shadow transition">
+                    <div class="flex items-center justify-between text-xs text-slate-600 font-semibold">
                         <span>Model Sistem Aktif</span>
-                        <i data-lucide="cpu" class="w-4 h-4 text-slate-500"></i>
+                        <i data-lucide="cpu" class="w-4 h-4 text-slate-400"></i>
                     </div>
                     <div class="space-y-1.5 text-xs">
                         <div class="truncate">
                             <span class="text-slate-500 text-[10px] block uppercase font-bold">Generator (LLM):</span>
-                            <span id="status-generator-model" class="font-mono font-bold text-slate-200 text-xs">-</span>
+                            <span id="status-generator-model" class="font-mono font-bold text-slate-800 text-xs">-</span>
                         </div>
                         <div class="truncate">
                             <span class="text-slate-500 text-[10px] block uppercase font-bold">Evaluator (Ragas):</span>
-                            <span id="status-evaluator-model" class="font-mono font-bold text-slate-200 text-xs">-</span>
+                            <span id="status-evaluator-model" class="font-mono font-bold text-slate-800 text-xs">-</span>
                         </div>
                         <div class="truncate">
                             <span class="text-slate-500 text-[10px] block uppercase font-bold">Embedding:</span>
-                            <span id="status-embedding-model" class="font-mono font-bold text-slate-200 text-xs">-</span>
+                            <span id="status-embedding-model" class="font-mono font-bold text-slate-800 text-xs">-</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 3: ChromaDB Vector Store -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
-                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 shadow-sm hover:shadow transition">
+                    <div class="flex items-center justify-between text-xs text-slate-600 font-semibold">
                         <span>ChromaDB Vector Store (Config B)</span>
-                        <i data-lucide="database" class="w-4 h-4 text-slate-500"></i>
+                        <i data-lucide="database" class="w-4 h-4 text-slate-400"></i>
                     </div>
                     <div class="space-y-1 text-xs">
                         <div class="flex items-baseline space-x-2">
-                            <span id="chroma-chunks-count" class="text-2xl font-black text-rose-400">0</span>
-                            <span class="text-slate-400 text-xs">chunks tersimpan</span>
+                            <span id="chroma-chunks-count" class="text-2xl font-black text-rose-600">0</span>
+                            <span class="text-slate-500 text-xs">chunks tersimpan</span>
                         </div>
-                        <div id="chroma-meta-info" class="text-[10px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-800">
+                        <div id="chroma-meta-info" class="text-[10px] text-slate-500 space-y-0.5 pt-1 border-t border-slate-100">
                             <div>Meta: Ingestion log not found</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Card 4: BM25 Index -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg">
-                    <div class="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 shadow-sm hover:shadow transition">
+                    <div class="flex items-center justify-between text-xs text-slate-600 font-semibold">
                         <span>BM25 Sparse Index (Config C)</span>
-                        <i data-lucide="file-text" class="w-4 h-4 text-slate-500"></i>
+                        <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
                     </div>
                     <div class="space-y-2 text-xs">
-                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/60 border border-slate-800">
-                            <span class="text-slate-300 font-medium">Index File</span>
-                            <span id="bm25-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-slate-400">Checking...</span>
+                        <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                            <span class="text-slate-700 font-medium">Index File</span>
+                            <span id="bm25-status" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-200 text-slate-600">Checking...</span>
                         </div>
-                        <p class="text-[10px] text-slate-500">Penyimpanan baseline sparse retrieval BM25 di `bm25_index/bm25_index.pkl`</p>
+                        <p class="text-[10px] text-slate-500 leading-relaxed">Penyimpanan baseline sparse retrieval BM25 di <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">bm25_index.pkl</code></p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 2: Live API Health Check -->
+        <!-- SECTION 2: Model Tester & Switcher -->
         <section class="space-y-4">
             <div class="flex items-center justify-between">
-                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-rose-400"></i>
-                    <span>Section 2: Live API Pre-flight Health Check</span>
+                <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-2">
+                    <i data-lucide="box" class="w-4 h-4 text-rose-500"></i>
+                    <span>Section 2: Model Tester & Switcher</span>
                 </h2>
-                <button id="run-preflight-btn" class="flex items-center space-x-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-rose-950/50">
-                    <i data-lucide="play-circle" class="w-4 h-4"></i>
-                    <span>Run Pre-flight Check</span>
-                </button>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="preflight-cards-container">
-                <!-- Card Google Gemini API -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 shadow-lg">
-                    <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
-                        <span>Google Gemini API</span>
-                        <span id="pf-google-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Belum diuji</span>
+            
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-grow">
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Pilih Model</label>
+                        <select id="model-select" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-rose-500 focus:border-rose-500 block p-2.5 outline-none transition">
+                            <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+                            <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+                            <option value="google/gemma-2-9b-it">google/gemma-2-9b-it</option>
+                            <option value="nvidia/llama-3.1-nemotron-nano-8b-v1">nvidia/llama-3.1-nemotron-nano-8b-v1</option>
+                            <option value="meta/llama-3.1-8b-instruct">meta/llama-3.1-8b-instruct</option>
+                            <option value="meta/llama-3.1-70b-instruct">meta/llama-3.1-70b-instruct</option>
+                        </select>
                     </div>
-                    <div id="pf-google-details" class="text-xs text-slate-400">
-                        Klik 'Run Pre-flight Check' untuk menguji konektivitas API.
-                    </div>
-                </div>
-
-                <!-- Card Generator LLM -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 shadow-lg">
-                    <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
-                        <span>Generator LLM</span>
-                        <span id="pf-generator-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Belum diuji</span>
-                    </div>
-                    <div id="pf-generator-details" class="text-xs text-slate-400">
-                        Klik 'Run Pre-flight Check' untuk menguji pemanggilan model.
-                    </div>
-                </div>
-
-                <!-- Card Evaluator LLM -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 shadow-lg">
-                    <div class="flex items-center justify-between text-xs font-semibold text-slate-300">
-                        <span>Evaluator LLM (Ragas)</span>
-                        <span id="pf-evaluator-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Belum diuji</span>
-                    </div>
-                    <div id="pf-evaluator-details" class="text-xs text-slate-400">
-                        Klik 'Run Pre-flight Check' untuk menguji respon evaluator.
+                    <div class="flex items-end gap-2">
+                        <button id="test-model-btn" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-bold transition flex items-center gap-2 border border-slate-200 shadow-sm active:bg-slate-100">
+                            <i data-lucide="zap" class="w-4 h-4"></i> Test Model
+                        </button>
+                        <button id="set-active-model-btn" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white rounded-xl text-sm font-bold transition flex items-center gap-2 shadow-sm shadow-rose-200/50">
+                            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Set Active
+                        </button>
                     </div>
                 </div>
+                
+                <div id="model-test-result" class="hidden rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm font-mono text-slate-700 whitespace-pre-wrap max-h-64 overflow-y-auto custom-scrollbar"></div>
             </div>
         </section>
 
-        <!-- SECTION 3: Evaluation Runs Manager -->
+        <!-- SECTION 3: Raw Chunk Viewer -->
         <section class="space-y-4">
             <div class="flex items-center justify-between">
-                <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
-                    <i data-lucide="layers" class="w-4 h-4 text-rose-400"></i>
-                    <span>Section 3: Manajer Arsip Runs Evaluasi (run_manifest.json)</span>
+                <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-2">
+                    <i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>
+                    <span>Section 3: Raw Chunk Viewer</span>
                 </h2>
-                <button id="refresh-runs-btn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium border border-slate-700 transition">
-                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                    <span>Refresh Runs</span>
-                </button>
             </div>
-
-            <!-- Warning Alert Banner if active runs differ -->
-            <div id="dev-consistency-alert" class="hidden"></div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left text-xs text-slate-300">
-                        <thead class="bg-slate-950 text-slate-400 uppercase text-[10px] font-bold tracking-wider border-b border-slate-800">
-                            <tr>
-                                <th class="px-4 py-3">Config</th>
-                                <th class="px-4 py-3">Run ID / Waktu</th>
-                                <th class="px-4 py-3">Generator Model</th>
-                                <th class="px-4 py-3">Evaluator Model</th>
-                                <th class="px-4 py-3 text-center">Faithfulness</th>
-                                <th class="px-4 py-3 text-center">Relevancy</th>
-                                <th class="px-4 py-3 text-center">Failed Evals</th>
-                                <th class="px-4 py-3 text-center">Status</th>
-                                <th class="px-4 py-3 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="runs-table-body" class="divide-y divide-slate-800/60">
-                            <tr>
-                                <td colspan="9" class="px-4 py-6 text-center text-slate-500 font-medium">
-                                    Memuat data runs...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col md:flex-row">
+                <div class="w-full md:w-64 bg-slate-50 border-r border-slate-200 p-5 flex flex-col gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Index Chunk</label>
+                        <div class="flex gap-2">
+                            <button id="chunk-prev-btn" class="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition shadow-sm active:bg-slate-100"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                            <input type="number" id="chunk-index-input" value="0" min="0" class="w-full text-center bg-white border border-slate-200 rounded-lg text-sm text-slate-800 shadow-sm focus:ring-rose-500 focus:border-rose-500 outline-none">
+                            <button id="chunk-next-btn" class="px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600 transition shadow-sm active:bg-slate-100"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Config Mode</label>
+                        <div class="flex bg-slate-200 p-1 rounded-xl">
+                            <button id="chunk-config-b" class="flex-1 px-2 py-1.5 text-xs font-bold rounded-lg bg-white shadow-sm text-slate-800 transition">B (Chroma)</button>
+                            <button id="chunk-config-c" class="flex-1 px-2 py-1.5 text-xs font-medium rounded-lg text-slate-500 hover:text-slate-700 transition">C (BM25)</button>
+                        </div>
+                    </div>
+                    <button id="chunk-load-btn" class="w-full px-4 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-white rounded-xl text-xs font-bold transition mt-auto shadow-sm flex justify-center items-center gap-1.5">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> Load Chunk
+                    </button>
+                </div>
+                
+                <div class="flex-1 p-5 flex flex-col bg-white overflow-hidden min-h-[300px]">
+                    <div id="chunk-metadata" class="flex flex-wrap gap-2 mb-3 empty:hidden"></div>
+                    <pre id="chunk-content-display" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs font-mono text-slate-800 overflow-y-auto whitespace-pre-wrap custom-scrollbar">Pilih index dan klik 'Load Chunk' untuk melihat isi raw text.</pre>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 4: Live Log Terminal -->
+        <!-- SECTION 4: Retrieval Search Playground -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-2">
+                    <i data-lucide="search" class="w-4 h-4 text-rose-500"></i>
+                    <span>Section 4: Retrieval Search Playground</span>
+                </h2>
+            </div>
+            
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 relative">
+                        <i data-lucide="search" class="absolute left-3.5 top-3 w-4 h-4 text-slate-400"></i>
+                        <input type="text" id="retrieval-query-input" placeholder="Masukkan query pencarian..." class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:ring-rose-500 focus:border-rose-500 outline-none transition">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex bg-slate-200 p-1 rounded-xl">
+                            <button id="retrieval-config-b" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-white shadow-sm text-slate-800 transition">B (Chroma)</button>
+                            <button id="retrieval-config-c" class="px-3 py-1.5 text-xs font-medium rounded-lg text-slate-500 hover:text-slate-700 transition">C (BM25)</button>
+                        </div>
+                        <button id="retrieval-search-btn" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-white rounded-xl text-sm font-bold transition shadow-sm flex items-center gap-2">
+                            <i data-lucide="search" class="w-4 h-4"></i> Search
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="retrieval-results-container" class="space-y-3 hidden">
+                    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-4 flex justify-between items-center">
+                        <span id="retrieval-results-header">Results</span>
+                        <span id="retrieval-time-badge" class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-[10px] text-slate-500 font-mono hidden"></span>
+                    </div>
+                    <div id="retrieval-results-list" class="space-y-3 max-h-[500px] overflow-y-auto custom-scrollbar pr-2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Evaluation Runs Manager -->
+        <section class="space-y-4">
+            <details class="group bg-white border border-slate-200 rounded-2xl shadow-sm [&_summary::-webkit-details-marker]:hidden transition-all duration-300">
+                <summary class="flex items-center justify-between p-5 cursor-pointer select-none">
+                    <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-2">
+                        <i data-lucide="layers" class="w-4 h-4 text-rose-500"></i>
+                        <span>Section 5: Manajer Arsip Runs Evaluasi (run_manifest.json)</span>
+                    </h2>
+                    <div class="flex items-center gap-4">
+                        <button id="refresh-runs-btn" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            <span>Refresh</span>
+                        </button>
+                        <div class="p-1.5 rounded-full bg-slate-100 text-slate-500 group-open:bg-rose-50 group-open:text-rose-500 transition-colors">
+                            <i data-lucide="chevron-down" class="w-4 h-4 group-open:-rotate-180 transition-transform duration-300"></i>
+                        </div>
+                    </div>
+                </summary>
+                <div class="px-5 pb-5 pt-2 border-t border-slate-100">
+                    <div id="dev-consistency-alert" class="hidden mb-4"></div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-inner">
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left text-xs text-slate-700">
+                                <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
+                                    <tr>
+                                        <th class="px-4 py-3">Config</th>
+                                        <th class="px-4 py-3">Run ID / Waktu</th>
+                                        <th class="px-4 py-3">Generator Model</th>
+                                        <th class="px-4 py-3">Evaluator Model</th>
+                                        <th class="px-4 py-3 text-center">Faithfulness</th>
+                                        <th class="px-4 py-3 text-center">Relevancy</th>
+                                        <th class="px-4 py-3 text-center">Failed Evals</th>
+                                        <th class="px-4 py-3 text-center">Status</th>
+                                        <th class="px-4 py-3 text-right">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="runs-table-body" class="divide-y divide-slate-200">
+                                    <tr>
+                                        <td colspan="9" class="px-4 py-6 text-center text-slate-500 font-medium">
+                                            Memuat data runs...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- SECTION 6: Live Log Terminal -->
         <section class="space-y-4">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div class="flex items-center space-x-3">
-                    <h2 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-2">
-                        <i data-lucide="terminal-square" class="w-4 h-4 text-rose-400"></i>
-                        <span>Section 4: Terminal Log Real-Time (unsrat_rag.log)</span>
+                    <h2 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-2">
+                        <i data-lucide="terminal-square" class="w-4 h-4 text-rose-500"></i>
+                        <span>Section 6: Terminal Log Real-Time</span>
                     </h2>
-                    <span id="log-polling-badge" class="flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="log-polling-badge" class="flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span>Auto-refresh 5s</span>
                     </span>
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
-                        <button id="log-filter-all" class="px-3 py-1 rounded-lg text-slate-200 bg-slate-800 font-semibold transition">Semua</button>
-                        <button id="log-filter-error" class="px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200 font-medium transition">Error & Warning Only</button>
+                    <div class="flex bg-white p-1 rounded-xl border border-slate-200 text-xs shadow-sm">
+                        <button id="log-filter-all" class="px-3 py-1 rounded-lg text-slate-800 bg-slate-100 font-semibold transition">Semua</button>
+                        <button id="log-filter-error" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-700 font-medium transition">Error & Warning</button>
                     </div>
-                    <button id="manual-refresh-logs" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition" title="Refresh Sekarang">
+                    <button id="manual-refresh-logs" class="p-2 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-600 rounded-xl border border-slate-200 shadow-sm transition" title="Refresh Sekarang">
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
 
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 font-mono text-xs shadow-2xl relative">
-                <div id="terminal-box" class="h-96 overflow-y-auto custom-scrollbar space-y-1 text-slate-300">
+            <!-- Terminal is kept dark for aesthetics -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 font-mono text-xs shadow-xl relative">
+                <div class="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-slate-900 to-transparent rounded-t-2xl pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-slate-900 to-transparent rounded-b-2xl pointer-events-none"></div>
+                <div id="terminal-box" class="h-96 overflow-y-auto terminal-scrollbar space-y-1.5 text-slate-300 px-2 py-4">
                     <div class="text-slate-500 italic">[Initializing log stream...]</div>
                 </div>
             </div>
@@ -284,8 +365,9 @@
 
     </main>
 
-    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
-        UNSRAT RAG Developer Dashboard &bull; System Hardening Release v4.0
+    <footer class="border-t border-slate-200 py-8 text-center flex flex-col items-center gap-2">
+        <div class="text-xs font-bold text-slate-700 tracking-wider">UNSRAT RAG Developer Dashboard</div>
+        <div class="text-[10px] text-slate-400">System Hardening Release v4.0</div>
     </footer>
 
     <script src="/static/js/dev.js"></script>
