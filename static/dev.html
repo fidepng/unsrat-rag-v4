@@ -344,31 +344,33 @@
             </section>
 
             <!-- VIEW: SYSTEM LOGS -->
-            <section id="view-logs" class="view-section max-w-7xl mx-auto h-[calc(100vh-12rem)] flex flex-col">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                    <div class="flex items-center space-x-3">
-                        <span id="log-polling-badge" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-sm">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Auto-refresh 5s</span>
-                        </span>
-                    </div>
-
-                    <div class="flex items-center space-x-3">
-                        <div class="flex bg-white p-1 rounded-xl border border-slate-200 text-sm shadow-sm">
-                            <button id="log-filter-all" class="px-4 py-1.5 rounded-lg text-slate-800 bg-slate-100 font-bold transition">Semua Log</button>
-                            <button id="log-filter-error" class="px-4 py-1.5 rounded-lg text-slate-500 hover:text-slate-700 font-medium transition">Error & Warning</button>
+            <section id="view-logs" class="view-section max-w-7xl mx-auto h-[calc(100vh-12rem)]">
+                <div class="h-full flex flex-col">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span id="log-polling-badge" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-sm">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span>Auto-refresh 5s</span>
+                            </span>
                         </div>
-                        <button id="manual-refresh-logs" class="p-2.5 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-600 rounded-xl border border-slate-200 shadow-sm transition" title="Refresh Sekarang">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
 
-                <div class="flex-1 bg-[#0f172a] border border-slate-800 rounded-2xl p-4 font-mono text-xs shadow-2xl relative flex flex-col overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-[#0f172a] to-transparent rounded-t-2xl pointer-events-none z-10"></div>
-                    <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-[#0f172a] to-transparent rounded-b-2xl pointer-events-none z-10"></div>
-                    <div id="terminal-box" class="flex-1 overflow-y-auto terminal-scrollbar space-y-1.5 text-slate-300 px-4 py-4 relative z-0">
-                        <div class="text-slate-500 italic">[Initializing log stream...]</div>
+                        <div class="flex items-center space-x-3">
+                            <div class="flex bg-white p-1 rounded-xl border border-slate-200 text-sm shadow-sm">
+                                <button id="log-filter-all" class="px-4 py-1.5 rounded-lg text-slate-800 bg-slate-100 font-bold transition">Semua Log</button>
+                                <button id="log-filter-error" class="px-4 py-1.5 rounded-lg text-slate-500 hover:text-slate-700 font-medium transition">Error & Warning</button>
+                            </div>
+                            <button id="manual-refresh-logs" class="p-2.5 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-600 rounded-xl border border-slate-200 shadow-sm transition" title="Refresh Sekarang">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex-1 bg-[#0f172a] border border-slate-800 rounded-2xl p-4 font-mono text-xs shadow-2xl relative flex flex-col overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-[#0f172a] to-transparent rounded-t-2xl pointer-events-none z-10"></div>
+                        <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-[#0f172a] to-transparent rounded-b-2xl pointer-events-none z-10"></div>
+                        <div id="terminal-box" class="flex-1 overflow-y-auto terminal-scrollbar space-y-1.5 text-slate-300 px-4 py-4 relative z-0">
+                            <div class="text-slate-500 italic">[Initializing log stream...]</div>
+                        </div>
                     </div>
                 </div>
             </section>
