@@ -1,7 +1,7 @@
 ---
-doc_id: "UNSRAT-PROFILE-2020-001"
+doc_id: "UNSRAT-PROFILE-2026-001"
 title: "Sejarah Universitas Sam Ratulangi"
-version: "1.0"
+version: "2.0"
 language_primary: "id"
 language_secondary: null
 institution: "Universitas Sam Ratulangi"
@@ -28,24 +28,24 @@ tanggal_penetapan: null
 pejabat_penandatangan: null
 source_document: null
 source_url: "https://www.unsrat.ac.id/profil-unversitas/"
-supersedes: null
+supersedes: "UNSRAT-PROFILE-2020-001"
 superseded_by: null
 
-valid_from: "2020-11-11"
+valid_from: "2026-07-16"
 valid_until: null
 status: "active"
-last_updated: "2020-11-11"
-last_verified: "2020-11-11"
+last_updated: "2026-07-16"
+last_verified: "2026-07-16"
 
-retrieval_summary: "Dokumen narasi profil institusi ini menguraikan sejarah pendirian dan perkembangan Universitas Sam Ratulangi (UNSRAT) dari tahun 1954 hingga sekarang. Mencakup tonggak-tonggak sejarah mulai dari PTM (1958), UNISUT (1961), hingga peresmian UNSRAT berdasarkan Keppres No. 277 tanggal 14 September 1965. Dokumen juga memuat daftar lengkap 11 Fakultas dan 1 Program Pascasarjana, daftar Rektor sejak 1961, serta latar belakang tokoh Dr. Sam Ratulangi dan falsafah 'Si Tou Timou Tumou Tou'. Relevan untuk seluruh sivitas akademika dan publik umum yang ingin memahami akar historis dan identitas institusi UNSRAT."
+retrieval_summary: "Dokumen narasi profil institusi ini menguraikan sejarah pendirian dan perkembangan Universitas Sam Ratulangi (UNSRAT) dari tahun 1954 hingga terbentuknya 11 Fakultas dan 1 Program Pascasarjana. Mencakup tonggak sejarah PTM (1958), UNSUT/UNISUT/UNSULUTTENG (1960-1965), peresmian UNSRAT via Keppres No. 277/1965, daftar lengkap 13 pimpinan universitas sejak 1961, serta latar belakang tokoh Dr. Sam Ratulangi dan falsafah 'Si Tou Timou Tumou Tou'. Direvisi dan diverifikasi ulang terhadap sumber resmi www.unsrat.ac.id pada 16 Juli 2026; menggantikan versi UNSRAT-PROFILE-2020-001 yang sudah usang."
 
 chunk_strategy: "by_section"
-chunk_notes: "Potong per heading ##. Tabel daftar Rektor adalah satu chunk mandiri. Tabel daftar Fakultas adalah satu chunk mandiri tersendiri."
+chunk_notes: "Potong per heading ## / ###. Tabel Pimpinan (13 baris) dijaga sebagai satu chunk mandiri (ukuran <2000 char, aman dari RecursiveCharacterTextSplitter). CATATAN KOREKSI: Sumber resmi (unsrat.ac.id) mencantumkan nomor '12' dua kali (untuk Ellen J. Kumaat dan Oktovian Sompie) — kekeliruan administratif pada sumber asli. Di dokumen ini penomoran dikoreksi menjadi 1-13 berurutan; ini perbaikan label urutan, BUKAN perubahan fakta nama/jabatan/periode. Bagian 'Struktur Fakultas' dan 'Pimpinan' sengaja diberi penanda tanggal verifikasi eksplisit (bukan kata 'saat ini'/'sekarang' polos) agar sistem RAG tidak menganggap data ini valid selamanya tanpa perlu re-verifikasi berkala."
 embedding_model: "text-embedding-001"
 priority: 4
 
 related_docs:
-  - "UNSRAT-PROFILE-2020-002"
+  - "UNSRAT-PROFILE-2026-002"
   - "UNSRAT-PROFILE-2020-004"
 
 tags:
@@ -68,6 +68,7 @@ keywords:
   - "11 fakultas"
   - "Universitas Pinaesaan"
   - "Universitas Permesta"
+  - "Universitas Negeri Gorontalo"
 
 entities:
   - "Dr. Gerungan Saul Samuel Jacob Ratulangi"
@@ -85,7 +86,7 @@ Setelah kemerdekaan Indonesia tercapai, cita-cita meningkatkan mutu pendidikan d
 
 Cita-cita mendirikan perguruan tinggi atau universitas negeri di Manado — yang ketika itu merupakan pusat pemerintahan dan kegiatan daerah Sulawesi Utara dan Tengah — dirintis oleh adanya **Universitas Pinaesaan** yang didirikan tanggal 1 Oktober 1954 di Tondano, dengan satu fakultas, yakni Fakultas Hukum. Bersama dengan **Universitas Permesta** yang didirikan pada tanggal 23 September 1957 di Manado, Universitas Pinaesaan sesungguhnya merupakan embrio dari berkembangnya Universitas Sam Ratulangi di masa depan.
 
-Atas inisiatif masyarakat Sulawesi Utara dan Tengah (para pemuka militer, sipil, maupun cendekiawan), terciptalah kesatuan dan kebulatan tekad untuk merealisir berdirinya satu perguruan tinggi berstatus negeri di kedua daerah tersebut.
+Memiliki dua universitas dengan status swasta ternyata belum memuaskan warga Sulawesi Utara dan Tengah. Atas inisiatif masyarakat setempat (para pemuka militer, sipil, maupun cendekiawan), terciptalah kesatuan dan kebulatan tekad untuk merealisir berdirinya satu perguruan tinggi berstatus negeri di kedua daerah tersebut.
 
 ---
 
@@ -127,23 +128,23 @@ Berdasarkan **Surat Keputusan Presiden Republik Indonesia Nomor 277, tanggal 14 
 3. Fakultas Peternakan
 4. Fakultas Hukum dan Pengetahuan Masyarakat
 5. Fakultas Ekonomi
-6. Fakultas Ilmu Sosial dan Politik
+6. Fakultas Sosial Politik
 7. Fakultas Teknik
 
 ### Perkembangan Selanjutnya
 
 - Fakultas Sastra (sebelumnya berstatus swasta) diresmikan masuk ke dalam UNSRAT.
-- Tahun **1966**: UNSRAT bertambah Fakultas Perikanan, yang berkedudukan di Tahuna hingga 1969, kemudian dipindahkan ke Manado (pada 1996 menjadi Fakultas Perikanan dan Ilmu Kelautan / FPIK).
-- Tahun **1982**: FKIP Manado cabang Gorontalo menjadi FKIP UNSRAT di Gorontalo (kini dikenal sebagai Universitas Negeri Gorontalo).
+- Tahun **1966**: UNSRAT bertambah Fakultas Perikanan (berkedudukan di Tahuna hingga 1969, sehingga UNSRAT saat itu menjadi 9 fakultas). Fakultas ini kemudian dipindahkan ke Manado dan pada 1996 menjadi Fakultas Perikanan dan Ilmu Kelautan (FPIK).
+- Tahun **1982**: FKIP Manado cabang Gorontalo menjadi FKIP UNSRAT di Gorontalo, yang kemudian berdiri sendiri dan kini dikenal sebagai **Universitas Negeri Gorontalo** (mencatat 3.037 lulusan terakhir sebagai bagian UNSRAT pada tahun 1992 sebelum pemisahan).
 - Tahun **1985**: Program Pascasarjana didirikan.
 - Tahun **1998**: Fakultas Matematika dan Ilmu Pengetahuan Alam (FMIPA) berdiri.
-- Tahun **2009**: Berdasarkan surat persetujuan DIKTI No. 212/D/2009 tanggal 17 Februari 2009, Fakultas Kesehatan Masyarakat resmi berdiri sebagai fakultas termuda.
+- Tahun **2009**: Berdasarkan surat persetujuan DIKTI No. 212/D/2009 tanggal 17 Februari 2009, Fakultas Kesehatan Masyarakat resmi berdiri sebagai fakultas termuda pada masa itu.
 
 ---
 
-## Struktur Fakultas Saat Ini
+## Struktur Fakultas (Terverifikasi per 16 Juli 2026)
 
-Universitas Sam Ratulangi kini merupakan perguruan tinggi negeri dengan **11 Fakultas** dan **1 Program Pascasarjana**:
+Berdasarkan sumber resmi yang diverifikasi pada 16 Juli 2026, Universitas Sam Ratulangi merupakan perguruan tinggi negeri dengan **11 Fakultas** dan **1 Program Pascasarjana**:
 
 1. Fakultas Kedokteran
 2. Fakultas Teknik
@@ -158,9 +159,13 @@ Universitas Sam Ratulangi kini merupakan perguruan tinggi negeri dengan **11 Fak
 11. Fakultas Kesehatan Masyarakat
 12. Program Pascasarjana
 
+> Catatan kesegaran data: struktur fakultas dapat berubah sewaktu-waktu melalui SK Rektor/Kemendiktisaintek. Untuk kepastian terkini, rujuk https://www.unsrat.ac.id/fakultas/.
+
 ---
 
-## Pimpinan Universitas Sam Ratulangi (1961 – Sekarang)
+## Pimpinan Universitas Sam Ratulangi (1961 – 16 Juli 2026)
+
+> Data berikut diverifikasi terhadap www.unsrat.ac.id/profil-unversitas/ pada 16 Juli 2026. Penomoran dikoreksi berurutan (lihat catatan `chunk_notes`); nama, jabatan, dan periode tidak diubah dari sumber resmi.
 
 | No  | Nama                                                     | Jabatan    | Periode                |
 | --- | -------------------------------------------------------- | ---------- | ---------------------- |
@@ -176,7 +181,9 @@ Universitas Sam Ratulangi kini merupakan perguruan tinggi negeri dengan **11 Fak
 | 10  | Prof. Dr. D. A. Rumokoy, SH, MH                          | Rektor     | 2008 – 2014            |
 | 11  | Prof. Dr. Ir. H. Musliar Kasim, MS                       | PLT Rektor | Maret 2014 – Juli 2014 |
 | 12  | Prof. Dr. Ir. Ellen J. Kumaat, M.Sc, DEA                 | Rektor     | Juli 2014 – 2022       |
-| 13  | Prof. Dr. Ir. Oktovian Berty Alexander Sompie, M.Eng IPU | Rektor     | 2022 – Sekarang        |
+| 13  | Prof. Dr. Ir. Oktovian Berty Alexander Sompie, M.Eng IPU | Rektor     | 2022 – 16 Juli 2026 (menjabat, sesuai verifikasi terakhir) |
+
+> Catatan kesegaran data: rektor petahana dapat berganti. Untuk kepastian terkini, rujuk https://www.unsrat.ac.id/profil-unversitas/ atau https://www.unsrat.ac.id/sambutan-rektor/.
 
 ---
 

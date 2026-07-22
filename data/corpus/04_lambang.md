@@ -1,7 +1,7 @@
 ---
 doc_id: "UNSRAT-PROFILE-2020-004"
 title: "Lambang Universitas Sam Ratulangi"
-version: "1.0"
+version: "1.1"
 language_primary: "id"
 language_secondary: null
 institution: "Universitas Sam Ratulangi"
@@ -34,18 +34,18 @@ superseded_by: null
 valid_from: "2020-11-11"
 valid_until: null
 status: "active"
-last_updated: "2020-11-11"
-last_verified: "2026-05-13"
+last_updated: "2026-07-16"
+last_verified: "2026-07-16"
 
-retrieval_summary: "Dokumen narasi profil institusi ini menguraikan arti, makna filosofis, dan tata cara penggunaan lambang resmi Universitas Sam Ratulangi (UNSRAT). Elemen visual lambang terdiri dari bidang dasar segi lima yang melambangkan Pancasila, serta bulatan tengah berisi lukisan pohon kelapa dengan 12 elemen bermakna yang merepresentasikan Tridharma Perguruan Tinggi, semangat Proklamasi Kemerdekaan 17 Agustus 1945, dan identitas daerah Sulawesi Utara. Dokumen juga mengatur ketentuan penempatan lambang pada atribut dan ruang resmi universitas. Relevan bagi seluruh sivitas akademika dan publik umum."
+retrieval_summary: "Dokumen narasi profil institusi ini menguraikan arti, makna filosofis, dan tata cara penggunaan lambang resmi Universitas Sam Ratulangi (UNSRAT). Elemen visual lambang terdiri dari bidang dasar segi lima yang melambangkan Pancasila, serta bulatan tengah berisi lukisan pohon kelapa dengan 12 elemen bermakna yang merepresentasikan Tridharma Perguruan Tinggi, semangat Proklamasi Kemerdekaan 17 Agustus 1945, dan identitas daerah Sulawesi Utara. Dokumen juga mengatur ketentuan penempatan lambang pada atribut dan ruang resmi universitas. Diverifikasi ulang terhadap sumber resmi pada 16 Juli 2026; isi substantif tidak berubah, hanya format 12 elemen makna diubah dari tabel menjadi definition-list bernomor."
 
 chunk_strategy: "by_section"
-chunk_notes: "Potong per heading ## (Arti Lambang, Makna Lambang, Penggunaan Lambang). Tabel 12 elemen makna pada bagian Bulatan Tengah (Lambang Kelapa) harus dijadikan satu chunk utuh agar konteks simbolik tidak terpotong."
+chunk_notes: "Potong per heading ## / ### (Arti Lambang, Makna Lambang > Bidang Dasar, Makna Lambang > Bulatan Tengah, Makna Keseluruhan, Penggunaan Lambang). PERUBAHAN v1.1: 12 elemen 'Bulatan Tengah (Lambang Kelapa)' diubah dari tabel 2 kolom (No/Elemen/Makna) menjadi list bernomor '**Elemen N** — deskripsi elemen. Makna: penjelasan.' Alasan: versi tabel v1.0 berukuran ~3600 karakter untuk satu section — jauh melebihi chunk_size=2000, sehingga RecursiveCharacterTextSplitter memotongnya menjadi 2 chunk dan baris ke-4 s.d. ke-12 kehilangan header kolom 'No | Elemen | Makna' (chunk yatim, konteks tak terbaca LLM). Format list baru membuat setiap elemen sepenuhnya self-contained (elemen + makna dalam satu blok teks), sehingga aman dipotong di titik manapun oleh splitter tanpa kehilangan konteks."
 embedding_model: "text-embedding-001"
 priority: 4
 
 related_docs:
-  - "UNSRAT-PROFILE-2020-001"
+  - "UNSRAT-PROFILE-2026-001"
   - "UNSRAT-PROFILE-2020-005"
   - "UNSRAT-PROFILE-2020-006"
 
@@ -79,7 +79,7 @@ entities:
 
 # Lambang Universitas Sam Ratulangi
 
-> Referensi gambar lambang: [Logo UNSRAT](https://www.unsrat.ac.id/wp-content/uploads/2020/11/logo_unsrat_large.jpg)
+> Referensi gambar lambang: https://www.unsrat.ac.id/wp-content/uploads/2020/11/logo_unsrat_large.jpg
 
 ---
 
@@ -105,22 +105,20 @@ Lambang UNSRAT memiliki tiga elemen visual utama:
 
 ### Bulatan Tengah (Lambang Kelapa)
 
-Bulatan berisi lukisan di tengah berasal dari ciri khas daerah Sulawesi Utara dengan makna sebagai berikut:
+Bulatan berisi lukisan di tengah berasal dari ciri khas daerah Sulawesi Utara, dengan makna sebagai berikut:
 
-| No  | Elemen                                                                                                                      | Makna                                                                                                                                                                                 |
-| --- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Satu biji kelapa dengan tiga matanya menghadap ke bawah (tempat keluarnya akar lembaga)                                     | Melambangkan UNSRAT sebagai lembaga pendidikan tinggi yang melaksanakan Tridharma Perguruan Tinggi berdasarkan Pancasila di bumi Indonesia.                                           |
-| 2   | Warna lila pada bagian-bagian kelapa yang distilir                                                                          | Melambangkan warna kebudayaan yang hidup, bertumbuh, dan berkembang.                                                                                                                  |
-| 3   | Warna merah pada bakal-bakal buah yang sedang tumbuh serta buah yang telah matang                                           | Melambangkan hasil proses pertumbuhan yang sedang disiapkan dan siap digunakan dalam fungsi sosial.                                                                                   |
-| 4   | Tangkai halus berwarna lila yang saling berhubungan satu sama lain                                                          | Melambangkan semangat kekeluargaan (_l'esprit des corps_) dalam sivitas akademika.                                                                                                    |
-| 5   | Sepasang seludang berwarna lila yang melindungi bakal-bakal buah                                                            | Melambangkan tugas UNSRAT dalam rangka Tridharma: _instituendum et scolarium_ dan _scientiarum_.                                                                                      |
-| 6   | 17 bakal buah berwarna merah, 8 ruas pada batang kelapa berwarna lila, 9 pelepah berwarna ungu (masing-masing 5 helai daun) | Melambangkan semangat Proklamasi Kemerdekaan Indonesia 17 Agustus 1945 yang menjiwai pelaksanaan tugas UNSRAT.                                                                        |
-| 7   | Tiga pelepah kelapa berwarna lila                                                                                           | Melambangkan tugas dan falsafah perguruan tinggi dalam bentuk Tridharma Perguruan Tinggi.                                                                                             |
-| 8   | Dua pasang seludang berwarna lila di kiri-kanan ketiga pelepah                                                              | Melambangkan proses _"patah tumbuh hilang berganti"_.                                                                                                                                 |
-| 9   | Sembilan bagian lukisan berwarna lila di sekitar pohon kelapa                                                               | Melambangkan bulan September sebagai Dies Natalis UNSRAT.                                                                                                                             |
-| 10  | Satu pelepah kelapa menghadap ke atas yang sedang terbuka (mekar) kelima helai daunnya                                      | Melambangkan UNSRAT dijiwai semangat Proklamasi Kemerdekaan Indonesia 17 Agustus 1945 untuk terus berupaya mencapai tujuan dan cita-cita bangsa Indonesia merdeka.                    |
-| 11  | Nama dan tempat universitas berwarna biru                                                                                   | Melambangkan adanya fakta hidup, landasan teguh, pasti, dan dinamis.                                                                                                                  |
-| 12  | Lembaga-lembaga kelapa berwarna lila di antara nama dan tempat universitas                                                  | Melambangkan bahwa UNSRAT yang memulai kegiatannya di Manado akan terus hidup sebagai universitas yang menjadi milik dan dapat dimanfaatkan oleh seluruh rakyat dan bangsa Indonesia. |
+- **Elemen 1 — Satu biji kelapa dengan tiga matanya menghadap ke bawah** (tempat keluarnya akar lembaga). **Makna:** UNSRAT sebagai lembaga pendidikan tinggi yang melaksanakan Tridharma Perguruan Tinggi berdasarkan Pancasila di bumi Indonesia.
+- **Elemen 2 — Warna lila pada bagian-bagian kelapa yang distilir.** **Makna:** warna kebudayaan yang hidup, bertumbuh, dan berkembang.
+- **Elemen 3 — Warna merah pada bakal-bakal buah yang sedang tumbuh serta buah yang telah matang.** **Makna:** hasil proses pertumbuhan yang sedang disiapkan dan siap digunakan dalam fungsi sosial.
+- **Elemen 4 — Tangkai halus berwarna lila yang saling berhubungan satu sama lain.** **Makna:** semangat kekeluargaan (_l'esprit des corps_) dalam sivitas akademika.
+- **Elemen 5 — Sepasang seludang berwarna lila yang melindungi bakal-bakal buah.** **Makna:** tugas UNSRAT dalam rangka Tridharma: _instituendum et scolarium_ dan _scientiarum_.
+- **Elemen 6 — 17 bakal buah berwarna merah, 8 ruas pada batang kelapa berwarna lila, 9 pelepah berwarna ungu (masing-masing 5 helai daun).** **Makna:** semangat Proklamasi Kemerdekaan Indonesia 17 Agustus 1945 yang menjiwai pelaksanaan tugas UNSRAT.
+- **Elemen 7 — Tiga pelepah kelapa berwarna lila.** **Makna:** tugas dan falsafah perguruan tinggi dalam bentuk Tridharma Perguruan Tinggi.
+- **Elemen 8 — Dua pasang seludang berwarna lila di kiri-kanan ketiga pelepah.** **Makna:** proses _"patah tumbuh hilang berganti"_.
+- **Elemen 9 — Sembilan bagian lukisan berwarna lila di sekitar pohon kelapa.** **Makna:** bulan September sebagai Dies Natalis UNSRAT.
+- **Elemen 10 — Satu pelepah kelapa menghadap ke atas yang sedang terbuka (mekar) kelima helai daunnya.** **Makna:** UNSRAT dijiwai semangat Proklamasi Kemerdekaan Indonesia 17 Agustus 1945 untuk terus berupaya mencapai tujuan dan cita-cita bangsa Indonesia merdeka.
+- **Elemen 11 — Nama dan tempat universitas berwarna biru.** **Makna:** fakta hidup, landasan teguh, pasti, dan dinamis.
+- **Elemen 12 — Lembaga-lembaga kelapa berwarna lila di antara nama dan tempat universitas.** **Makna:** UNSRAT yang memulai kegiatannya di Manado akan terus hidup sebagai universitas yang menjadi milik dan dapat dimanfaatkan oleh seluruh rakyat dan bangsa Indonesia.
 
 ### Makna Keseluruhan
 

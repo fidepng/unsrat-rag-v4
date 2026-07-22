@@ -1,7 +1,7 @@
 ---
 doc_id: "UNSRAT-PROFILE-2020-005"
 title: "Bendera Universitas Sam Ratulangi"
-version: "1.0"
+version: "1.1"
 language_primary: "id"
 language_secondary: null
 institution: "Universitas Sam Ratulangi"
@@ -34,13 +34,13 @@ superseded_by: null
 valid_from: "2020-11-11"
 valid_until: null
 status: "active"
-last_updated: "2020-11-11"
-last_verified: "2026-05-13"
+last_updated: "2026-07-16"
+last_verified: "2026-07-16"
 
-retrieval_summary: "Dokumen narasi profil institusi ini mendeskripsikan spesifikasi resmi bendera Universitas Sam Ratulangi (UNSRAT) di tingkat universitas maupun fakultas. Bendera universitas berukuran 160×185 cm berwarna dasar kuning, sementara bendera fakultas berukuran 90×130 cm dengan warna khas masing-masing. Dokumen memuat tabel lengkap 11 warna bendera spesifik untuk setiap fakultas dan Program Pascasarjana di lingkungan UNSRAT, mulai dari Hijau Tua (Kedokteran) hingga Coklat Muda (Pascasarjana). Relevan bagi seluruh sivitas akademika dan publik umum."
+retrieval_summary: "Dokumen narasi profil institusi ini mendeskripsikan spesifikasi resmi bendera Universitas Sam Ratulangi (UNSRAT) di tingkat universitas maupun fakultas. Bendera universitas berukuran 160x185 cm berwarna dasar kuning, sementara bendera fakultas berukuran 90x130 cm dengan warna khas masing-masing. Dokumen memuat tabel lengkap 11 warna bendera spesifik untuk setiap fakultas dan Program Pascasarjana di lingkungan UNSRAT, mulai dari Hijau Tua (Kedokteran) hingga Coklat Muda (Pascasarjana). Diverifikasi ulang terhadap sumber resmi pada 16 Juli 2026 tanpa perubahan substantif."
 
 chunk_strategy: "by_section"
-chunk_notes: "Potong per heading ## (Bendera Universitas, Bendera Fakultas dan Program Pascasarjana). Tabel 'Warna Bendera Per Fakultas' harus di-chunk secara utuh agar relasi antara nama fakultas dan warna benderanya tidak terputus."
+chunk_notes: "Potong per heading ## (Bendera Universitas, Bendera Fakultas dan Program Pascasarjana). Tabel 'Warna Bendera Per Fakultas' berukuran kecil (~500 karakter, 11 baris) sehingga aman berada dalam satu chunk utuh tanpa risiko terpotong RecursiveCharacterTextSplitter (chunk_size=2000); dipertahankan sebagai tabel (bukan list) karena data bersifat tabular murni (1 fakultas -> 1 warna) dan ukurannya jauh di bawah batas aman."
 embedding_model: "text-embedding-001"
 priority: 4
 
@@ -88,7 +88,7 @@ entities:
 
 # Bendera Universitas Sam Ratulangi
 
-> Referensi gambar bendera: [Bendera UNSRAT](https://www.unsrat.ac.id/wp-content/uploads/2020/11/bendera_UNSRAT.jpg)
+> Referensi gambar bendera: https://www.unsrat.ac.id/wp-content/uploads/2020/11/bendera_UNSRAT.jpg
 
 ---
 
@@ -96,7 +96,7 @@ entities:
 
 Bendera UNSRAT berbentuk **empat persegi** dengan spesifikasi berikut:
 
-- **Ukuran:** Lebar 160 cm × Panjang 185 cm
+- **Ukuran:** Lebar 160 cm x Panjang 185 cm
 - **Warna dasar:** Kuning
 - **Tengah:** Terdapat lambang universitas
 
@@ -106,13 +106,13 @@ Bendera UNSRAT berbentuk **empat persegi** dengan spesifikasi berikut:
 
 Bendera fakultas dan program pascasarjana berbentuk **empat persegi** dengan spesifikasi:
 
-- **Ukuran:** Lebar 90 cm × Panjang 130 cm
+- **Ukuran:** Lebar 90 cm x Panjang 130 cm
 - **Tengah:** Terdapat lambang fakultas atau program pascasarjana yang bersangkutan
 
 ### Warna Bendera Per Fakultas
 
 | No  | Fakultas                                      | Warna Bendera |
-| --- | --------------------------------------------- | ------------- |
+| -----| -----------------------------------------------| ---------------|
 | 1   | Fakultas Kedokteran                           | Hijau Tua     |
 | 2   | Fakultas Teknik                               | Biru Tua      |
 | 3   | Fakultas Pertanian                            | Hijau Muda    |

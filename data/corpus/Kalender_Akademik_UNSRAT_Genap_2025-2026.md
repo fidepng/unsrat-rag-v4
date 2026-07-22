@@ -1,7 +1,7 @@
 ---
 doc_id: "UNSRAT-CAL-2026-001"
 title: "Kalender Akademik UNSRAT Semester Genap 2025/2026"
-version: "1.0"
+version: "2.0"
 language_primary: "id"
 language_secondary: null
 institution: "Universitas Sam Ratulangi"
@@ -90,7 +90,7 @@ entities:
 ## Identitas Dokumen
 
 | Atribut               | Keterangan                                          |
-| --------------------- | --------------------------------------------------- |
+| -----------------------| -----------------------------------------------------|
 | Nomor SK              | 2079/UN12/PP/2025                                   |
 | Tanggal Penetapan     | 16 Desember 2025                                    |
 | Ditetapkan di         | Manado                                              |
@@ -296,7 +296,7 @@ _(Bagi mahasiswa yang mengontrak mata kuliah lain)_
 | 31 Mei 2026        | Hari Raya Waisak                              |
 | 01 Juni 2026       | Hari Lahir Pancasila                          |
 | 16 Juni 2026       | Tahun Baru Hijriah                            |
-| 27 Juni 2026       | Tahun Baru Hijriah _(pengganti/cuti bersama)_ |
+| 27 Juni 2026       | Tahun Baru Hijriah                            |
 
 > **Catatan:** Hari-hari libur nasional disesuaikan dengan ketetapan Pemerintah (KEDUA dalam Keputusan Rektor).
 

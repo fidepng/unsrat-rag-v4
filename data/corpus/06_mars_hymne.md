@@ -1,7 +1,7 @@
 ---
 doc_id: "UNSRAT-PROFILE-2020-006"
 title: "Mars & Hymne Universitas Sam Ratulangi"
-version: "1.0"
+version: "1.1"
 language_primary: "id"
 language_secondary: null
 institution: "Universitas Sam Ratulangi"
@@ -27,20 +27,20 @@ nomor_sk: null
 tanggal_penetapan: null
 pejabat_penandatangan: null
 source_document: null
-source_url: "https://www.unsrat.ac.id/profil-unversitas/"
+source_url: "https://www.unsrat.ac.id/profil-unversitas/#1605173169544-eb20e289-76cd"
 supersedes: null
 superseded_by: null
 
 valid_from: "2020-11-11"
 valid_until: null
 status: "active"
-last_updated: "2020-11-11"
-last_verified: "2026-05-13"
+last_updated: "2026-07-16"
+last_verified: "2026-07-16"
 
-retrieval_summary: "Dokumen narasi profil institusi ini memuat informasi lengkap mengenai dua lagu resmi Universitas Sam Ratulangi (UNSRAT), yaitu Mars UNSRAT dan Hymne UNSRAT. Mars UNSRAT ditulis oleh Drs. M. Patiesina dengan aransemen Nelt. dan dinyanyikan pada setiap acara resmi universitas. Dokumen mencakup lirik lengkap kedua lagu yang mengandung nilai-nilai Tridharma Perguruan Tinggi, Pancasila, dan semangat patriotisme. Relevan bagi seluruh sivitas akademika dan publik umum yang ingin mengetahui identitas musikal resmi UNSRAT."
+retrieval_summary: "Dokumen narasi profil institusi ini memuat informasi lengkap mengenai dua lagu resmi Universitas Sam Ratulangi (UNSRAT), yaitu Mars UNSRAT dan Hymne UNSRAT. Mars UNSRAT ditulis oleh Drs. M. Patiesina dengan aransemen Nelt., dinyanyikan pada setiap acara resmi universitas. Dokumen mencakup lirik lengkap kedua lagu yang mengandung nilai-nilai Tridharma Perguruan Tinggi, Pancasila, dan semangat patriotisme. Diverifikasi ulang terhadap sumber resmi pada 16 Juli 2026 tanpa perubahan lirik."
 
 chunk_strategy: "by_section"
-chunk_notes: "Potong per heading ## (Mars UNSRAT dan Hymne UNSRAT). Seluruh bait lirik tidak boleh dipotong dan harus berada dalam satu chunk yang sama dengan sub-judul lagunya agar konteks lirik tidak terpecah."
+chunk_notes: "Potong per heading ## (Mars UNSRAT dan Hymne UNSRAT). Seluruh bait lirik tidak boleh dipotong dan harus berada dalam satu chunk yang sama dengan sub-judul lagunya agar konteks lirik tidak terpecah. Ukuran tiap section (<600 karakter) jauh di bawah chunk_size=2000 sehingga aman dari pemotongan RecursiveCharacterTextSplitter."
 embedding_model: "text-embedding-001"
 priority: 4
 
@@ -72,6 +72,8 @@ entities:
 
 # Mars & Hymne Universitas Sam Ratulangi
 
+> Sumber: dipublikasikan resmi di www.unsrat.ac.id/profil-unversitas/ (bagian akordeon "Mars & Hymne Unsrat"), diverifikasi 16 Juli 2026.
+
 ---
 
 ## Mars UNSRAT
@@ -79,8 +81,6 @@ entities:
 **Penulis lirik:** Drs. M. Patiesina
 **Aransemen:** Nelt.
 **Keterangan:** Mars ini dinyanyikan pada setiap acara resmi Universitas Sam Ratulangi.
-
----
 
 ### Lirik Mars UNSRAT
 
