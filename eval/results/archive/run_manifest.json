@@ -489,7 +489,7 @@
         "response_time_seconds": 11.8365
       },
       "archive_file": "eval/results/archive/hasil_config_b_20260713_125629_gemini35flash_gemini31propreview.csv",
-      "is_active": true
+      "is_active": false
     },
     {
       "run_id": "c_20260713_141723",
@@ -514,6 +514,56 @@
         "response_time_seconds": 2.2477
       },
       "archive_file": "eval/results/archive/hasil_config_c_20260713_141723_gemini35flash_gemini31propreview.csv",
+      "is_active": false
+    },
+    {
+      "run_id": "b_20260729_074115",
+      "config": "b",
+      "timestamp_start": "2026-07-29T07:41:15.207397+00:00",
+      "timestamp_end": "2026-07-29T08:56:24.411452+00:00",
+      "status": "completed",
+      "generator_model": "gemini-3.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "gemini-3.1-pro-preview",
+      "evaluator_provider": "google",
+      "embedding_model": "gemini-embedding-001",
+      "ground_truth_hash": "01556be0d685",
+      "total_queries": 80,
+      "success_count": 80,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.8053,
+        "answer_relevancy": 0.7364,
+        "context_precision": 0.8163,
+        "context_recall": 0.7248,
+        "response_time_seconds": 16.7546
+      },
+      "archive_file": "eval/results/archive/hasil_config_b_20260729_074115_gemini35flash_gemini31propreview.csv",
+      "is_active": true
+    },
+    {
+      "run_id": "c_20260729_085912",
+      "config": "c",
+      "timestamp_start": "2026-07-29T08:59:12.075182+00:00",
+      "timestamp_end": "2026-07-29T10:03:16.719837+00:00",
+      "status": "completed",
+      "generator_model": "gemini-3.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "gemini-3.1-pro-preview",
+      "evaluator_provider": "google",
+      "embedding_model": "gemini-embedding-001",
+      "ground_truth_hash": "01556be0d685",
+      "total_queries": 80,
+      "success_count": 80,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.7989,
+        "answer_relevancy": 0.6526,
+        "context_precision": 0.6153,
+        "context_recall": 0.6283,
+        "response_time_seconds": 6.2264
+      },
+      "archive_file": "eval/results/archive/hasil_config_c_20260729_085912_gemini35flash_gemini31propreview.csv",
       "is_active": true
     }
   ]
