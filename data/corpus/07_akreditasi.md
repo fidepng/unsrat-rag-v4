@@ -1,7 +1,7 @@
 ---
 doc_id: "UNSRAT-PROFILE-2022-007"
 title: "Akreditasi Institusi Universitas Sam Ratulangi"
-version: "1.1"
+version: "1.2"
 language_primary: "id"
 language_secondary: null
 institution: "Universitas Sam Ratulangi"
@@ -30,7 +30,7 @@ superseded_by: null
 valid_from: "2022-12-28"
 valid_until: "2027-12-28"
 status: "active"
-last_updated: "2026-07-16"
+last_updated: "2026-07-22"
 last_verified: "2026-07-16"
 
 retrieval_summary: "Dokumen narasi profil institusi ini menjelaskan status akreditasi resmi Universitas Sam Ratulangi (UNSRAT). UNSRAT memegang Sertifikat Akreditasi UNGGUL dari BAN-PT (SK No. 2000/SK/BAN-PT/Ak.Ppj/PT/XII/2022, ditetapkan di Jakarta 13 Desember 2022), berlaku 28 Desember 2022 s.d. 28 Desember 2027. Dokumen juga mencatat secara terpisah riwayat kunjungan asesor BAN-PT pada 18-19 Desember 2017 (instrumen akreditasi lama, Peringkat A dengan nilai 367) sebagai konteks historis -- BUKAN nilai dari sertifikat Unggul 2022-2027 yang sedang berlaku. Relevan bagi calon mahasiswa, mahasiswa aktif, dan publik umum yang ingin mengetahui status akreditasi institusi UNSRAT."
@@ -82,8 +82,6 @@ Universitas Sam Ratulangi (UNSRAT) memegang **Sertifikat Akreditasi UNGGUL** dar
 - **Ditetapkan di:** Jakarta, 13 Desember 2022
 - **Ditandatangani oleh:** Prof. Ari Purbayanto, Ph.D. — Direktur Dewan Eksekutif BAN-PT
 - **Masa berlaku:** 28 Desember 2022 sampai dengan **28 Desember 2027**
-
-> ⚠️ **Catatan kesegaran data:** masa berlaku sertifikat ini berakhir **28 Desember 2027**. Jika tanggal saat ini sudah melewati batas tersebut, informasi peringkat "Unggul" di atas WAJIB diverifikasi ulang ke https://www.unsrat.ac.id/akreditasi-unsrat/ sebelum disampaikan sebagai fakta terkini — jangan asumsikan otomatis masih berlaku.
 
 ## Riwayat Asesmen Sebelumnya (Instrumen Lama, 2017) — Konteks Historis
 

@@ -1,7 +1,7 @@
 ---
 doc_id: "UNSRAT-PROFILE-2020-005"
 title: "Bendera Universitas Sam Ratulangi"
-version: "1.1"
+version: "1.2"
 language_primary: "id"
 language_secondary: null
 institution: "Universitas Sam Ratulangi"
@@ -31,16 +31,16 @@ source_url: "https://www.unsrat.ac.id/profil-unversitas/"
 supersedes: null
 superseded_by: null
 
-valid_from: "2020-11-11"
+valid_from: null
 valid_until: null
 status: "active"
-last_updated: "2026-07-16"
-last_verified: "2026-07-16"
+last_updated: "2026-07-22"
+last_verified: "2026-07-22"
 
-retrieval_summary: "Dokumen narasi profil institusi ini mendeskripsikan spesifikasi resmi bendera Universitas Sam Ratulangi (UNSRAT) di tingkat universitas maupun fakultas. Bendera universitas berukuran 160x185 cm berwarna dasar kuning, sementara bendera fakultas berukuran 90x130 cm dengan warna khas masing-masing. Dokumen memuat tabel lengkap 11 warna bendera spesifik untuk setiap fakultas dan Program Pascasarjana di lingkungan UNSRAT, mulai dari Hijau Tua (Kedokteran) hingga Coklat Muda (Pascasarjana). Diverifikasi ulang terhadap sumber resmi pada 16 Juli 2026 tanpa perubahan substantif."
+retrieval_summary: "Dokumen narasi profil institusi ini mendeskripsikan spesifikasi resmi bendera Universitas Sam Ratulangi (UNSRAT) di tingkat universitas maupun fakultas. Bendera universitas berukuran 160x185 cm berwarna dasar kuning, sementara bendera fakultas berukuran 90x130 cm dengan warna khas masing-masing. Dokumen memuat tabel lengkap 11 warna bendera spesifik untuk setiap fakultas dan Program Pascasarjana di lingkungan UNSRAT, mulai dari Hijau Tua (Kedokteran) hingga Coklat Muda (Pascasarjana)."
 
 chunk_strategy: "by_section"
-chunk_notes: "Potong per heading ## (Bendera Universitas, Bendera Fakultas dan Program Pascasarjana). Tabel 'Warna Bendera Per Fakultas' berukuran kecil (~500 karakter, 11 baris) sehingga aman berada dalam satu chunk utuh tanpa risiko terpotong RecursiveCharacterTextSplitter (chunk_size=2000); dipertahankan sebagai tabel (bukan list) karena data bersifat tabular murni (1 fakultas -> 1 warna) dan ukurannya jauh di bawah batas aman."
+chunk_notes: "Potong per heading ## (Bendera Universitas, Bendera Fakultas dan Program Pascasarjana). Tabel 'Warna Bendera Per Fakultas' berukuran kecil (~500+ karakter dengan catatan disclosure, 11 baris) sehingga aman berada dalam satu chunk utuh tanpa risiko terpotong RecursiveCharacterTextSplitter (chunk_size=2000); dipertahankan sebagai tabel (bukan list) karena data bersifat tabular murni (1 fakultas -> 1 warna). PERBAIKAN v1.2 (re-verification 22 Juli 2026): ditambahkan catatan disclosure eksplisit bahwa baris ke-8 tabel ('Ilmu Pendidikan') tidak konsisten dengan nama fakultas di UNSRAT-PROFILE-2026-001 ('Ilmu Politik') — keduanya dipertahankan verbatim sesuai bagian sumber masing-masing, inkonsistensi didisclose bukan disilent-fix."
 embedding_model: "text-embedding-001"
 priority: 4
 
@@ -124,3 +124,5 @@ Bendera fakultas dan program pascasarjana berbentuk **empat persegi** dengan spe
 | 9   | Fakultas Sastra                               | Ungu          |
 | 10  | Fakultas Matematika dan Ilmu Pengetahuan Alam | Putih         |
 | 11  | Program Pascasarjana                          | Coklat Muda   |
+
+> **Catatan disclosure — inkonsistensi penamaan pada sumber resmi:** baris ke-8 di atas ditulis persis sesuai sumber sebagai **"Fakultas Ilmu Sosial dan Ilmu Pendidikan"**. Namun pada dokumen Sejarah (`UNSRAT-PROFILE-2026-001`), fakultas yang sama disebut **"Fakultas Ilmu Sosial dan Ilmu Politik"** (FISIP) — sesuai nama resmi fakultas yang berlaku saat ini. Inkonsistensi ini ADA PADA SUMBER RESMI ITU SENDIRI (dua bagian berbeda dari halaman yang sama, kemungkinan typo lama yang tak pernah diperbaiki), bukan kesalahan transkripsi dokumen ini. Baris tabel di atas dipertahankan verbatim demi kesetiaan sumber; untuk pertanyaan RAG mengenai nama resmi fakultas, rujuk ke `UNSRAT-PROFILE-2026-001` (Ilmu Politik) sebagai yang lebih konsisten dengan penamaan fakultas resmi saat ini.
