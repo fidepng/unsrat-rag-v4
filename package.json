@@ -1,0 +1,26 @@
+{
+  "name": "unsrat-rag-v4-28.05.2026",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fidepng/unsrat-rag-v4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fidepng/unsrat-rag-v4/issues"
+  },
+  "homepage": "https://github.com/fidepng/unsrat-rag-v4#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1"
+  }
+}
