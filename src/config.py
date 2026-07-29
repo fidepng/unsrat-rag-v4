@@ -84,7 +84,7 @@ REQUIRED_YAML_FIELDS = [
 
 # ── RETRIEVAL ────────────────────────────────────────────────
 RETRIEVAL_K          = 4
-SIMILARITY_THRESHOLD = 0.3
+SIMILARITY_THRESHOLD = 0.31
 MIN_CHUNK_LENGTH     = 50
 
 # ── BM25 — CONFIG C ──────────────────────────────────────────
