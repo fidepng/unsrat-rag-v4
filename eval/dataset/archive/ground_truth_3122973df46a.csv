@@ -1,0 +1,601 @@
+user_input,reference,category,source_doc,notes,query_length,query_style,synthesizer_name
+Maks berapa sks ya yang boleh diambil kalau masih di semester-semester awal S1?,"Untuk mahasiswa S1 di semester 1 dan semester 2, batas maksimal beban belajar yang boleh diprogramkan adalah paling banyak 20 SKS. Selain itu, mata kuliah yang diprogramkan pada semester 1 dan 2 wajib diambil sesuai paket kurikulum dari masing-masing program studi.  Batas maksimal baru dapat dinaikkan hingga paling banyak 24 SKS mulai dari semester 3 dan seterusnya.  ",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 27 ayat (1) huruf a,MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Berapa jumlah sks terendah yang wajib diselesaikan sebelum boleh mengikuti KKT?,"Untuk program sarjana (S1), jumlah SKS terendah yang wajib diselesaikan (lulus) sebelum diperbolehkan mengikuti Kuliah Kerja Terpadu (KKT) adalah sekurang-kurangnya 110 (seratus sepuluh) SKS.
+Selain syarat minimal SKS lulus tersebut, mahasiswa juga wajib mengisi KRS yang mencantumkan mata kuliah KKT pada semester berjalan.  ",lexical,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 55 ayat (6) huruf b,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"Denger-denger boleh ikut kelas di kampus lain ya, itu ada batas jumlah sks-nya nggak buat anak S1?","Ya, mahasiswa program Sarjana (S1) di UNSRAT diperbolehkan untuk mengambil kelas di kampus lain (di luar UNSRAT). Aturan ini dikategorikan sebagai bagian dari penyelenggaraan Pembelajaran di Luar Program Studi.
+Berikut adalah rincian batasan jumlah SKS:
+1. Batas SKS dan Waktu Pembelajaran
+Batas Maksimal di Luar UNSRAT (Kampus Lain): Beban belajar yang dapat diambil adalah paling lama 2 (dua) semester atau setara dengan maksimal 40 SKS.
+
+2. Persyaratan dan Ketentuan Tambahan
+Waktu Pelaksanaan: Untuk kuliah di kampus lain (luar UNSRAT), kegiatan ini hanya boleh dilaksanakan pada semester 5, semester 6, atau semester 7.
+Syarat Kemitraan: Kampus lain yang dituju harus merupakan perguruan tinggi yang memiliki nota kesepahaman (MoU) resmi dengan UNSRAT.
+Pengecualian Khusus: Aturan pembelajaran di luar prodi/kampus ini tidak berlaku (dikecualikan) bagi mahasiswa program studi Kedokteran dan Keperawatan.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 15 ayat (2) huruf b dan Pasal 16 ayat (3),MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Berapa tahun atau semester paling lama mahasiswa S1 boleh menyelesaikan studinya?,Batas waktu maksimal (masa studi paling lama) bagi mahasiswa program Sarjana (S1) di UNSRAT untuk menyelesaikan studinya adalah 7 tahun atau 14 (empat belas) semester.,lexical,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 9,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"Kalau mau lulus dengan predikat tertinggi, transkrip nilainya harus bersih dari nilai C ke bawah ya?","Ya, benar. Untuk lulus dengan predikat tertinggi yaitu Dengan Pujian (Cum Laude) pada Program Sarjana (S1), transkrip nilai mahasiswa tidak boleh memiliki nilai C maupun C+ (harus bersih dari nilai C+ ke bawah).  Selain syarat nilai tersebut, untuk meraih predikat Cum Laude pada program S1, mahasiswa wajib memenuhi seluruh kriteria akumulatif berikut:  
+1. IPK: 3,76 – 4,00  
+2. Masa Studi: Maksimum 8 semester  
+3. Nilai Tugas Akhir/Skripsi: Wajib bernilai A  
+4. Ketentuan Nilai Rendah: Tidak memiliki nilai C dan C+  
+5. Riwayat Perkuliahan: Tidak pernah mengulang mata kuliah  
+6. Sanksi Akademik: Tidak pernah mendapatkan sanksi akademik",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 68 ayat (1),MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+"Kalau dulu pernah di-DO dari S1, masih ada kesempatan daftar ulang nggak di kampus yang sama?","Tidak ada kesempatan (tidak bisa). Mahasiswa yang telah dinyatakan putus studi (DO) dari UNSRAT tidak dapat kembali lagi untuk menempuh studi di Universitas Sam Ratulangi (UNSRAT).  
+Aturan ini berlaku secara mengikat baik untuk mahasiswa yang terkena DO karena alasan akademik (evaluasi SKS/IPK di semester 4 atau melebih batas waktu 14 semester), alasan administratif (tidak registrasi 4 semester berturut-turut), maupun melalui jalur Rekognisi Pembelajaran Lampau (RPL).",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 14 ayat (5) dan Pasal 62 ayat (15),LONG,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Anak S1 boleh nonaktif/cuti kuliah berapa kali sih selama masa studi?,"Berdasarkan dokumen Peraturan Akademik UNSRAT 2025, mahasiswa program Sarjana (S1) diperbolehkan mengambil cuti akademik/nonaktif paling banyak 2 (dua) kali selama masa studi, dengan ketentuan sekali cuti paling lama adalah 1 (satu) semester.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 49 ayat (6) huruf a,MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Nilai rata-rata berapa yang dibutuhin biar bisa lulus dengan predikat terbaik di S1?,"Untuk lulus dengan predikat terbaik (Dengan Pujian / Cum Laude) pada Program Sarjana (S1), mahasiswa harus meraih Indeks Prestasi Kumulatif (IPK) sebesar 3,76 – 4,00. 
+Secara keseluruhan, predikat Cum Laude S1 mewajibkan seluruh syarat akumulatif berikut:  
+1. IPK: 3,76 – 4,00  
+2. Nilai Tugas Akhir / Skripsi: Wajib mendapat nilai A (nilai rata-rata evaluasi minimal 80,00)  
+3. Masa Studi: Maksimum 8 semester  
+4. Ketentuan Nilai Rendah: Tidak boleh memiliki nilai C maupun C+  
+5. Riwayat Akademik: Tidak pernah mengulang mata kuliah dan tidak pernah mendapat sanksi akademik  ",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 68 ayat (1),LONG,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Kuliah semester ini (genap 2025/2026) mulai tanggal berapa ya?,Perkuliahan Semester Genap Tahun Akademik 2025/2026 di Universitas Sam Ratulangi (UNSRAT) dimulai pada tanggal 9 Februari 2026.  ,semantic,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian I.B. Perkuliahan,MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+kapan mulai UAS untuk semester genap ini?,Ujian Akhir Semester (UAS) Genap untuk Tahun Akademik 2025/2026 di Universitas Sam Ratulangi (UNSRAT) dilaksanakan pada tanggal 1 Juni hingga 5 Juni 2026.  ,lexical,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian I.B. Perkuliahan,SHORT,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+UTS semester genap sekarang kira-kira minggu keberapa atau tanggal berapa?,"Ujian Tengah Semester (UTS) untuk Semester Genap Tahun Akademik 2025/2026 dijadwalkan pada tanggal 30 Maret sampai dengan 3 April 2026
+",semantic,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian I.B. Perkuliahan,MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Wisuda tahun ini ada berapa kali dan sekitar bulan apa saja?,"Pada Tahun Akademik Semester Genap 2025/2026 (tahun 2026), pelaksanaan wisuda di UNSRAT diselenggarakan sebanyak 3 (tiga) kali (yaitu Periode IV, V, dan VI), yang dilaksanakan pada bulan-bulan berikut:  
+1. Wisuda Periode IV: Februari 2026 (Upacara Wisuda: 19 Februari 2026)  
+2. Wisuda Periode V: April 2026 (Upacara Wisuda: 16 April 2026)  
+3. Wisuda Periode VI: Juni 2026 (Upacara Wisuda: 18 Juni 2026)  ",semantic,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian III. Jadwal Wisuda,MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Sejak kapan sih kampus ini resmi jadi PTN (universitas negeri)?,"Universitas Sam Ratulangi resmi berstatus sebagai Universitas Negeri sejak tanggal 4 Juli 1961 berdasarkan Keputusan Menteri Perguruan Tinggi dan Ilmu Pengetahuan (PTIP) Nomor 22/1961.  
+Saat resmi menjadi PTN pada tahun 1961 tersebut, kampus ini awalnya bernama UNISUT (Universitas Sulawesi Utara dan Tengah) dan membina 5 fakultas. Nama Universitas Sam Ratulangi (UNSRAT) sendiri kemudian disahkan empat tahun setelahnya melalui Surat Keputusan Presiden RI Nomor 277 tanggal 14 September 1965. ",semantic,01_sejarah.md,Bagian Tonggak-Tonggak Sejarah (1961 dan 1965),MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Berapa akreditasi institusi Unsrat yang berlaku sekarang?,"Status akreditasi institusi Universitas Sam Ratulangi (UNSRAT) yang berlaku saat ini adalah UNGGUL.  Sertifikat Akreditasi UNGGUL ini diterbitkan oleh Badan Akreditasi Nasional Perguruan Tinggi (BAN-PT) dan berlaku selama 5 tahun, terhitung mulai tanggal 28 Desember 2022 sampai dengan 28 Desember 2027.  Rincian dokumen sertifikat akreditasi:Peringkat: Akreditasi Unggul  Nomor SK: 2000/SK/BAN-PT/Ak.Ppj/PT/XII/2022  Tanggal Penetapan: 13 Desember 2022  Penandatangan: Prof. Ari Purbayanto, Ph.D. (Direktur Dewan Eksekutif BAN-PT)  ",lexical,07_akreditasi.md,Bagian Status Akreditasi Terkini: UNGGUL (2022-2027),SHORT,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"Kalau nggak puas sama nilai yang keluar, ada tenggat waktu buat komplain nggak?",Ada. Mahasiswa dapat mengajukan banding nilai secara tertulis kepada Dekan atau Direktur dengan tenggat waktu paling lambat 7 (tujuh) hari setelah periode penginputan nilai ditutup.  ,semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,BAB XIII Pasal 59 ayat (10),MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Skripsi/TA itu minimal dapet nilai apa biar dianggap lulus?,"Untuk mahasiswa Program Sarjana (S1), Tugas Akhir / Skripsi dianggap lulus apabila memperoleh nilai mutu minimal C (yang setara dengan nilai konversi bilangan 2,0 atau rentang nilai rata-rata evaluasi 60,00 – 64,99). Nilai D dan E dikategorikan sebagai nilai tidak lulus.  
+Namun, perlu diperhatikan untuk jenjang Pascasarjana (S2 Magister, S3 Doktor), Program Spesialis, dan Program Profesi, batas nilai minimal agar Tugas Akhir/Tesis/Disertasi dianggap lulus adalah B (konversi bilangan 3,0 atau rentang nilai rata-rata evaluasi 70,00 – 74,99). Nilai C+, C, D, dan E pada jenjang ini dinyatakan tidak lulus. ",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,BAB XIII Pasal 59 ayat (3),MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+"Kalau ketauan skripsinya nyontek/plagiat, konsekuensinya apa?","Jika mahasiswa terbukti melakukan plagiarisme/penyontekan pada karya akhir (skripsi/tugas akhir), konsekuensi dan sanksi resminya diatur dalam beberapa tahap:
+
+Pembatalan Keabsahan Tugas Akhir: Keabsahan skripsi/tugas akhir akan dibatalkan secara resmi jika sebagian atau seluruh isinya merupakan plagiasi, duplikasi, atau saduran dari karya ilmiah yang sudah ada.
+
+Sanksi Akademik: Dikenakan sanksi atas pelanggaran Kode Etik Akademik (Pasal 99 Ayat 2 dan 5), yang dapat berupa:
+
+Peringatan;
+Pembinaan;
+Pembatalan sebagian atau seluruh hasil evaluasi pembelajaran;
+Pembatalan satu atau beberapa mata kuliah;
+Pembatalan seluruh mata kuliah dalam satu semester; dan/atau
+Pencabutan status kemahasiswaan, baik secara sementara (skorsing) maupun secara permanen (dikeluarkan/Drop Out);
+Sanksi lainnya yang diatur lebih lanjut melalui surat keputusan Rektor.
+
+Pencabutan Predikat Kelulusan: Mahasiswa gugur dan tidak berhak mendapatkan predikat kelulusan Cum Laude maupun predikat memuaskan lainnya karena telah melakukan pelanggaran akademik.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,BAB XIII Pasal 66 ayat (3) dan BAB XVII Pasal 99 ayat (5),MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Who be the rector in records from Juli 2014?,"Berdasarkan catatan pimpinan universitas, Rektor yang menjabat mulai bulan Juli 2014 adalah Prof. Dr. Ir. Ellen J. Kumaat, M.Sc, DEA. Beliau menjabat sebagai Rektor Universitas Sam Ratulangi selama dua periode, yaitu dari Juli 2014 hingga tahun 2022.  ",semantic,01_sejarah.md,Bagian Pimpinan Universitas Sam Ratulangi (1961 - Sekarang),MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"hallo kakk, sy calon mhasiswa yg lg nyari kmpus riset yg bgus buat ngembangin skill. sy dnger UNSRAT pnya visi buat jd excellent university dr diagram misinya. sy mau nanya yg agak pnjg nih, gmn sih sbnrnya aturan ttg proses pembelajaran disana, kyk pemakaian bhs pengantar sm sistem e-learning nya? trus klo misalny nnti sy butuh istirahat, apa bnr mhasiswa pnya hak buat brhenti smntara dr segala bentuk kegiatan akademik? tolong jlasin yaa biar sy mkin yakin.","Untuk menjawab rasa penasaranmu secara lengkap dan mendalam, berikut penjelasan komprehensif mengenai proses pembelajaran (bahasa & e-learning) serta ketentuan berhenti studi sementara (cuti akademik) berdasarkan peraturan resmi UNSRAT:1. Aturan Proses Pembelajaran & Sistem E-LearningUNSRAT telah mengatur penyelenggaraan akademik secara modern dan terstruktur untuk mendukung suasana belajar-mengajar yang kondusif:A. Penggunaan Bahasa PengantarBahasa Resmi Utama: Bahasa resmi yang wajib dipakai dalam penyelenggaraan pendidikan dan pembelajaran adalah Bahasa Indonesia.  Bahasa Daerah & Asing: Bahasa daerah dan bahasa asing dapat dipakai sebagai bahasa pengantar sejauh diperlukan dalam penyampaian pengetahuan atau pelatihan keterampilan tertentu.  Dukungan Bahasa & Kelas Internasional: UNSRAT menyediakan fasilitas UPT Bahasa, serta menyelenggarakan Kelas Internasional (khusus bagi prodi berakreditasi Unggul) dengan bahasa pengantar Bahasa Inggris.  B. Pembelajaran Daring & Sistem E-LearningSistem Resmi (SEL & LMS): Pembelajaran daring di UNSRAT diselenggarakan menggunakan Sistem E-Learning (SEL) UNSRAT yang terintegrasi dengan Learning Management System (LMS).  Mode Pembelajaran: Pembelajaran daring dapat berbentuk:Synchronous: Pembelajaran langsung/interaktif secara real-time menggunakan aplikasi.  Asynchronous: Pembelajaran tidak langsung melalui LMS di mana dosen mengunggah materi, tugas, dan soal ujian untuk diakses mahasiswa.  Sistem Informasi Akademik: Seluruh administrasi nilai, KRS, dan status keaktifan mahasiswa dikelola secara terpusat melalui portal INSPIRE.  2. Hak Berhenti Sementara (Cuti Akademik)Ya, benar sekali! Mahasiswa memiliki hak resmi untuk berhenti sementara dari segala bentuk kegiatan akademik, yang dalam regulasi resmi disebut sebagai Cuti Akademik.  Berikut adalah syarat, aturan, dan hak kamu terkait Cuti Akademik:  Pengertian & Hak: Cuti akademik adalah hak mahasiswa untuk berhenti sementara tidak mengikuti segala bentuk kegiatan akademik atas izin resmi Rektor.  Bebas SPP/UKT: Mahasiswa yang sedang menjalani Cuti Akademik dibebaskan dari kewajiban membayar SPP/UKT/BOP dan tidak diperkenankan mengikuti kegiatan akademik apa pun selama masa cuti tersebut.  Masa Studi Aman: Masa Cuti Akademik TIDAK diperhitungkan dalam batas waktu penyelesaian studi (sehingga tidak mengurangi jatah batas maksimal 14 semester kamu).  Batas Maksimal Cuti (S1): Untuk program sarjana (S1), cuti akademik dapat diambil paling banyak 2 (dua) kali selama masa studi, di mana sekali cuti paling lama 1 (satu) semester.  Tata Cara Pengajuan: Pengajuan dilakukan secara online melalui Portal INSPIRE selambat-lambatnya 1 (satu) bulan sebelum semester berjalan (atau pada semester berjalan jika mengalami masalah kesehatan/pemulihan khusus).  Catatan Khusus Penerima Beasiswa: Mahasiswa penerima beasiswa tidak diperkenankan mengambil cuti akademik, kecuali mendapat pertimbangan khusus dari Dekan/Direktur dan Rektor. ",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB I Pasal 1 ayat (63), BAB XII Pasal 49, Pasal 53 ayat (7-8), dan Pasal 54",LONG,MISSPELLED,single_hop_specific_query_synthesizer
+"Hlo, sya Andi Pratama, caln mahsiswa yg pgn bngat dapet pndidikan brkualitas buat ngembangin skill akdemik dan wirausaha. Sya mau nanya tntang evaluasi blajar d kmpus. Sya sring denger kta IPK, tpi blum pham. Apa sih sbenarnya kpanjangan dan mksud dri IPK itu, trus gmana cra kmpus mnghitung IPK dri smua mata kulah yg udah kta tmpuh nntinya?","Halo Andi! Senang sekali melihat semangatmu untuk melanjutkan pendidikan dan mengembangkan keahlian akademik serta kewirausahaan.Berikut adalah penjelasan resmi mengenai kependekan, maksud, serta rumus perhitungan IPK berdasarkan regulasi akademik di UNSRAT:1. Kependekan dan Maksud IPKKependekan: IPK adalah singkatan dari Indeks Prestasi Kumulatif.  Maksud/Pengertian: IPK adalah nilai capaian pembelajaran/keberhasilan studi mahasiswa yang dihitung secara kumulatif dari seluruh mata kuliah yang telah ditempuh selama proses pendidikan.  IPK ini berbeda dengan IPS (Indeks Prestasi Semester) yang hanya menghitung nilai capaian pada satu semester berjalan saja.  2. Cara Kampus Menghitung IPKKampus menghitung IPK dengan menjumlahkan hasil perkalian antara nilai huruf setiap mata kuliah yang telah ditempuh (yang sudah dikonversi ke nilai bilangan) dengan bobot kreditnya (SKS), kemudian dibagi dengan jumlah seluruh SKS yang telah ditempuh.  A. Konversi Nilai Huruf ke Nilai Bilangan ($N$)Sebelum dihitung, nilai huruf dari setiap mata kuliah dikonversi ke dalam bentuk bilangan ($N$) sebagai berikut:  A = 4,0
+B+ = 3,5
+B = 3,0
+C+ = 2,5
+C = 2,0
+D = 1,0
+E = 0  
+B. Rumus Perhitungan IPKRumus resmi perhitungan IPK (maupun IPS) adalah:  $$\text{IPK} = \frac{\sum (N \times K)}{\sum K}$$Keterangan:$K$ = Besarnya bobot kredit mata kuliah ($\text{SKS}$).  $N$ = Nilai huruf mata kuliah setelah dikonversi ke bentuk bilangan ($4,0$; $3,5$; dst.).  $\sum (N \times K)$ = Total jumlah hasil kali nilai bilangan dan SKS dari seluruh mata kuliah yang telah diambil.  $\sum K$ = Total jumlah SKS dari seluruh mata kuliah yang telah ditempuh.  ",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,BAB I Pasal 1 ayat (56) dan BAB XIII Pasal 60 ayat (2-3),LONG,MISSPELLED,single_hop_specific_query_synthesizer
+"kak mau nanya, klo kuliah pke beasiswa, msh bs gak si ambil cuti akademik?","Bagi mahasiswa yang kuliah menggunakan beasiswa, pada dasarnya tidak diperkenankan untuk mengambil cuti akademik
+.
+Namun, aturan ini memiliki pengecualian khusus. Kamu masih bisa mengambil cuti akademik apabila mendapatkan pertimbangan khusus dari Dekan/Direktur dan Rektor
+.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XII, Bagian Kelima, Pasal 49 ayat (5)",MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+"dosen sy slh input nilai di inspire, itu bs dibenerin lg gak yah?","Bisa, tetapi nilai tersebut tidak bisa langsung diubah begitu saja oleh dosen di portal INSPIRE. Karena nilai yang sudah diunggah sudah bersifat mengikat, ada prosedur resmi yang harus dilalui
+.
+Berikut adalah ketentuan resmi dari Peraturan Akademik UNSRAT mengenai perbaikan nilai yang salah input:
+1. Prosedur Perubahan Nilai
+Wajib Ada Persetujuan Rektor: Berdasarkan Pasal 61 ayat (2), setelah nilai hasil belajar diunggah secara online ke Portal INSPIRE, nilai tersebut tidak diperkenankan diubah atau diperbaiki, kecuali atas persetujuan Rektor melalui permohonan tertulis dari Dekan/Direktur
+.
+Batas Semester: Perubahan nilai tersebut hanya dapat dilakukan pada semester yang baru berakhir (Pasal 61 ayat (3))
+.
+Mekanisme Banding: Mahasiswa harus mengajukan banding nilai secara tertulis kepada Dekan/Direktur
+. Dekan kemudian akan membentuk tim khusus untuk mengkaji kesalahan input tersebut dan memberikan rekomendasi tertulis kepada Rektor untuk melakukan perubahan di Kartu Hasil Studi (KHS)
+.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XIII, Bagian Keempat, Pasal 59 ayat (10)-(13) dan Bagian Keenam, Pasal 61 ayat (2)-(3)",MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+btas bayar ukt sm isi krs online smester genap ini kpn yah kak?,"Berdasarkan Kalender Akademik UNSRAT untuk Semester Genap Tahun Akademik 2025/2026, jadwal pembayaran UKT serta pengisian KRS online diatur pada periode berikut:
+Pembayaran SPP/UKT dan Registrasi Akademik (Daftar Ulang):
+Tanggal: 05 sampai dengan 31 Januari 2026
+.
+Pengisian KRS Online:
+Tanggal: 09 sampai dengan 31 Januari 2026
+.
+Batas Akhir Perubahan / Pembatalan KRS:
+Tanggal: 20 Februari 2026
+.",semantic,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,I.A. Administrasi Awal Semester,MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+kkt angktan 146 ampe 148 tuh jalannya kpn?,"Berdasarkan Kalender Akademik UNSRAT Semester Genap 2025/2026, berikut adalah jadwal pelaksanaan Kuliah Kerja Terpadu (KKT) untuk Angkatan 146, 147, dan 148 beserta ketentuannya:
+KKT Angkatan 146
+Waktu Pelaksanaan: Februari – Maret 2026
+.
+Ketentuan: Khusus diperuntukkan bagi mahasiswa yang hanya mengontrak KKT dan Tugas Akhir pada semester berjalan
+. Seluruh rangkaian kegiatan mulai dari pendaftaran, pembekalan, pelepasan, kegiatan lapangan, penarikan, hingga evaluasi/yudisium KKT diselesaikan pada periode ini
+.
+KKT Angkatan 147
+Waktu Pelaksanaan: April – Mei 2026
+.
+Ketentuan: Sama seperti Angkatan 146, jalur ini dikhususkan bagi mahasiswa yang hanya mengontrak KKT dan Tugas Akhir
+.
+KKT Angkatan 148
+Waktu Pelaksanaan: Juli 2026
+.
+Ketentuan: Diperuntukkan bagi mahasiswa yang mengontrak mata kuliah lain
+. Seluruh rangkaian kegiatan KKT untuk angkatan ini dilangsungkan sepenuhnya pada bulan Juli 2026
+.",semantic,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,IV. Kuliah Kerja Terpadu (KKT),MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+itu semboyan unsrat yg si tou timou tumou tou artinya apaan sih sbenernya?,"Semboyan sekaligus falsafah hidup dari pahlawan nasional Dr. Gerungan Saul Samuel Jacob Ratulangi (Sam Ratulangi)
+, yaitu ""Si Tou Timou Tumou Tou"", sebenarnya memiliki arti:
+""Manusia dilahirkan untuk memanusiakan orang lain""
+.
+Di lingkungan Universitas Sam Ratulangi (UNSRAT), nilai-nilai luhur dari falsafah ini diharapkan selalu terpatri dan berkobar di dalam dada setiap insan akademik dalam menuntut ilmu serta mengabdikannya demi pembangunan masyarakat, bangsa, dan negara
+.",semantic,01_sejarah.md,Sosok Dr. Sam Ratulangi,MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+"klo menang pkm sampe tingkat nasional, bs gantiin skripsi gak?","Ya, bisa. Mahasiswa yang berhasil lolos Program Kreativitas Mahasiswa (PKM) hingga tingkat nasional dapat menyetarakan prestasinya tersebut untuk menggantikan kewajiban Tugas Akhir atau Skripsi
+.
+Berikut adalah ketentuan dan syarat resmi yang harus dipenuhi berdasarkan Peraturan Akademik UNSRAT:
+Lolos Tingkat Nasional: Mahasiswa harus mengikuti program PKM (atau program sejenis yang dikeluarkan oleh KEMDIKTISAINTEK) dan dinyatakan lolos sampai ke tingkat nasional
+.
+Memenuhi Kurikulum: Mahasiswa wajib memenuhi semua kewajiban akademik sesuai dengan kurikulum yang berlaku di program studinya masing-masing terlebih dahulu
+.
+Disahkan oleh Rektor: Proses pengakuan kesetaraan PKM menjadi Tugas Akhir/Skripsi ini nantinya akan disahkan secara resmi melalui Keputusan Rektor
+.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XIII, Bagian Kesembilan, Pasal 63 ayat (8)",MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+"As an UNSRAT lecturerr, whos the national hero choosen to name the state university in Provinsi Sulawesi Utara?",Tokoh pahlawan nasional yang dipilih menjadi nama universitas negeri di Provinsi Sulawesi Utara adalah Dr. Gerungan Saul Samuel Jacob Ratulangi (panggilan sehari-hari: Sam).  ,semantic,,,MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+"For UNSRAT program sarjana, wat languge is the Ijazah writen in and wat is the max sks for semster 3?","Bahasa Penulisan Ijazah:
+Ijazah untuk program sarjana UNSRAT wajib dituliskan dalam Bahasa Indonesia. Namun, ijazah tersebut dapat diterjemahkan dalam bahasa asing (atau diberikan dalam format dua bahasa/bilingual, yaitu Bahasa Indonesia dan Bahasa Inggris).  Maksimal SKS untuk Semester 3:
+Batas maksimal beban belajar (SKS) yang boleh diambil oleh mahasiswa program sarjana pada Semester 3 adalah paling banyak 24 SKS.  ",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XIV, Bagian Kesatu, Pasal 69 ayat (4) & BAB VII, Bagian Keempat, Pasal 27 ayat (1)",LONG,PERFECT_GRAMMAR,multi_hop_abstract_query_synthesizer
+"In my capacity as a university archivist dedicated to preserving institutional history and maintaining accurate records, I am compiling a comprehensive overview of the operational and strategic frameworks of UNSRAT. Could you please elucidate how UNSRAT structures its vision, mission, and strategies to achieve its long-term objectives, while also detailing the specific administrative protocols students must navigate, such as the system used for student identification coding and the procedures for registering their academic courses on Portal INSPIRE?","### Bagian I: Kerangka Kerja Strategis (Visi, Misi, dan Strategi Organisasi)
+
+UNSRAT mengintegrasikan visi jangka panjangnya secara linier ke dalam misi, tujuan, sasaran, hingga langkah taktis operasional (strategi) untuk memastikan efektivitas tata kelola sebagai **""Excellent University""**.
+
+#### 1. Visi Institusi
+Visi resmi UNSRAT adalah: **""Bersama menata Universitas Sam Ratulangi menjadi Universitas Unggul dan Berbudaya""**.
+*   **Sifat Arsip**: Visi ini bersifat dinamis dan jangka panjang. Makna kata ""unggul"" (*excellent*) diposisikan secara relatif terhadap perkembangan waktu dan kondisi, serta luwes untuk skala nasional maupun internasional.
+*   **Tahapan Capaian**: Untuk mencapai visi tersebut, UNSRAT menerapkan pentahapan logis: mewujudkan tata pamong dan tata kelola institusi yang efektif dan efisien terlebih dahulu. Tata kelola yang baik ini menjadi fondasi utama untuk menyelenggarakan proses pendidikan tinggi yang unggul, yang pada akhirnya akan melahirkan lulusan (*output*) dan dampak jangka panjang (*outcome*) yang unggul di masyarakat.
+*   **Landasan Hukum**: Rumusan visi ini mengacu pada dokumen resmi Statuta UNSRAT (Peraturan Menteri Pendidikan dan Kebudayaan Nomor 61 Tahun 2011).
+
+#### 2. Misi Institusi dan Filosofi ""IMANKU""
+Misi UNSRAT dirumuskan sebagai berikut: **""Terdepan dalam Mengemban Tridharma Perguruan Tinggi dan sebagai Pusat Inovasi Ilmu Pengetahuan, Teknologi dan Seni-Budaya guna Peningkatan Taraf dan Kualitas Kehidupan Masyarakat""**. 
+
+Misi besar ini dijabarkan ke dalam nilai-nilai dasar yang membentuk akronim **IMANKU**:
+*   **I**novatif dalam Ilmu Pengetahuan, Teknologi dan Seni-Budaya.
+*   **M**itra masyarakat dan pemerintah.
+*   **A**plikatif dalam Penelitian dan Pengabdian kepada Masyarakat.
+*   **N**ormatif dalam Konservasi Alam dan Lingkungan.
+*   **K**reatif dalam Pendidikan dan Pembelajaran.
+*   **U**nggul dan Kompetitif dalam Kewirausahaan.
+
+Untuk kemudahan tata kelola, nilai-nilai ini dikelompokkan ke dalam **Empat Butir Misi Utama**:
+*   **Misi-1**: Meningkatkan kualitas Tridharma Perguruan Tinggi (Pendidikan, Penelitian, Pengabdian) secara berkelanjutan mulai dari tahap masukan (*input*), proses (*process*), hasil (*output*), hingga dampak (*outcomes*).
+*   **Misi-2**: Mengembangkan inovasi IPTEKS yang secara geografis berorientasi dan relevan dengan **Kawasan Pasifik**.
+*   **Misi-3**: Meningkatkan akses, pemerataan kesempatan belajar, serta memperluas kemitraan untuk meningkatkan taraf ekonomi masyarakat.
+*   **Misi-4**: Meningkatkan tata kelola pendidikan agar tercipta sistem institusi yang akuntabel, efektif, dan efisien.
+
+#### 3. Penurunan Linier: Tujuan, Sasaran, dan Strategi (T-S-ST)
+UNSRAT menjamin setiap program kerja dan aktivitas akademik di bawahnya terstruktur secara linier melalui koordinasi diagram hubungan:
+*   **Tujuan (T-1 s.d. T-4)**: Deskripsi spesifik untuk mencapai masing-masing misi. Sebagai contoh, **T-1** berfokus pada tersedianya sistem layanan Tridharma yang berkualitas, sedangkan **T-4** menitikberatkan pada otonomi, akuntabilitas, dan kemandirian institusi.
+*   **Sasaran (S-1 s.d. S-4)**: Target terukur yang diturunkan langsung dari rumusan tujuan. Salah satunya adalah **S-2**, yaitu meningkatnya citra dan kepercayaan publik melalui pengakuan akreditasi nasional dan internasional.
+*   **Strategi (ST-1 s.d. ST-4)**: Panduan taktis sistematis bagi semua unit kerja untuk mencapai sasaran strategis tersebut. Sebagai contoh, **ST-1** berfokus pada peningkatan mutu program studi, mutu riset, dan pelayanan masyarakat.
+
+---
+
+### Bagian II: Protokol Administrasi Identifikasi Mahasiswa (Sistem NIM 12 Digit)
+
+Setiap mahasiswa yang terdaftar secara sah di UNSRAT akan diberikan kode identitas unik berupa **Nomor Induk Mahasiswa (NIM) yang terdiri dari 12 digit**. Untuk kepentingan kearsipan, berikut adalah struktur pembacaan kode desimal tersebut:
+
+$$\text{Format NIM: } \underbrace{\text{[Digit 1-2]}}_{\text{Tahun Masuk}} \ \underbrace{\text{[Digit 3-4]}}_{\text{Kode Fakultas}} \ \underbrace{\text{[Digit 5]}}_{\text{Jenjang}} \ \underbrace{\text{[Digit 6]}}_{\text{Status Masuk}} \ \underbrace{\text{[Digit 7-8]}}_{\text{Kode Prodi}} \ \underbrace{\text{[Digit 9-12]}}_{\text{No. Urut}}$$
+
+*   **Digit 1 dan 2 (Tahun Masuk)**: Merupakan dua angka terakhir dari tahun kalender saat mahasiswa pertama kali diterima (misalnya, angka `""26""` untuk mahasiswa angkatan 2026).
+*   **Digit 3 dan 4 (Kode Fakultas)**: Menunjukkan fakultas atau unit pascasarjana yang mengelola program studi mahasiswa:
+    *   `01` = Fakultas Kedokteran
+    *   `02` = Fakultas Teknik
+    *   `03` = Fakultas Pertanian
+    *   `04` = Fakultas Peternakan
+    *   `05` = Fakultas Perikanan dan Ilmu Kelautan
+    *   `06` = Fakultas Ekonomi dan Bisnis
+    *   `07` = Fakultas Hukum
+    *   `08` = Fakultas Ilmu Sosial dan Ilmu Politik
+    *   `09` = Fakultas Ilmu Budaya
+    *   `10` = Fakultas Matematika dan Ilmu Pengetahuan Alam
+    *   `11` = Fakultas Kesehatan Masyarakat
+    *   `20` = Pascasarjana
+*   **Digit 5 (Jenjang / Program Pendidikan)**: Menandakan tingkatan kualifikasi akademik yang ditempuh:
+    *   `1` = Program Sarjana (S1)
+    *   `2` = Program Magister (S2)
+    *   `3` = Program Doktor (S3)
+    *   `4` = Program Profesi
+    *   `5` = Program Spesialis-1 (Sp-1)
+*   **Digit 6 (Status Masuk)**: Mengidentifikasi jalur penerimaan atau kondisi administrasi mahasiswa saat mendaftar:
+    *   `1` = Mahasiswa baru
+    *   `2` = Mahasiswa pindahan internal (antar-prodi/fakultas di lingkungan UNSRAT)
+    *   `3` = Mahasiswa pindahan eksternal (dari perguruan tinggi lain)
+    *   `4` = Mahasiswa kerja sama
+    *   `5` = Mahasiswa adaptasi (lulusan luar negeri)
+    *   `6` = Mahasiswa asing
+    *   `7` = Mahasiswa kelas daring
+    *   `8` = Mahasiswa magang/paruh waktu
+    *   `9` = Jalur status masuk lainnya
+*   **Digit 7 dan 8 (Kode Program Studi)**: Nomor urut identifikasi program studi spesifik yang telah ditetapkan oleh universitas.
+*   **Digit 9, 10, 11 dan 12 (Nomor Urut Mahasiswa)**: Nomor urut unik mahasiswa pada program studi bersangkutan berdasarkan tahun angkatan masuknya.
+
+---
+
+### Bagian III: Protokol Registrasi Mata Kuliah (KRS Online) pada Portal INSPIRE
+
+Pengelolaan administrasi perkuliahan di UNSRAT sepenuhnya telah didigitalisasi melalui **Portal INSPIRE** yang berada di bawah pengelolaan teknis **UPT TIK**. Mahasiswa wajib mengikuti rangkaian alur protokol berikut pada setiap awal semester:
+
+```
+[Pembayaran UKT/SPP] ──> [Status Aktif (A)] ──> [Konsultasi PA (Buku PA/Digital)] 
+                                                        │
+[lock & KRS Sah] <── [Approve KRS oleh PA] <── [Input KRS Online di INSPIRE]
+```
+
+#### 1. Kliring Keuangan & Aktivasi Status
+*   Mahasiswa diwajibkan melakukan pembayaran *Uang Kuliah Tunggal (UKT/SPP)* terlebih dahulu sebelum pengisian KRS dibuka.
+*   Setelah kasir bank mencatat pembayaran, sistem secara otomatis merubah atribut data status mahasiswa di database INSPIRE menjadi **Aktif (A)**.
+*   Mahasiswa juga wajib mengisi dan menyetujui surat pernyataan elektronik untuk patuh pada segala regulasi kampus.
+
+#### 2. Konsultasi Akademik & Pembimbingan (PA)
+*   Sebelum menginput pilihan kelas, mahasiswa **wajib melakukan konsultasi akademik** dengan dosen Pembimbing Akademik (PA) yang ditunjuk Dekan.
+*   Konsultasi dilakukan secara tatap muka dan/atau daring, yang wajib dibuktikan secara fisik dengan tanda tangan di Buku PA, atau secara digital melalui **jejak digital persetujuan (*approval*) di Portal INSPIRE**.
+*   **Batas SKS**: Pengisian mata kuliah dibatasi oleh kuota kredit (SKS). Untuk mahasiswa semester 1 dan semester 2 menggunakan sistem paket dengan beban paling banyak **20 SKS**. Sedangkan pada semester 3 dan seterusnya, mahasiswa diperbolehkan mengontrak maksimal hingga **24 SKS** per semester.
+
+#### 3. Input dan Validasi KRS
+*   Mahasiswa memilih mata kuliah terjadwal di Portal INSPIRE sesuai dengan hasil bimbingan bersama dosen PA.
+*   Setelah mahasiswa melakukan penguncian (*submit*), dosen PA akan memberikan persetujuan elektronik (*approve*) pada portal INSPIRE. 
+*   Mahasiswa dinyatakan sah secara hukum sebagai peserta kuliah apabila mata kuliah yang diikuti tercantum dalam **Kartu Rencana Studi (KRS)** yang telah disetujui di semester berjalan.
+
+#### 4. Pembatalan dan Perubahan KRS (KPRS)
+*   Apabila mahasiswa memerlukan penyesuaian jadwal atau pergantian kelas, perubahan mata kuliah difasilitasi menggunakan instrumen *Kartu Perubahan Rencana Studi (KPRS)*.
+*   Proses ini membutuhkan persetujuan berjenjang dari dosen PA, Koordinator Program Studi (Korprodi), hingga Dekan.
+*   Batas waktu final pengerjaan revisi atau pembatalan ini paling lambat adalah **2 (dua) minggu setelah kegiatan perkuliahan resmi dimulai**.",multi-hop,"03_tujuan_sasaran_strategi.md, Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md","Diagram Hubungan Pernyataan Visi, Misi, Tujuan, Sasaran & Strategi UNSRAT; BAB XI Pasal 37 ayat (7); BAB XII Pasal 45",LONG,PERFECT_GRAMMAR,multi_hop_abstract_query_synthesizer
+"Me looking at old UNSRAT archive record for leadership. What exactly is Dekan do, and how many maximum semester for student in Program Sarjana to finish their study?","1. Peran dan Tugas Dekan
+Dalam struktur kepemimpinan dan tata kelola di UNSRAT, Dekan adalah pimpinan tertinggi pada tingkat Fakultas.
+
+Tugas Utama Dekan:
+
+Memimpin Penyelenggaraan Fakultas: Memimpin dan mengelola penyelenggaraan pendidikan, penelitian, dan pengabdian kepada masyarakat di tingkat fakultas.
+
+Pengelolaan Kebijakan & Sumber Daya: Mengelola sumber daya manusia, keuangan, sarana prasarana, serta administrasi akademik di lingkup fakultas.
+
+Wewenang Akademik Mahasiswa:
+
+Menetapkan dan mengusulkan penetapan status akademik mahasiswa (seperti rekomendasi cuti akademik, permohonan banding/perubahan nilai, dan syarat kelulusan/yudisium).
+
+Membentuk tim khusus untuk penanganan masalah akademik tertentu (misalnya peninjauan kasus nilai atau pelanggaran disiplin mahasiswa).
+
+2. Batas Maksimal Masa Studi Program Sarjana (S1)
+Berdasarkan Peraturan Akademik UNSRAT (Peraturan Rektor No. 01 Tahun 2025):
+
+Batas Maksimal Masa Studi: Masa studi untuk program sarjana (S1) diatur paling lama 7 (tujuh) tahun akademik atau 14 (empat belas) semester.
+
+Beban Kredit: Mahasiswa wajib menyelesaikan beban belajar sekurang-kurangnya 144 (seratus empat puluh empat) SKS dalam kurun waktu tersebut.
+
+Ketentuan Cuti Akademik: Masa cuti akademik resmi yang diambil mahasiswa (maksimal 2 semester selama studi) TIDAK diperhitungkan dalam batas maksimal 14 semester ini.
+
+Konsekuensi: Apabila mahasiswa tidak dapat menyelesaikan studinya dalam batas waktu maksimal 14 semester efektif, maka mahasiswa yang bersangkutan dapat dikenakan sanksi pemutusan hubungan studi (drop out / DO).",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,BAB I Pasal 1 ayat (26); BAB IV Bagian Kesatu Pasal 9,LONG,PERFECT_GRAMMAR,multi_hop_abstract_query_synthesizer
+When Pemilihan Dosen Berprestasi happen for Dosen who guide student final project?,"Berdasarkan peraturan dan dokumen resmi UNSRAT, tidak ada kategori pemilihan khusus yang terjadwal secara terpisah hanya untuk ""Dosen Pembimbing Tugas Akhir Berprestasi"". Dosen yang membimbing tugas akhir (skripsi, tesis, atau disertasi)
+ termasuk dalam kategori dosen yang mengikuti agenda umum Pemilihan Dosen & Koordinator Program Studi (Koorprodi) Berprestasi
+.
+Jadwal pelaksanaan pemilihan tersebut berdasarkan Kalender Akademik Semester Genap 2025/2026 adalah sebagai berikut:
+Tingkat Jurusan: Dilaksanakan pada bulan April 2026
+.
+Tingkat Fakultas: Dilaksanakan pada bulan Mei 2026
+.
+Tingkat Universitas: Dilaksanakan pada bulan Juni 2026
+.",multi-hop,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian V.B. Pemilihan Dosen & Koordinator Prodi Berprestasi,MEDIUM,PERFECT_GRAMMAR,multi_hop_specific_query_synthesizer
+"Di UNSRAT, apa sebutan untuk hak mahasiswa yang ingin berhenti sementara dari kegiatan akademik, dan dokumen apa yang memuat informasi mengenai pencapaian akademik lulusannya?","Di UNSRAT, sebutan untuk hak mahasiswa yang ingin berhenti sementara dari segala bentuk kegiatan akademik adalah Cuti Akademik atau penghentian studi sementara
+. Hak ini dapat diperoleh secara resmi dengan izin Rektor dalam tenggang waktu tertentu
+.
+Sementara itu, dokumen resmi yang diterbitkan oleh universitas untuk memuat informasi mengenai pencapaian akademik atau kualifikasi dari lulusan pendidikan tinggi bergelar di UNSRAT adalah Surat Keterangan Pendamping Ijazah (SKPI)
+. Di samping SKPI, lulusan juga mendapatkan Transkrip Nilai, yaitu dokumen yang mendampingi ijazah berisi daftar nilai mata kuliah kumulatif yang telah ditempuh mahasiswa selama menjalani masa studinya
+.",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"Pasal 1 angka 60 dan 63, Pasal 71 ayat 2",LONG,PERFECT_GRAMMAR,multi_hop_abstract_query_synthesizer
+"Helo, my name is Andi Pratama and I am a prospektiv undergraduat student who wants to join a top reserch university to develop my akademik and entreprenurial skils. I am trying to figur out how the campus is organized to suport students. Can you tel me what exactly is the role of a Dekan, and what is the duty of a Dosen who helps with final asigments? And also, looking at the list of past Rectors, who was the Rektor in charge from 2008 to 2014 that woud normaly isue the decree to apoint a Dekan?","1. Peran Dekan
+Dekan ialah pemimpin fakultas di lingkungan UNSRAT yang ditetapkan dengan surat keputusan Rektor.  
+
+2. Tugas Dosen Pembimbing Tugas Akhir (Skripsi/Tesis/Disertasi)
+Pembimbing tugas akhir/skripsi/tesis/disertasi bertugas membimbing mahasiswa dalam menyelesaikan tugas akhir/skripsi/tesis/disertasi.
+
+3. Rektor UNSRAT Periode 2008 – 2014
+Rektor yang menjabat pada periode 2008 – 2014 adalah Prof. Dr. D. A. Rumokoy, SH, MH.",multi-hop,"Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md, 01_sejarah.md",Pasal 1 angka 26 dan 70 (Peraturan Akademik); Bagian Pimpinan Universitas Sam Ratulangi (Sejarah),LONG,PERFECT_GRAMMAR,multi_hop_abstract_query_synthesizer
+"As a student interested in entrepreneurship, can I fulfill my study load through entrepreneurial activities according to Pasal 26, and what specific information must be included in the Semester Learning Plan (RPS)?","Pemenuhan Beban Belajar Melalui Kegiatan Wirausaha (Pasal 26): Ya, pemenuhan beban belajar dapat dilakukan dalam bentuk wirausaha. Pemenuhan beban belajar tersebut dilakukan dalam bentuk: kuliah, responsi, tutorial, seminar, praktikum, praktik, studio, penelitian, perancangan, pengembangan, tugas akhir, pelatihan bela negara, pertukaran pelajar, magang, wirausaha, pengabdian kepada masyarakat, dan/atau bentuk pembelajaran lain.  Informasi Khusus yang Wajib Dimuat dalam Rencana Pembelajaran Semester (RPS):
+RPS memuat:  a. nama program studi, nama dan kode mata kuliah, semester, sks, nama dosen pengampu;  b. capaian pembelajaran lulusan yang dibebankan pada mata kuliah;  c. kemampuan akhir yang direncanakan pada tiap tahap pembelajaran untuk memenuhi capaian pembelajaran lulusan;  d. bahan kajian yang terkait dengan kemampuan yang akan dicapai;  e. metode pembelajaran;  f. waktu yang disediakan untuk mencapai kemampuan pada tiap tahap pembelajaran;  g. pengalaman belajar mahasiswa yang diwujudkan dalam deskripsi tugas yang harus dikerjakan oleh mahasiswa selama satu semester; dan  h. kriteria, indikator, dan bobot penilaian, serta daftar referensi yang digunakan.  ",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 25 ayat (1) dan Pasal 26 ayat (2),LONG,PERFECT_GRAMMAR,multi_hop_abstract_query_synthesizer
+"I is prospective student want ask. If I must do consult with PA before I put class in KRS INSPIRE, where I can read the requirement and duty for this PA, is it write in Pasal 47?","Ya, persyaratan dan kewajiban/tugas Pembimbing Akademik (PA) diatur secara spesifik pada Pasal 47.
+Persyaratan dan kewajiban PA adalah sebagai berikut:
+1. **Persyaratan:** Berstatus dosen tetap dan aktif.
+2. **Kewajiban/Tugas PA:**
+* Membantu mahasiswa dalam merencanakan rencana studi pada setiap semester dan memantau perkembangan studi mahasiswa yang dibimbingnya sampai selesai studi.
+* Melakukan pembimbingan akademik dan menandatangani buku PA dan atau melalui jejak digital pada Portal INSPIRE.
+* Membimbing mahasiswa dalam melaksanakan hak dan kewajibannya.
+* Menuntun mahasiswa untuk mengatasi kesulitan yang dihadapinya.
+* Melaporkan secara tertulis pelaksanaan tugas PA pada setiap akhir semester ke pimpinan Fakultas melalui Korprodi.
+Selain itu, PA diusulkan oleh Korprodi untuk ditetapkan oleh Dekan.",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 47,LONG,PERFECT_GRAMMAR,multi_hop_abstract_query_synthesizer
+"klo sy nnti blajar trkait riset yg wajib ngacu k standar penelitian, mtd pembelajran apa aja yg bsa sy plih?","Metode pembelajaran yang dapat dipilih untuk pelaksanaan pembelajaran mata kuliah (termasuk proses pembelajaran yang terkait dengan penelitian mahasiswa yang wajib mengacu pada Standar Penelitian) meliputi:
+1. Diskusi kelompok
+2. Simulasi
+3. Studi kasus
+4. Pembelajaran kolaboratif
+5. Pembelajaran kooperatif
+6. Pembelajaran berbasis proyek
+7. Pembelajaran berbasis masalah
+8. Pembelajaran daring, atau
+9. Metode pembelajaran lain yang dapat secara efektif memfasilitasi pemenuhan capaian pembelajaran lulusan.
+
+Setiap mata kuliah dapat menggunakan satu atau gabungan dari beberapa metode pembelajaran tersebut.",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,Pasal 24 ayat (3),LONG,MISSPELLED,multi_hop_abstract_query_synthesizer
+batas nilai INSPIRE,"Batas akhir unggah nilai mata kuliah ke Portal INSPIRE untuk Semester Genap Tahun Akademik 2025/2026 adalah tanggal 30 Juni 2026 pukul 23:59 WITA
+. Nilai mata kuliah tersebut akan menjadi permanen pada tanggal 1 Juli 2026
+.",abstract,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian I.B. Perkuliahan,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+misi Unsrat,"Misi Utama
+""Terdepan dalam Mengemban Tridharma Perguruan Tinggi dan sebagai Pusat Inovasi Ilmu Pengetahuan, Teknologi dan Seni-Budaya guna Peningkatan Taraf dan Kualitas Kehidupan Masyarakat""
+.
+Penjabaran Misi dalam Akronim ""IMANKU""
+Misi tersebut dijabarkan ke dalam akronim IMANKU yang terdiri dari
+:
+Inovatif dalam Ilmu Pengetahuan, Teknologi dan Seni-Budaya
+.
+Mitra masyarakat dan pemerintah
+.
+Aplikatif dalam Penelitian dan Pengabdian kepada Masyarakat
+.
+Normatif dalam Konservasi Alam dan Lingkungan
+.
+Kreatif dalam Pendidikan dan Pembelajaran
+.
+Unggul dan Kompetitif dalam Kewirausahaan
+.
+Empat Butir Misi Utama
+Misi UNSRAT dikelompokkan lebih lanjut menjadi 4 (empat) butir utama
+:
+Misi-1 — Meningkatkan kualitas Tridharma PT secara berkelanjutan. Dimaksudkan untuk peningkatan kualitas program Pendidikan, Penelitian, dan Pengabdian pada masyarakat mulai dari proses perencanaan, penyelenggaraan/implementasi, pelaporan, monitoring, dan evaluasi melalui standar terukur terhadap tahap masukan (input), proses (process), hasil (output), dan dampak (outcomes)
+.
+Misi-2 — Mengembangkan Inovasi dalam Ilmu Pengetahuan, Teknologi dan Seni-Budaya yang berorientasi Kawasan Pasifik. Dimaksudkan untuk peningkatan daya saing melalui penguasaan dan pemanfaatan ilmu pengetahuan dan inovasi teknologi yang memiliki relevansi dengan posisi geografis kawasan dimana UNSRAT berada
+.
+Misi-3 — Meningkatkan Akses dan peran PT bagi peningkatan Taraf dan Kualitas hidup Masyarakat. Dimaksudkan untuk peningkatan akses belajar di perguruan tinggi, dan pemerataan mengecap pendidikan tinggi, serta meningkatkan peran dalam perekonomian masyarakat melalui peluang kerjasama dan kemitraan demi peningkatan taraf dan kualitas hidup masyarakat
+.
+Misi-4 — Meningkatkan Tatakelola Pendidikan. Dimaksudkan untuk menata UNSRAT menuju institusi dengan sistem , akuntabel, efektif dan efisien dalam penyelenggaraan fungsi-fungsi institusi
+.",abstract,02_visi_misi.md,Bagian Misi,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+rektor Unsrat sekarang,"Rektor Universitas Sam Ratulangi (UNSRAT) yang menjabat saat ini (2022 – Sekarang) adalah Prof. Dr. Ir. Oktovian Berty Alexander Sompie, M.Eng IPU.",abstract,01_sejarah.md,Bagian Pimpinan Universitas Sam Ratulangi (1961 – Sekarang),SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+aturan biaya pendidikan UNSRAT,"### 1. Pengertian UKT
+UKT (Uang Kuliah Tunggal) adalah dana yang wajib dibayar oleh mahasiswa pada setiap semester, kecuali bagi mereka yang dibebaskan dari kewajiban tersebut berdasarkan Surat Keputusan Rektor.
+### 2. Kewajiban Pembayaran
+Setiap mahasiswa wajib membayar UKT/SPP/BOP sesuai kalender akademik untuk semester yang akan diikutinya sebelum mengisi Kartu Rencana Studi (KRS). Pembayaran ini merupakan syarat pendaftaran kembali untuk mengaktifkan status kemahasiswaan.
+### 3. Status Kemahasiswaan Berdasarkan Pembayaran
+* Mahasiswa yang telah melakukan pembayaran UKT/SPP/BOP pada semester berjalan berstatus **Aktif (A)**.
+* Mahasiswa yang tidak melakukan pembayaran UKT/SPP/BOP berstatus **Non Aktif (N)**.
+### 4. Penetapan Besaran Biaya
+* Besarnya UKT/SPP/BOP bagi mahasiswa program sarjana, profesi, pascasarjana, dan spesialis berpedoman pada peraturan Menteri dan ketentuan UNSRAT, yang ditetapkan melalui SK Rektor.
+* Komponen pembiayaan yang termasuk dalam UKT diatur dengan peraturan Rektor.
+* Besarnya UKT/SPP/BOP bagi mahasiswa asing ditetapkan melalui keputusan Rektor.
+### 5. Ketentuan Penunggakan dan Cuti Akademik
+* Mahasiswa yang tidak mendaftar ulang selama satu semester dan bermaksud melanjutkan pada semester berikutnya, diwajibkan membayar UKT/SPP/BOP semester yang tidak diikutinya.
+* Mahasiswa yang diberikan cuti akademik dibebaskan dari kewajiban membayar SPP/UKT/BOP selama masa cuti tersebut.",abstract,,,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Apa syarat Cum Laude?,"Syarat predikat kelulusan **Dengan Pujian (Cum Laude)** pada setiap jenjang dan program studi di UNSRAT diatur sebagai berikut:
+
+1. **Program Sarjana:**
+* **IPK:** 3,76 – 4,00
+* **Syarat:** Masa studi maksimum 8 semester; Nilai Tugas Akhir A; Tidak memiliki nilai C dan C+; Tidak pernah mendapatkan sanksi akademik; Tidak pernah mengulang mata kuliah.
+
+2. **Program Profesi Insinyur:**
+* **IPK:** 3,86 – 4,00
+* **Syarat:** Masa studi maksimum 2 semester; Nilai Tugas Akhir A; Tidak pernah mendapatkan sanksi akademik.
+
+3. **Program Profesi Akuntansi:**
+* **IPK:** 3,86 – 4,00
+* **Syarat:** Masa studi maksimum 2 semester; Nilai Tugas Akhir A; Tidak pernah mendapatkan sanksi akademik.
+
+4. **Program Profesi Ners:**
+* **IPK:** 3,86 – 4,00
+* **Syarat:** Masa studi maksimum 2 semester; Tidak pernah mendapatkan sanksi akademik.
+
+5. **Program Profesi Apoteker:**
+* **IPK:** 3,86 – 4,00
+* **Syarat:** Masa studi maksimum 2 semester; Tidak pernah mendapatkan sanksi akademik.
+
+6. **Program Profesi Dokter Gigi:**
+* **IPK:** 3,86 – 4,00
+* **Syarat:** Masa studi maksimum 3 semester; tidak pernah mendapatkan sanksi akademik.
+
+7. **Program Profesi Dokter:**
+* **IPK:** 3,86 – 4,00
+* **Syarat:** Masa studi maksimum 4 semester; tidak pernah mendapatkan sanksi akademik.
+
+8. **Program Magister:**
+* **IPK:** 3,76 – 4,00
+* **Syarat:** Masa studi maksimum 4 semester; nilai tugas akhir A; tidak pernah mendapatkan sanksi akademik.
+
+9. **Program Spesialis-1:**
+* **IPK:** 3,86 – 4,00
+* **Syarat:** Masa studi maksimum 8 semester; Nilai tugas akhir A; Tidak pernah mendapatkan sanksi akademik.
+
+10. **Program Doktor:**
+* **IPK:** ≥ 3,80
+* **Syarat:** Masa studi maksimum 7 semester; nilai tugas akhir A; tidak pernah mendapatkan sanksi akademik.",abstract,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XIII, Bagian Keempat belas, Pasal 68",SHORT,PERFECT_GRAMMAR,single_hop_abstract_query_synthesizer
+apakah saya masih bisa cumlaude kalau pernah mengulang mata kuliah?,"Tidak bisa. Mahasiswa Program Sarjana yang pernah mengulang mata kuliah tidak dapat memperoleh predikat Dengan Pujian (Cum Laude), karena salah satu syarat wajibnya adalah ""Tidak pernah mengulang mata kuliah"".",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XIII, Bagian Keempat belas, Pasal 68 ayat (1)",MEDIUM,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Apakah saya masih bisa bisa Cum Laude kalau sudah semester 9?,"**Tidak bisa.** Pada seluruh jenjang dan program pendidikan di UNSRAT, masa studi semester 9 sudah melebihi batas maksimum masa studi yang ditentukan untuk memperoleh predikat Dengan Pujian (Cum Laude).
+Rincian batas masa studi maksimum untuk predikat Cum Laude pada tiap jenjang adalah sebagai berikut:
+* **Program Sarjana:** Masa studi maksimum 8 semester.
+* **Program Profesi Insinyur, Akuntansi, Ners, dan Apoteker:** Masa studi maksimum 2 semester.
+* **Program Profesi Dokter Gigi:** Masa studi maksimum 3 semester.
+* **Program Profesi Dokter:** Masa studi maksimum 4 semester.
+* **Program Magister:** Masa studi maksimum 4 semester.
+* **Program Spesialis-1:** Masa studi maksimum 8 semester.
+* **Program Doktor:** Masa studi maksimum 7 semester.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XIII, Bagian Keempat belas, Pasal 68 ayat (1)",MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"kak, syarat buat mulai ngerjain skripsi/tugas akhir tuh apa aja sih?","Berdasarkan Peraturan Rektor Universitas Sam Ratulangi Nomor 01 Tahun 2025 tentang Peraturan Akademik, berikut adalah persyaratan dan tahapan untuk memulai serta menyusun tugas akhir/skripsi bagi mahasiswa program sarjana (S1):
+1. Pemrograman dalam Kartu Rencana Studi (KRS)
+Mahasiswa wajib melunasi biaya pendidikan (UKT/SPP/BOP) untuk semester berjalan
+.
+Mahasiswa wajib berkonsultasi dengan Dosen Pembimbing Akademik (PA) baik secara daring maupun tatap muka
+.
+Tugas akhir/skripsi wajib dikontrak/diprogramkan pada KRS di Portal INSPIRE sebagai 1 (satu) mata kuliah pada semester berjalan
+.
+Bobot tugas akhir untuk program sarjana (S1) adalah 6 (enam) SKS
+.
+2. Penetapan Komisi Pembimbing
+Penyusunan tugas akhir/skripsi dibimbing oleh dosen yang tergabung dalam satu Komisi Pembimbing
+.
+Penunjukan komisi pembimbing ditetapkan melalui Keputusan Dekan berdasarkan usulan Koordinator Program Studi (Korprodi)
+.
+Mahasiswa dapat mengusulkan komisi pembimbing atas persetujuan Korprodi
+.
+Surat Keputusan (SK) penetapan komisi pembimbing berlaku selama 6 (enam) bulan (dapat diperpanjang atas permohonan mahasiswa dengan persetujuan komisi pembimbing dan Korprodi)
+.
+3. Tahapan Pelaksanaan
+Pengerjaan tugas akhir/skripsi wajib dilaksanakan secara mandiri dan melalui tiga tahapan terstruktur:
+Seminar Proposal
+.
+Seminar Hasil
+.
+Ujian Akhir
+.
+4. Pernyataan Bebas Plagiasi
+Mahasiswa wajib menandatangani halaman pernyataan bebas plagiasi pada dokumen tugas akhir
+. Jika di kemudian hari ditemukan adanya plagiasi, duplikasi, atau saduran, keabsahan tugas akhir tersebut akan dibatalkan
+.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XII, Bagian Kesembilan, Pasal 63; BAB XIII, Bagian Kesepuluh, Pasal 64",MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+Berapa total SKS minimal yang harus ditempuh supaya bisa lulus S1?,Total SKS minimal yang harus ditempuh untuk menyelesaikan dan lulus dari program sarjana (S1) adalah sekurang-kurangnya 144 (seratus empat puluh empat) SKS.  ,lexical,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB IV, Bagian Kesatu, Pasal 9",MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"Untuk memahami akar lembaga kami, inisiatif apa yang diambil oleh masyarakat Sulawesi Tengah untuk mendirikan sebuah universitas negeri?","Karena keberadaan dua universitas swasta tersebut belum memuaskan selera warga (Sumekolah), timbul inisiatif bersama dari para pemuka militer, sipil, serta cendekiawan masyarakat Sulawesi Utara dan Tengah untuk membentuk kesatuan dan kebulatan tekad merealisasikan berdirinya satu perguruan tinggi berstatus negeri di kedua daerah tersebut.",abstract,,,SHORT,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+berapa sks untuk magang,"Beban SKS untuk kegiatan magang di Universitas Sam Ratulangi (UNSRAT) dibedakan berdasarkan status mahasiswa sebagai berikut:
+1. Bagi Mahasiswa UNSRAT (Program MBKM / Pembelajaran di Luar Program Studi)
+Kegiatan magang merupakan salah satu bentuk pemenuhan beban belajar resmi
+. Jumlah SKS yang dapat diakui dan dikonversikan adalah:
+Setara 20 SKS untuk pemenuhan sebagian beban belajar selama 1 (satu) semester di program studi yang berbeda di UNSRAT atau luar UNSRAT
+.
+Maksimal 40 SKS untuk pemenuhan beban belajar paling lama 2 (dua) semester di luar UNSRAT
+.
+
+Bagi Mahasiswa Asing (Magang di UNSRAT)
+Mahasiswa asing dari perguruan tinggi luar negeri yang diakui dapat diterima untuk melakukan magang atau kuliah paruh waktu di UNSRAT dengan beban:
+Minimal 14 SKS
+.",abstract,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB V, Pasal 15; BAB XI, Bagian Kedua, Pasal 38 ayat (2)",SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Apakah mahasiswa KIP-K boleh mengambil cuti akademik?,"Mahasiswa penerima beasiswa (termasuk KIP-K) pada dasarnya tidak diperkenankan mengambil cuti akademik, kecuali mendapat pertimbangan khusus dari Dekan/Direktur dan Rektor.  ",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XII, Bagian Kelima, Pasal 49 ayat (5)",SHORT,PERFECT_GRAMMAR,multi_hop_specific_query_synthesizer
+Kapan mahasiswa yang belum selesai kuliah akan dinyatakan DO?,"Mahasiswa yang belum menyelesaikan perkuliahannya dinyatakan putus studi (Drop Out / DO) berdasarkan tiga alasan utama, yaitu alasan administratif, alasan akademik, dan melebihi batas maksimum masa studi:
+1. **Alasan Administratif:**
+* Mahasiswa tidak melakukan registrasi selama 4 (empat) semester secara berturut-turut.
+2. **Alasan Akademik:**
+* **Program Sarjana (S1):** Dievaluasi pada akhir semester 4 (empat) dan memperoleh jumlah SKS lulus < 45 **dan** IPK < 2,00.
+* **Program Magister (S2):** Dievaluasi pada akhir semester 2 (dua) dan memperoleh IPK < 3,00.
+* **Program Doktor (S3):** Dievaluasi pada akhir semester 2 (dua) dan memperoleh IPK < 3,00; atau tidak lulus ujian pra-promosi setelah diberi kesempatan 2 (dua) kali.
+3. **Melebihi Batas Maksimum Masa Studi:**
+Lama studi mahasiswa melebihi batas waktu maksimum penyelesaian studi yang ditetapkan:
+* **Program Sarjana (S1):** Melebihi 14 (empat belas) semester.
+* **Program Magister (S2):** Melebihi 8 (delapan) semester.
+* **Program Doktor (S3):** Melebihi 12 (dua belas) semester.
+* **Program Profesi:** Melebihi 6 (enam) semester (umum), atau melebihi 10 (sepuluh) semester khusus untuk Profesi Dokter dan Dokter Gigi.
+* **Program Spesialis-1:** Melebihi 16 (enam belas) semester.
+
+(Catatan Tambahan: Mahasiswa juga dinyatakan putus studi atas prakarsa sendiri/mengundurkan diri).",multi-hop,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB XIII, Bagian Kedelapan, Pasal 62; BAB IV, Pasal 9-12",MEDIUM,PERFECT_GRAMMAR,multi_hop_specific_query_synthesizer
+"Bagaimana cara agar bisa lulus dalam 3,5 tahun?","Untuk dapat lulus program sarjana dalam waktu 3,5 tahun (setara dengan 7 semester), mahasiswa harus memenuhi ketentuan dan tahapan akademik yang diatur sebagai berikut:
+1. **Masa Tempuh Kurikulum:** Program sarjana secara teoretis memang dirancang untuk dapat diselesaikan dalam Masa Tempuh Kurikulum selama 7 (tujuh) sampai 8 (delapan) semester.
+2. **Pemenuhan Total Beban Belajar:** Menyelesaikan seluruh beban belajar program sarjana sekurang-kurangnya **144 (seratus empat puluh empat) SKS**.
+3. **Pengambilan SKS Maksimal per Semester:**
+* Pada semester 1 dan semester 2, mahasiswa mengambil paket mata kuliah paling banyak 20 (dua puluh) SKS.
+* Pada semester 3 dan seterusnya, mahasiswa dapat mengambil beban belajar paling banyak 24 (dua puluh empat) SKS per semester.
+4. **Memenuhi Syarat Kuliah Kerja Terpadu (KKT):** Mengontrak KKT pada KRS setelah menyelesaikan dan lulus sekurang-kurangnya 110 (seratus sepuluh) SKS.
+5. **Penyelesaian Tugas Akhir/Skripsi:** Memprogramkan dan menyelesaikan Tugas Akhir/Skripsi (bobot 6 SKS) melalui tahapan seminar proposal, seminar hasil, dan ujian akhir, atau melalui jalur rekognisi/kesetaraan Program Kreativitas Mahasiswa (PKM) yang lolos tingkat nasional.
+6. **Syarat Kelulusan Sarjana:** Memperoleh IPK sekurang-kurangnya 2,00 dan memiliki publikasi pada jurnal nasional yang merupakan bagian dari Tugas Akhir/Skripsi.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"BAB IV, Bagian Kesatu, Pasal 9; BAB VII, Bagian Keempat, Pasal 27",MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+gimana sih prosedur tugas akhir dari awal sampai akhir?,"Prosedur pelaksanaan Tugas Akhir/Skripsi bagi mahasiswa program sarjana (S1) dari awal hingga akhir diselenggarakan melalui tahapan-tahapan berikut:
+1. **Pengontrakan pada KRS:**
+* Mahasiswa memprogramkan/mengontrak Tugas Akhir pada Kartu Rencana Studi (KRS) semester berjalan sebagai 1 (satu) mata kuliah dengan bobot 6 (enam) SKS.
+2. **Penetapan Komisi Pembimbing:**
+* Mahasiswa dibimbing oleh dosen yang tergabung dalam satu Komisi Pembimbing.
+* Komisi Pembimbing ditunjuk melalui Keputusan Dekan/Direktur berdasarkan usulan Korprodi (mahasiswa dapat mengusulkan Komisi Pembimbing atas persetujuan Korprodi).
+* Surat Keputusan (SK) penetapan Komisi Pembimbing berlaku selama 6 (enam) bulan. Jika belum selesai, perpanjangan pertama berlaku untuk 3 (tiga) bulan, dan perpanjangan selanjutnya berlaku 1 (satu) bulan, yang diajukan oleh mahasiswa dengan persetujuan Komisi Pembimbing dan Korprodi serta melampirkan laporan kemajuan penelitian dan buku kontrol pembimbingan.
+3. **Tahapan Pelaksanaan Tugas Akhir:**
+* Tugas akhir dilaksanakan melalui 3 (tiga) tahapan berurutan, yaitu:
+1. **Seminar Proposal**
+2. **Seminar Hasil**
+3. **Ujian Akhir**
+* *(Jalur Rekognisi PKM):* Mahasiswa yang telah mengikuti program PKM atau program sejenis yang dikeluarkan oleh KEMDIKTISAINTEK dan telah lolos tingkat nasional, dapat diakui kesetaraannya dengan Tugas Akhir/Skripsi melalui keputusan Rektor setelah memenuhi kewajiban kurikulum.
+4. **Persyaratan Sebelum Menempuh Ujian Akhir:**
+* Telah melunasi SPP/UKT/BOP dan kewajiban lainnya sampai pada semester saat pelaksanaan ujian.
+* Telah memprogramkan Tugas Akhir/Skripsi pada KRS semester berjalan.
+* Menandatangani surat pernyataan bahwa Tugas Akhir/Skripsi bebas plagiasi.
+* Telah lulus semua mata kuliah yang diprogramkan dengan IPK sekurang-kurangnya 2,00.
+5. **Pelaksanaan Ujian Akhir dan Penilaian:**
+* Komisi Ujian Akhir ditetapkan oleh Dekan/Direktur atas usul Korprodi, terdiri dari Ketua (Pembimbing Utama), Sekretaris (Pembimbing Pendamping), dan 3 (tiga) orang anggota penguji.
+* Ujian Akhir hanya dapat dilaksanakan apabila dihadiri sekurang-kurangnya 80% komisi penguji dan minimal dihadiri oleh Ketua atau Sekretaris.
+* Proporsi penilaian akhir adalah 65% nilai Komisi Pembimbing dan 35% nilai Komisi Penguji bukan pembimbing.
+6. **Pengesahan, Syarat Kelulusan, dan Yudisium:**
+* Mahasiswa menandatangani halaman pernyataan bebas plagiasi, dan Tugas Akhir disetujui serta ditandatangani oleh Komisi Pembimbing dan Dekan/Direktur.
+* Mahasiswa wajib memiliki publikasi pada jurnal nasional yang merupakan bagian dari Tugas Akhir/Skripsi.
+* Kelulusan program sarjana ditetapkan melalui Surat Keputusan Dekan/Direktur berdasarkan hasil sidang/yudisium.",semantic,Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md,"Pasal 21, Pasal 63, Pasal 64",MEDIUM,MISSPELLED,single_hop_specific_query_synthesizer
+"What activities are included in the research process standards under Pasal 81, and how must non-confidential research results be disseminated?","**Kegiatan dalam Standar Proses Penelitian (Pasal 81)**
+Proses dan pengelolaan penelitian meliputi kegiatan:
+* Perencanaan
+* Pelaksanaan
+* Penilaian
+* Pengawasan
+* Pengendalian penelitian
+
+**Penyebarluasan Hasil Penelitian yang Tidak Bersifat Rahasia**
+Hasil penelitian yang tidak bersifat rahasia, tidak mengganggu, dan/atau tidak membahayakan kepentingan umum atau nasional **wajib disebarluaskan** dengan cara:
+* Diseminarkan
+* Dipublikasikan
+* Dipatenkan
+* Dan/atau cara lain yang dapat digunakan untuk menyampaikan hasil penelitian kepada masyarakat",multi-hop,,,MEDIUM,PERFECT_GRAMMAR,multi_hop_specific_query_synthesizer
+"According to Pasal 35, what is the maximum workload for a main supervisor, and what recent publication requirements must they meet to qualify for this role?","1. Beban Kerja Maksimal Pembimbing Utama
+Berdasarkan Pasal 35 ayat (3), beban kerja maksimal bagi dosen yang bertindak sebagai pembimbing utama dalam penelitian terstruktur untuk penyusunan skripsi, tesis, dan disertasi adalah paling banyak 10 (sepuluh) lulusan per semester.
+
+2. Persyaratan Publikasi Terbaru Pembimbing Utama
+Persyaratan publikasi untuk menjadi pembimbing utama (ditetapkan khusus bagi dosen program doktor dan program doktor terapan) diatur di dalam Pasal 34 ayat (9) huruf b. Dosen yang bersangkutan dalam jangka waktu 5 (lima) tahun terakhir harus memenuhi salah satu kriteria publikasi berikut:
+- Menghasilkan paling sedikit 1 (satu) karya ilmiah pada jurnal internasional yang bereputasi, atau jurnal nasional terakreditasi (Sinta 1 atau Sinta 2); atau
+- Menghasilkan paling sedikit 1 (satu) bentuk lain yang diakui oleh kelompok pakar yang ditetapkan oleh senat akademik.",multi-hop,,,MEDIUM,PERFECT_GRAMMAR,multi_hop_specific_query_synthesizer
+Apa makna bidang dasar segi lima dan warna kelabu pada lambang UNSRAT?,"Makna dari bidang dasar segi lima dan warna kelabu pada lambang UNSRAT adalah sebagai berikut:  
+Bidang dasar segi lima: Merupakan lambang Pancasila.  
+Warna kelabu: Melambangkan nilai-nilai luhur Pancasila yang menjadi tugas UNSRAT sebagai:  
+Penggali dan pencari kebenaran,  Pengenal dan penerus kebenaran untuk dunia sekitarnya, dan  Pembela dan pelindung kebenaran.  ",lexical,04_lambang.md,Makna Lambang > Bidang Dasar,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"kenapa di logo unsrat ada gambar pohon kelapa, itu artinya apa?","Gambar pohon/lukisan kelapa berada pada bagian bulatan tengah lambang UNSRAT karena berasal dari **ciri khas yang terdapat di daerah Sulawesi Utara**. Secara umum, lukisan kelapa tersebut bermakna **proses pertumbuhan dan perkembangan**.
+Rincian makna elemen-elemen kelapa pada lambang UNSRAT meliputi:
+1. **Satu biji kelapa dengan tiga matanya menghadap ke bawah:** Melambangkan UNSRAT sebagai suatu lembaga pendidikan tinggi yang melaksanakan Tridharma Perguruan Tinggi berdasarkan Pancasila di bumi Indonesia.
+2. **Warna lila pada bagian-bagian kelapa yang distylir:** Melambangkan warna kebudayaan yang hidup, bertumbuh, dan berkembang.
+3. **Warna merah pada bakal-bakal buah yang sedang tumbuh serta buah yang telah matang dan dapat dipetik:** Melambangkan hasil proses pertumbuhan yang sedang disiapkan dan siap untuk digunakan dalam fungsi sosial.
+4. **Bagian-bagian kelapa yang mencuat berbentuk tangkai halus berwarna lila:** Melambangkan semangat kekeluargaan (*l'espirit des corps*) dalam sivitas akademika.
+5. **Sepasang seludang berwarna lila yang melindungi bakal-bakal buah:** Melambangkan dalam rangka melaksanakan Tridharma Perguruan Tinggi, UNSRAT memiliki tugas: *menginstorum et scolarium* dan *scientiarum*.
+6. **17 bakal buah berwarna merah, 8 ruas pada batang kelapa berwarna lila, 9 pelepah berwarna ungu (masing-masing memiliki 5 helai daun):** Melambangkan dalam menjalankan tugasnya UNSRAT dijiwai dan diisi oleh semangat Proklamasi Kemerdekaan Indonesia 17 Agustus 1945.
+7. **Tiga pelepah kelapa berwarna lila:** Melambangkan tugas dan falsafah perguruan tinggi dalam bentuk Tridharma Perguruan Tinggi.
+8. **Dua pasang seludang berwarna lila di kiri-kanan ketiga pelepah:** Melambangkan proses *""patah tumbuh hilang berganti""*.
+9. **Sembilan bagian lukisan berwarna lila di sekitar pohon kelapa:** Melambangkan bulan September sebagai Dies Natalis UNSRAT.
+10. **Satu pelepah kelapa menghadap ke atas yang sedang terbuka (mekar) kelima helai daunnya:** Melambangkan UNSRAT dijiwai semangat Proklamasi Kemerdekaan Indonesia 17 Agustus 1945 untuk terus berupaya mencapai tujuan dan cita-cita bangsa Indonesia merdeka.
+11. **Lembaga-lembaga kelapa berwarna lila di antara nama dan tempat universitas:** Melambangkan bahwa UNSRAT yang memulai kegiatannya di Manado, terus akan hidup sebagai universitas yang menjadi milik dan dapat dimanfaatkan oleh seluruh rakyat dan bangsa Indonesia.",semantic,04_lambang.md,Makna Lambang > Bulatan Tengah (Lambang Kelapa),SHORT,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Berapa ukuran bendera universitas UNSRAT dan apa warna dasarnya?,Ukuran bendera Universitas Sam Ratulangi (UNSRAT) adalah lebar 160 cm x panjang 185 cm dengan warna dasar kuning.  ,lexical,05_bendera.md,Bendera Universitas,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+bendera fakultas kedokteran sama fakultas teknik itu beda warna apa aja ya,Warna bendera untuk kedua fakultas tersebut adalah:Fakultas Kedokteran: Berwarna Hijau Tua.  Fakultas Teknik: Berwarna Biru Tua.  ,semantic,05_bendera.md,Bendera Fakultas dan Program Pascasarjana > Warna Bendera Per Fakultas,SHORT,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Siapa penulis lirik Mars UNSRAT dan kapan lagu itu dinyanyikan?,Penulis Lirik Mars UNSRAT: Drs. M. Patiesina.  Waktu Dinyanyikan: Mars UNSRAT dinyanyikan pada setiap acara resmi Universitas Sam Ratulangi.  ,lexical,06_mars_hymne.md,Mars UNSRAT,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"unsrat punya lagu resmi apa aja sih, mars doang atau ada yang lain?","Universitas Sam Ratulangi (UNSRAT) memiliki dua lagu resmi, yaitu Mars UNSRAT dan Hymne UNSRAT.",abstract,06_mars_hymne.md,Mars & Hymne Universitas Sam Ratulangi,SHORT,POOR_GRAMMAR,single_hop_abstract_query_synthesizer
+Apa isi tujuan T-1 UNSRAT dan berkaitan dengan misi yang mana?,"Tujuan T-1 Universitas Sam Ratulangi (UNSRAT) adalah ""Tersedianya sistem layanan Tridharma unggul dan berkualitas""
+.
+Secara terperinci, ketercapaian tujuan T-1 ini dievaluasi melalui tiga indikator utama, yaitu:
+Kualitas dan kemampuan lulusan dalam menerapkan ilmu pengetahuan dan/atau teknologi untuk membuka lapangan kerja/pasar baru guna memenuhi kebutuhan pasar kerja dan industri
+.
+Bertumbuh-kembangnya ilmu pengetahuan dan inovasi teknologi melalui penelitian yang bermanfaat bagi kemajuan bangsa, peradaban, dan kesejahteraan umat manusia
+.
+Terwujudnya pengabdian masyarakat berbasis penalaran dan karya penelitian yang bermanfaat dalam memajukan dan mencerdaskan kehidupan masyarakat
+.
+Keterkaitan dengan Misi
+Tujuan T-1 ini diturunkan secara linier dan berkaitan langsung dengan Misi-1 UNSRAT, yaitu: ""Meningkatkan kualitas Tridharma PT secara berkelanjutan""
+.
+Misi-1 ini dimaksudkan untuk meningkatkan mutu program Pendidikan, Penelitian, dan Pengabdian kepada Masyarakat secara komprehensif—mulai dari tahap perencanaan, penyelenggaraan/implementasi, pelaporan, monitoring, hingga evaluasi menggunakan standar yang terukur pada aspek masukan (input), proses (process), hasil (output), dan dampak (outcomes)
+.",lexical,03_tujuan_sasaran_strategi.md,Tujuan,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+strategi ST-2 nya unsrat itu fokusnya ke arah mana ya?,"Strategi ST-2 Universitas Sam Ratulangi berfokus pada pengembangan pencitraan institusi agar menjadi lebih berwibawa dan tepercaya di mata masyarakat
+.
+Secara terperinci, arah dan fokus utama dari strategi ST-2 ini meliputi:
+Membangun Reputasi & Kepercayaan: Menjadikan UNSRAT sebagai lembaga pendidikan tinggi yang kredibel dan mendapatkan pengakuan penuh dari publik
+.
+Kekuatan Inovasi & Daya Saing: Mengembangkan potensi institusi melalui kemampuan inovasi serta penguasaan ilmu pengetahuan dan teknologi agar menghasilkan lulusan yang berdaya saing tinggi
+.
+Standar Rekognisi Formal: Pencapaian strategi ini ditargetkan untuk memenuhi standar pengakuan di tingkat nasional maupun internasional, yang dicirikan melalui penilaian dari lembaga akreditasi resmi dan lembaga pemeringkat perguruan tinggi
+.
+Strategi ST-2 ini diturunkan secara linier untuk mendukung Misi-2 UNSRAT (mengembangkan inovasi IPTEKS berorientasi Kawasan Pasifik)
+, guna mewujudkan Tujuan T-2 (menyediakan wadah pendidikan inovatif berbasis kearifan lokal)
+, serta menjawab Sasaran S-2 (meningkatkan citra berwibawa lewat akreditasi)
+.",semantic,03_tujuan_sasaran_strategi.md,Bagian Strategi,SHORT,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+Kapan pengumuman hasil SNBP UNSRAT diumumkan?,Pengumuman hasil Seleksi Nasional Berdasarkan Prestasi (SNBP) UNSRAT untuk Semester Genap Tahun Akademik 2025/2026 dijadwalkan pada 18 Maret 2026 pukul 15.00 WIB,lexical,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian II.A. Seleksi Nasional Penerimaan Mahasiswa Baru (SNPMB),SHORT,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+"kalo mau daftar ulang stelah lulus SNBT, batas waktunya kpn ya?","Batas waktu untuk melakukan pendaftaran kembali (daftar ulang) di UNSRAT bagi calon mahasiswa yang dinyatakan lulus jalur SNBT adalah mulai tanggal 28 Mei sampai dengan 30 Juni 2026
+.",semantic,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian II.A. Seleksi Nasional Penerimaan Mahasiswa Baru (SNPMB),SHORT,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+PKKMB kapan,Pengenalan Kehidupan Kampus bagi Mahasiswa Baru (PKKMB) di Universitas Sam Ratulangi dilaksanakan pada tanggal 30 – 31 Juli 2026.  ,abstract,Kalender_Akademik_UNSRAT_Genap_2025-2026.md,Bagian II.C. Pengenalan Kehidupan Kampus bagi Mahasiswa Baru (PKKMB),SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Tahun berapa Program Pascasarjana UNSRAT didirikan?,Program Pascasarjana UNSRAT didirikan pada tahun 1985.  ,lexical,01_sejarah.md,Bagian Perkembangan Selanjutnya,SHORT,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+Siapa rektor UNSRAT saat Fakultas Kesehatan Masyarakat resmi berdiri sebagai fakultas termuda?,"Rektor UNSRAT saat Fakultas Kesehatan Masyarakat resmi berdiri pada tahun 2009 adalah Prof. Dr. D. A. Rumokoy, SH, MH (menjabat periode 2008 – 2014).  ",multi-hop,01_sejarah.md,Bagian Perkembangan Selanjutnya & Pimpinan Universitas Sam Ratulangi (1961 – Sekarang),MEDIUM,PERFECT_GRAMMAR,multi_hop_specific_query_synthesizer
+Apa visi Universitas Sam Ratulangi?,"Visi Universitas Sam Ratulangi adalah: ""Bersama menata Universitas Sam Ratulangi menjadi Universitas Unggul dan Berbudaya"".  ",lexical,02_visi_misi.md,Bagian Visi,SHORT,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+unsrat pengen jadi kampus kayak apa sih ke depannya?,"Ke depannya, Universitas Sam Ratulangi bertujuan menjadi Universitas Unggul dan Berbudaya (Excellent University).  Kondisi unggul (excellent) ini hendak dicapai secara bertahap dengan mewujudkan tata pamong dan tata kelola institusi yang efektif dan efisien sebagai dasar proses penyelenggaraan pendidikan tinggi, guna menghasilkan luaran (output) serta dampak jangka panjang (outcome) yang berkualitas pada cakupan wilayah nasional maupun internasional.  ",semantic,02_visi_misi.md,Bagian Visi,SHORT,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+misi ke-4 unsrat,"Misi ke-4 Universitas Sam Ratulangi adalah Meningkatkan Tatakelola Pendidikan, yang dimaksudkan untuk menata UNSRAT menuju institusi dengan sistem tatakelola PT yang otonom, akuntabel, efektif dan efisien dalam penyelenggaraan fungsi-fungsi institusi.  ",abstract,02_visi_misi.md,Bagian Empat Butir Misi Utama,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Apa sasaran S-2 UNSRAT dan keterkaitannya dengan misi serta tujuan apa?,"Sasaran S-2 UNSRAT adalah meningkatnya citra UNSRAT sebagai lembaga pendidikan tinggi yang berwibawa dan mendapatkan kepercayaan dan pengakuan masyarakat melalui kemampuan inovasi dan daya saing yang tinggi, dicirikan dengan pengakuan lembaga akreditasi dan pemeringkat institusi.  Keterkaitan:
+Sasaran S-2 terkait secara langsung dengan Misi-2 dan Tujuan T-2.  ",lexical,03_tujuan_sasaran_strategi.md,Bagian Sasaran,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+tujuan T-4 unsrat,Tujuan T-4 UNSRAT (terkait Misi-4) adalah terwujudnya UNSRAT sebagai lembaga pendidikan tinggi yang otonom dan akuntabel dalam menjalankan fungsi-fungsi institusi yang efektif dan efisien untuk peningkatan kemandirian UNSRAT.  ,abstract,03_tujuan_sasaran_strategi.md,## Tujuan,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Apa makna warna lila dan warna merah pada lukisan kelapa di lambang UNSRAT?,"Makna warna lila dan warna merah pada lukisan kelapa di lambang UNSRAT adalah:
+Warna Lila (pada bagian-bagian kelapa yang distylir): Melambangkan warna kebudayaan yang hidup, bertumbuh, dan berkembang.  
+Warna Merah (pada bakal-bakal buah yang sedang tumbuh serta buah yang telah matang dan dapat dipetik): Melambangkan hasil proses pertumbuhan yang sedang disiapkan dan siap untuk digunakan dalam fungsi sosial.  ",multi-hop,04_lambang.md,### Bulatan Tengah (Lambang Kelapa),MEDIUM,PERFECT_GRAMMAR,multi_hop_specific_query_synthesizer
+lambang unsrat artinya apa,"Secara keseluruhan, lambang Universitas Sam Ratulangi (UNSRAT) menggambarkan kepribadian, cita-cita, tugas, dan kewajiban UNSRAT sebagai alat dan abdi negara untuk mencapai tujuan perjuangan nasional bangsa Indonesia
+. Hal ini mencakup usaha mencerdaskan kehidupan bangsa, memajukan IPTEK, mengembangkan kebudayaan, serta mengolah sumber daya alam demi kemakmuran masyarakat, khususnya di Sulawesi Utara
+.
+Berdasarkan dokumen resmi universitas, lambang UNSRAT memiliki tiga elemen visual",abstract,04_lambang.md,## Makna Keseluruhan,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Berapa ukuran bendera fakultas dan program pascasarjana UNSRAT?,Ukuran bendera fakultas dan program pascasarjana di Universitas Sam Ratulangi adalah Lebar 90 cm x Panjang 130 cm.  ,lexical,05_bendera.md,## Bendera Fakultas dan Program Pascasarjana,MEDIUM,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+warna bendera program pascasarjana unsrat,Warna bendera Program Pascasarjana UNSRAT adalah Coklat Muda.  ,abstract,05_bendera.md,### Warna Bendera Per Fakultas,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Siapa yang membuat aransemen untuk Mars UNSRAT?,Aransemen Mars UNSRAT dibuat oleh Nelt.,lexical,06_mars_hymne.md,## Mars UNSRAT,SHORT,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+kapan mars unsrat dinyanyikan,Mars UNSRAT dinyanyikan pada setiap acara resmi Universitas Sam Ratulangi.  ,abstract,06_mars_hymne.md,## Mars UNSRAT,SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
+Berapa nilai akreditasi UNSRAT dari BAN-PT?,"Status akreditasi UNSRAT dari BAN-PT yang berlaku saat ini (periode 2022–2027) adalah UNGGUL (SK No. 2000/SK/BAN-PT/Ak.Ppj/PT/XII/2022).  Sebagai catatan riwayat/konteks historis pada asesmen periode sebelumnya (2017 dengan instrumen lama), UNSRAT memperoleh peringkat A dengan nilai 367.  ",lexical,07_akreditasi.md,"## Status Akreditasi Terkini: UNGGUL (2022–2027) & ## Riwayat Asesmen Sebelumnya (Instrumen Lama, 2017) — Konteks Historis",SHORT,PERFECT_GRAMMAR,single_hop_specific_query_synthesizer
+akreditasi kampus msh berlaku sampe kapan yah?,Sertifikat Akreditasi UNGGUL Universitas Sam Ratulangi berlaku sampai dengan tanggal 28 Desember 2027.  ,semantic,07_akreditasi.md,## Status Akreditasi Terkini: UNGGUL (2022–2027),SHORT,POOR_GRAMMAR,single_hop_specific_query_synthesizer
+tanggal kunjungan asesor BAN-PT,Tanggal kunjungan asesor BAN-PT (pada riwayat asesmen re-akreditasi institusi) adalah 18–19 Desember 2017.  ,abstract,07_akreditasi.md,"## Riwayat Asesmen Sebelumnya (Instrumen Lama, 2017) — Konteks Historis",SHORT,WEB_SEARCH_LIKE,single_hop_abstract_query_synthesizer
