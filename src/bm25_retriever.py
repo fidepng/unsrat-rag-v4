@@ -10,6 +10,8 @@ from pathlib import Path
 import frontmatter
 from rank_bm25 import BM25Okapi
 from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 
 from src.config import (
     CORPUS_DIR, BM25_INDEX_DIR, BM25_INDEX_PATH,
@@ -21,6 +23,15 @@ from src.logger_manager import get_logger
 
 logger = get_logger("bm25_retriever")
 
+# ── Stemmer & stopword remover Bahasa Indonesia (Sastrawi) ─────────────────
+# CATATAN (fix fairness B vs C): BM25 murni cocok token literal, sehingga
+# variasi imbuhan ("mengambil" vs "diambil" vs "pengambilan") tidak akan
+# match tanpa stemming. Dibuat sebagai module-level singleton (bukan
+# per-panggilan) agar tidak membangun factory berulang kali — satu-satunya
+# pertimbangan performa yang relevan di sini, tidak ada tuning tambahan lain.
+_stemmer = StemmerFactory().create_stemmer()
+_stopword_remover = StopWordRemoverFactory().create_stop_word_remover()
+
 HEADERS_TO_SPLIT_ON = [
     ("#",    "header_1"),
     ("##",   "bab"),
@@ -31,11 +42,18 @@ HEADERS_TO_SPLIT_ON = [
 
 def _tokenize(text: str) -> list[str]:
     """
-    Tokenisasi sederhana: lowercase, hapus tanda baca, filter token pendek.
+    Tokenisasi Bahasa Indonesia untuk BM25: stopword removal → stemming →
+    lowercase → hapus tanda baca → filter token pendek.
+
+    Dipakai identik saat indexing (per chunk) dan saat query, sehingga
+    representasi token pada kedua sisi tetap konsisten (D-A6 tetap berlaku:
+    rank-bm25 dipakai langsung, hanya preprocessing teks yang berubah).
 
     Min token length dari BM25_MIN_TOKEN_LEN (default: 2 karakter).
     """
-    tokens = re.findall(r'\b\w+\b', text.lower())
+    cleaned = _stopword_remover.remove(text)
+    stemmed = _stemmer.stem(cleaned)
+    tokens = re.findall(r'\b\w+\b', stemmed.lower())
     return [t for t in tokens if len(t) >= BM25_MIN_TOKEN_LEN]
 
 
