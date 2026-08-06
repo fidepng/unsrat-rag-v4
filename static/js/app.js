@@ -168,9 +168,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
                                 <span class="truncate">Syarat cuti akademik?</span>
                             </button>
-                            <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Visi, misi, dan tujuan resmi Universitas Sam Ratulangi.')">
+                            <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Visi dan Misi Universitas Sam Ratulangi?')">
                                 <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
-                                <span class="truncate">Visi misi UNSRAT?</span>
+                                <span class="truncate">Visi dan Misi UNSRAT?</span>
                             </button>
                             <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Berapa beban SKS maksimum untuk mahasiswa baru semester satu?')">
                                 <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
@@ -848,7 +848,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 datasets: [
                     // Config A is archived/deprecated. Only plotting Config B and Config C.
                     {
-                        label: "Config B (2000 char)",
+                        label: "Config B",
                         data: dataB,
                         backgroundColor: "rgba(168, 69, 69, 0.9)",
                         borderColor: "rgb(168, 69, 69)",
@@ -856,7 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         borderRadius: 6
                     },
                     {
-                        label: "Config C (BM25)",
+                        label: "Config C",
                         data: dataC,
                         backgroundColor: "rgba(156, 163, 175, 0.5)",
                         borderColor: "rgb(156, 163, 175)",

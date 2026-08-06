@@ -98,9 +98,9 @@
                       </label>
                       <div class="relative">
                           <select id="config-select" class="w-full bg-black/20 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-white/30 cursor-pointer appearance-none">
-                              <option value="b" class="text-gray-800">Config B - RAG 2000 char</option>
+                              <option value="b" class="text-gray-800">Config B - Dense RAG</option>
                               <!-- <option value="a" class="text-gray-800">Config A - RAG 500 char [ARCHIVED]</option> -->
-                              <option value="c" class="text-gray-800">Config C - BM25 Baseline</option>
+                              <option value="c" class="text-gray-800">Config C - Sparse RAG</option>
                           </select>
                           <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-white/50">
                               <i data-lucide="chevron-down" class="w-4 h-4"></i>
@@ -157,16 +157,16 @@
                       <div class="space-y-2 flex-1">
                           <span class="inline-block bg-[#7B2D2D]/10 border border-[#7B2D2D]/15 text-[#7B2D2D] px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">Selamat Datang</span>
                           <div class="bg-white border border-[#EBE7E1] rounded-2xl rounded-tl-none px-5 py-4 shadow-sm text-gray-700 leading-relaxed text-sm">
-                              <p class="font-semibold text-gray-900 mb-1">Halo civitas akademika Universitas Sam Ratulangi!</p>
-                              <p class="text-gray-600 text-xs md:text-sm">Saya adalah asisten virtual akademik resmi Anda. Silakan tanyakan hal-hal terkait Peraturan Akademik (beban SKS, cuti kuliah, KRS, DO, drop-out, yudisium), kalender akademik, visi misi universitas, sejarah, akreditasi, maupun profil institut.</p>
+                              <p class="font-semibold text-gray-900 mb-1">Halo Sivitas Akademika Universitas Sam Ratulangi!</p>
+                              <p class="text-gray-600 text-xs md:text-sm">Silakan tanyakan hal-hal terkait Peraturan Akademik (beban SKS, cuti kuliah, KRS, Drop-Out, Yudisium), Kalender Akademik, Visi Misi, Sejarah, Akreditasi, maupun Profil Institut.</p>
                               <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
                                   <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Syarat dan batas pengambilan cuti akademik di UNSRAT?')">
                                       <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
                                       <span class="truncate">Syarat cuti akademik?</span>
                                   </button>
-                                  <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Visi, misi, dan tujuan resmi Universitas Sam Ratulangi.')">
+                                  <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Visi dan Misi Universitas Sam Ratulangi?')">
                                       <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
-                                      <span class="truncate">Visi misi UNSRAT?</span>
+                                      <span class="truncate">Visi dan Misi UNSRAT?</span>
                                   </button>
                                   <button class="text-left p-2.5 rounded-xl border border-gray-100 hover:border-[#7B2D2D]/30 hover:bg-[#7B2D2D]/5 transition text-gray-700 font-medium flex items-center space-x-2 cursor-pointer" onclick="fillInput('Berapa beban SKS maksimum untuk mahasiswa baru semester satu?')">
                                       <i data-lucide="help-circle" class="w-4 h-4 text-[#7B2D2D]/70 flex-shrink-0"></i>
@@ -185,7 +185,7 @@
               <!-- Area Form Input Bawah (Floating panel) -->
               <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#FAF9F6] via-[#FAF9F6]/95 to-transparent pt-8 pb-3 px-8 flex flex-col items-center z-10">
                   <form id="chat-form" class="w-full max-w-4xl flex items-end bg-white border border-[#E4DFD9] rounded-2xl shadow-xl p-2 focus-within:border-[#7B2D2D] focus-within:ring-2 focus-within:ring-[#7B2D2D]/20 transition duration-300">
-                      <textarea id="user-input" placeholder="Ketik pertanyaan akademik Anda di sini (misal: 'berapa batas minimal IPK...')" class="flex-1 pl-6 pr-4 py-2.5 text-sm text-gray-800 focus:outline-none placeholder-gray-400 bg-white resize-none max-h-36 custom-scrollbar" rows="1" autocomplete="off"></textarea>
+                      <textarea id="user-input" placeholder="Ketik pertanyaan akademik Anda di sini..." class="flex-1 pl-6 pr-4 py-2.5 text-sm text-gray-800 focus:outline-none placeholder-gray-400 bg-white resize-none max-h-36 custom-scrollbar" rows="1" autocomplete="off"></textarea>
                       <button type="submit" id="send-btn" class="bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 ml-4">
                           <!-- Send Icon -->
                           <svg id="send-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send w-5 h-5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -195,10 +195,10 @@
                   </form>
                   
                   <!-- Catatan Kaki Disclaimer Formal (Section 6) -->
-                  <div class="flex items-center space-x-1.5 text-[10px] text-[#6B6661] mt-5 text-center">
+                  <!-- <div class="flex items-center space-x-1.5 text-[10px] text-[#6B6661] mt-5 text-center">
                       <i data-lucide="shield-alert" class="w-3.5 h-3.5 flex-shrink-0 text-[#6B6661]"></i>
                       <span>Sistem ini adalah prototipe penelitian berbasis LLM. Tanggapan didasarkan pada dokumen ground-truth peraturan resmi Universitas Sam Ratulangi. Harap verifikasi informasi penting ke sub-bagian akademik fakultas Anda.</span>
-                  </div>
+                  </div> -->
               </div>
           </div>
           <!-- TAB 2: AREA DASHBOARD EVALUASI RAGAS -->
@@ -207,13 +207,13 @@
                   <div>
                       <h2 class="font-serif font-bold text-2xl text-gray-800 tracking-tight flex items-center space-x-2">
                           <i data-lucide="line-chart" class="w-5 h-5 text-[#7B2D2D]"></i>
-                          <span>Laporan Pengujian & Evaluasi Kuantitatif RAGAS</span>
+                          <span>Evaluasi RAGAS</span>
                       </h2>
-                      <p class="text-xs text-gray-500 mt-0.5">Komparasi performa sistem berbasis data ground-truth regulasi akademik Universitas Sam Ratulangi.</p>
+                      <!-- <p class="text-xs text-gray-500 mt-0.5">Komparasi performa sistem berbasis data ground-truth regulasi akademik Universitas Sam Ratulangi.</p> -->
                   </div>
                   <button id="refresh-eval-btn" class="flex items-center space-x-2 px-3.5 py-2 border border-[#E4DFD9] bg-white hover:bg-[#7B2D2D]/5 hover:border-[#7B2D2D]/20 text-[#7B2D2D] rounded-xl text-xs font-semibold transition duration-150 shadow-sm cursor-pointer active:scale-98">
                       <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                      <span>Muat Ulang Data</span>
+                      <!-- <span>Reload</span> -->
                   </button>
               </div>
 
@@ -250,14 +250,14 @@
                   <div class="space-y-1 border-l border-gray-100 pl-3">
                       <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
                           <i data-lucide="cpu" class="w-3 h-3"></i>
-                          <span>Generator LLM</span>
+                          <span>Model Generator</span>
                       </div>
                       <div class="text-xs font-bold text-gray-800 truncate" id="meta-generator-model">-</div>
                   </div>
                   <div class="space-y-1 border-l border-gray-100 pl-3">
                       <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
                           <i data-lucide="award" class="w-3 h-3"></i>
-                          <span>Evaluator LLM</span>
+                          <span>Model Evaluator</span>
                       </div>
                       <div class="text-xs font-bold text-gray-800 truncate" id="meta-evaluator-model">-</div>
                   </div>
@@ -278,9 +278,9 @@
                       <div class="flex items-center justify-between">
                           <h3 class="font-bold text-xs md:text-sm text-gray-800 flex items-center space-x-2">
                               <span class="w-2.5 h-2.5 rounded-full bg-[#7B2D2D]"></span>
-                              <span>Visualisasi Metrik Performa Ragas</span>
+                              <span>Grafik Hasil Evaluasi RAGAS</span>
                           </h3>
-                          <span class="text-[9px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold border border-amber-100">Nilai Lebih Tinggi = Lebih Baik</span>
+                          <!-- <span class="text-[9px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold border border-amber-100">Nilai Lebih Tinggi = Lebih Baik</span> -->
                       </div>
                       <div class="relative h-80 flex-1 flex items-center justify-center">
                           <canvas id="metricsChart"></canvas>
@@ -293,9 +293,9 @@
                           <div class="flex items-center justify-between">
                               <h3 class="font-bold text-xs md:text-sm text-gray-800 flex items-center space-x-2">
                                   <span class="w-2.5 h-2.5 rounded-full bg-[#7B2D2D]"></span>
-                                  <span>Ringkasan Metrik (Config B vs C)</span>
+                                  <span>Ringkasan Metrik</span>
                               </h3>
-                              <span class="text-[9px] bg-[#7B2D2D]/10 text-[#7B2D2D] px-2 py-0.5 rounded-full font-bold border border-[#7B2D2D]/15">Rataan (Mean)</span>
+                              <span class="text-[9px] bg-[#7B2D2D]/10 text-[#7B2D2D] px-2 py-0.5 rounded-full font-bold border border-[#7B2D2D]/15">Mean</span>
                           </div>
                           
                           <div class="overflow-x-auto border border-gray-100 rounded-xl">
@@ -303,8 +303,8 @@
                                   <thead class="bg-[#FAF9F6] text-gray-800 font-bold uppercase text-[9px] border-b border-gray-100">
                                       <tr>
                                           <th class="px-3 py-2.5">Metrik</th>
-                                          <th class="px-3 py-2.5 text-center">Config B (RAG)</th>
-                                          <th class="px-3 py-2.5 text-center">Config C (BM25)</th>
+                                          <th class="px-3 py-2.5 text-center">Config B (Dense)</th>
+                                          <th class="px-3 py-2.5 text-center">Config C (Sparse)</th>
                                       </tr>
                                   </thead>
                                   <tbody id="comparison-table-body" class="divide-y divide-gray-100">
@@ -314,9 +314,9 @@
                               </table>
                           </div>
                       </div>
-                      <div class="bg-[#FAF9F6] border border-gray-150 rounded-xl p-3 text-[10px] text-[#6B6661] leading-relaxed">
+                      <!-- <div class="bg-[#FAF9F6] border border-gray-150 rounded-xl p-3 text-[10px] text-[#6B6661] leading-relaxed">
                           <strong>Analisis Deskriptif Bab IV:</strong> Config B menggunakan pencarian vektor semantik (Dense Retrieval) dengan konteks 2000 karakter, sedangkan Config C menggunakan model pencarian kata kunci BM25 (Sparse Retrieval).
-                      </div>
+                      </div> -->
                   </div>
 
                   <!-- Card Hasil Uji Statistik Wilcoxon (Dengan Clipboard Copy) - HIDDEN/DEPRECATED -->
@@ -362,9 +362,9 @@
                   <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                       <div class="flex items-center space-x-2">
                           <i data-lucide="terminal" class="w-4 h-4 text-[#7B2D2D]"></i>
-                          <h3 class="font-bold text-xs md:text-sm text-gray-800">Live Audit Log Transaksi Chat (Kuantitatif Real-Time)</h3>
+                          <h3 class="font-bold text-xs md:text-sm text-gray-800">Log Chat Terbaru</h3>
                       </div>
-                      <div class="flex items-center space-x-2">
+                      <!-- <div class="flex items-center space-x-2">
                           <span class="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-mono border border-gray-250">logs/transaksi_chat.csv</span>
                           <button id="btn-copy-audit" class="p-1.5 text-gray-400 hover:text-[#7B2D2D] hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-lg transition cursor-pointer" title="Salin data log">
                               <i data-lucide="copy" class="w-3.5 h-3.5"></i>
@@ -372,7 +372,7 @@
                           <button id="btn-download-audit" class="p-1.5 text-gray-400 hover:text-[#7B2D2D] hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-lg transition cursor-pointer" title="Unduh CSV Lengkap">
                                <i data-lucide="download" class="w-3.5 h-3.5"></i>
                           </button>
-                      </div>
+                      </div> -->
                   </div>
                   <div class="overflow-x-auto border border-gray-100 rounded-xl">
                       <table class="w-full text-xs text-left text-gray-600" id="table-audit">
@@ -396,10 +396,10 @@
               </div>
               
               <!-- Kaki Halaman Disclaimer Evaluasi -->
-              <div class="flex items-center justify-center space-x-1.5 text-[9px] text-gray-400 pt-2 border-t border-gray-150">
+              <!-- <div class="flex items-center justify-center space-x-1.5 text-[9px] text-gray-400 pt-2 border-t border-gray-150">
                   <i data-lucide="info" class="w-3.5 h-3.5 text-gray-400"></i>
                   <span>Data di atas diperbarui secara langsung berdasarkan log file transaksi lokal dan hasil pengujian offline evaluasi Ragas.</span>
-              </div>
+              </div> -->
           </div>
       </main>
       <script src="/static/js/app.js?v=1.0.1"></script>
