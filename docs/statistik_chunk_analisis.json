@@ -1,0 +1,103 @@
+{
+    "timestamp": "2026-08-06T18:49:22.446486",
+    "source_corpus": {
+        "total_sections": 161,
+        "min_len": 60,
+        "mean_len": 1162.27950310559,
+        "median_len": 830.0,
+        "p75": 1348.0,
+        "p90": 1900.0,
+        "p95": 2617.0,
+        "p99": 7414.0,
+        "max_len": 15599,
+        "under_2000": 148,
+        "pct_under_2000": 91.92546583850931,
+        "mean_no_outlier": 1072.05,
+        "top_outliers": [
+            {
+                "length": 15599,
+                "header_1": "Peraturan Rektor Universitas Sam Ratulangi Nomor 01 Tahun 2025 Tentang Peraturan Akademik di Universitas Sam Ratulangi",
+                "bab": "BAB I — KETENTUAN UMUM",
+                "pasal": "Pasal 1",
+                "file_name": "Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md"
+            },
+            {
+                "length": 7450,
+                "header_1": "Peraturan Rektor Universitas Sam Ratulangi Nomor 01 Tahun 2025 Tentang Peraturan Akademik di Universitas Sam Ratulangi",
+                "bab": "BAB XIII — EVALUASI HASIL BELAJAR MAHASISWA",
+                "bagian": "Bagian Keempat belas — PREDIKAT KELULUSAN",
+                "pasal": "Pasal 68",
+                "file_name": "Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md"
+            },
+            {
+                "length": 7390,
+                "header_1": "Peraturan Rektor Universitas Sam Ratulangi Nomor 01 Tahun 2025 Tentang Peraturan Akademik di Universitas Sam Ratulangi",
+                "bab": "BAB XI — PENERIMAAN MAHASISWA",
+                "bagian": "Bagian Pertama — MAHASISWA BARU",
+                "pasal": "Pasal 37",
+                "file_name": "Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md"
+            },
+            {
+                "length": 5991,
+                "header_1": "Peraturan Rektor Universitas Sam Ratulangi Nomor 01 Tahun 2025 Tentang Peraturan Akademik di Universitas Sam Ratulangi",
+                "bab": "BAB XI — PENERIMAAN MAHASISWA",
+                "bagian": "Bagian Ketiga — MAHASISWA PINDAHAN",
+                "pasal": "Pasal 39",
+                "file_name": "Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md"
+            },
+            {
+                "length": 3655,
+                "header_1": "Peraturan Rektor Universitas Sam Ratulangi Nomor 01 Tahun 2025 Tentang Peraturan Akademik di Universitas Sam Ratulangi",
+                "bab": "KONSIDERAN",
+                "bagian": "Mengingat",
+                "file_name": "Peraturan_Akademik_UNSRAT_2025_RAG_REVISED.md"
+            }
+        ]
+    },
+    "runtime_index": {
+        "total_sections": 188,
+        "min_len": 60,
+        "mean_len": 1006.9734042553191,
+        "median_len": 888.0,
+        "p75": 1596.5,
+        "p90": 1918.0,
+        "p95": 1953.25,
+        "p99": 1975.56,
+        "max_len": 1992,
+        "under_2000": 188,
+        "pct_under_2000": 100.0,
+        "mean_no_outlier": 1001.7058823529412,
+        "top_outliers": [
+            {
+                "length": 1992,
+                "doc_id": "UNSRAT-REG-2025-001",
+                "title": "PERATURAN REKTOR UNIVERSITAS SAM RATULANGI Nomor 01 Tahun 2025 TENTANG PERATURAN AKADEMIK",
+                "pasal": "Pasal 54"
+            },
+            {
+                "length": 1986,
+                "doc_id": "UNSRAT-REG-2025-001",
+                "title": "PERATURAN REKTOR UNIVERSITAS SAM RATULANGI Nomor 01 Tahun 2025 TENTANG PERATURAN AKADEMIK",
+                "pasal": "Pasal 86"
+            },
+            {
+                "length": 1974,
+                "doc_id": "UNSRAT-REG-2025-001",
+                "title": "PERATURAN REKTOR UNIVERSITAS SAM RATULANGI Nomor 01 Tahun 2025 TENTANG PERATURAN AKADEMIK",
+                "pasal": "Pasal 97"
+            },
+            {
+                "length": 1966,
+                "doc_id": "UNSRAT-REG-2025-001",
+                "title": "PERATURAN REKTOR UNIVERSITAS SAM RATULANGI Nomor 01 Tahun 2025 TENTANG PERATURAN AKADEMIK",
+                "pasal": "Pasal 39"
+            },
+            {
+                "length": 1961,
+                "doc_id": "UNSRAT-REG-2025-001",
+                "title": "PERATURAN REKTOR UNIVERSITAS SAM RATULANGI Nomor 01 Tahun 2025 TENTANG PERATURAN AKADEMIK",
+                "pasal": "Pasal 1"
+            }
+        ]
+    }
+}
