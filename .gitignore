@@ -1,4 +1,4 @@
-# Secrets & Configuration
+# Configuration
 .env
 .env.*
 !.env.example
@@ -70,5 +70,5 @@ docs/superpowers/
 eval/dataset/archive/*.csv
 eval/results/archive/*.csv
 
-# Thesis specific docs
+# Docs
 prd_srs.md

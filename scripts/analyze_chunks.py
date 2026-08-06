@@ -27,7 +27,7 @@ except ImportError:
 ROOT_DIR = Path(__file__).parent.parent
 CORPUS_DIR = ROOT_DIR / "data" / "corpus"
 BM25_INDEX_PATH = ROOT_DIR / "bm25_index" / "bm25_index.pkl"
-REPORT_PATH = ROOT_DIR / "docs" / "statistik_chunk_analisis.json"
+REPORT_PATH = ROOT_DIR / "docs" / "reports" / "statistik_chunk_analisis.json"
 
 HEADERS_TO_SPLIT_ON = [
     ("#",    "header_1"),

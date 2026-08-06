@@ -5,7 +5,7 @@ from pathlib import Path
 # Setup paths
 ROOT_DIR = Path(__file__).parent.parent
 INDEX_PATH = ROOT_DIR / "bm25_index" / "bm25_index.pkl"
-OUTPUT_PATH = ROOT_DIR / "docs" / "laporan_seluruh_chunk.md"
+OUTPUT_PATH = ROOT_DIR / "docs" / "reports" / "laporan_seluruh_chunk.md"
 
 def main():
     if not INDEX_PATH.exists():
