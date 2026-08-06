@@ -539,7 +539,7 @@
         "response_time_seconds": 16.7546
       },
       "archive_file": "eval/results/archive/hasil_config_b_20260729_074115_gemini35flash_gemini31propreview.csv",
-      "is_active": true
+      "is_active": false
     },
     {
       "run_id": "c_20260729_085912",
@@ -564,7 +564,162 @@
         "response_time_seconds": 6.2264
       },
       "archive_file": "eval/results/archive/hasil_config_c_20260729_085912_gemini35flash_gemini31propreview.csv",
-      "is_active": true
+      "is_active": false
+    },
+    {
+      "run_id": "b_20260729_125336",
+      "config": "b",
+      "timestamp_start": "2026-07-29T12:53:36.165247+00:00",
+      "timestamp_end": "2026-07-29T13:19:19.223244+00:00",
+      "status": "failed",
+      "generator_model": "gemini-3.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "gemini-3.1-pro-preview",
+      "evaluator_provider": "google",
+      "embedding_model": "gemini-embedding-001",
+      "ground_truth_hash": "3122973df46a",
+      "total_queries": 80,
+      "success_count": 0,
+      "error_count": 0,
+      "metrics": {},
+      "archive_file": null,
+      "is_active": false
+    },
+    {
+      "run_id": "b_20260729_143414",
+      "config": "b",
+      "timestamp_start": "2026-07-29T14:34:14.374672+00:00",
+      "timestamp_end": "2026-07-29T15:50:44.838702+00:00",
+      "status": "completed",
+      "generator_model": "gemini-3.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "gemini-3.1-pro-preview",
+      "evaluator_provider": "google",
+      "embedding_model": "gemini-embedding-001",
+      "ground_truth_hash": "3122973df46a",
+      "total_queries": 80,
+      "success_count": 80,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.7871,
+        "answer_relevancy": 0.7449,
+        "context_precision": 0.8271,
+        "context_recall": 0.7835,
+        "response_time_seconds": 18.0405
+      },
+      "archive_file": "eval/results/archive/hasil_config_b_20260729_143414_gemini35flash_gemini31propreview.csv",
+      "is_active": false
+    },
+    {
+      "run_id": "c_20260729_155110",
+      "config": "c",
+      "timestamp_start": "2026-07-29T15:51:10.355709+00:00",
+      "timestamp_end": "2026-07-29T16:52:59.704011+00:00",
+      "status": "completed",
+      "generator_model": "gemini-3.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "gemini-3.1-pro-preview",
+      "evaluator_provider": "google",
+      "embedding_model": "gemini-embedding-001",
+      "ground_truth_hash": "3122973df46a",
+      "total_queries": 80,
+      "success_count": 80,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.8078,
+        "answer_relevancy": 0.6724,
+        "context_precision": 0.6288,
+        "context_recall": 0.6504,
+        "response_time_seconds": 6.1799
+      },
+      "archive_file": "eval/results/archive/hasil_config_c_20260729_155110_gemini35flash_gemini31propreview.csv",
+      "is_active": false
+    },
+    {
+      "run_id": "b_20260805_084322",
+      "config": "b",
+      "timestamp_start": "2026-08-05T08:43:22.558507+00:00",
+      "timestamp_end": "2026-08-05T10:00:32.465576+00:00",
+      "status": "completed",
+      "generator_model": "gemini-3.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "gemini-3.1-pro-preview",
+      "evaluator_provider": "google",
+      "embedding_model": "gemini-embedding-001",
+      "ground_truth_hash": "ad15dd1b3138",
+      "total_queries": 80,
+      "success_count": 80,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.8044,
+        "answer_relevancy": 0.7553,
+        "context_precision": 0.8323,
+        "context_recall": 0.7931,
+        "response_time_seconds": 17.1303
+      },
+      "archive_file": "eval/results/archive/hasil_config_b_20260805_084322_gemini35flash_gemini31propreview.csv",
+      "is_active": true,
+      "nan_summary": {
+        "faithfulness": {
+          "n_nan": 0,
+          "pct_nan": 0.0
+        },
+        "answer_relevancy": {
+          "n_nan": 0,
+          "pct_nan": 0.0
+        },
+        "context_precision": {
+          "n_nan": 0,
+          "pct_nan": 0.0
+        },
+        "context_recall": {
+          "n_nan": 0,
+          "pct_nan": 0.0
+        }
+      }
+    },
+    {
+      "run_id": "c_20260805_100101",
+      "config": "c",
+      "timestamp_start": "2026-08-05T10:01:01.322440+00:00",
+      "timestamp_end": "2026-08-05T11:17:48.176767+00:00",
+      "status": "completed",
+      "generator_model": "gemini-3.5-flash",
+      "generator_provider": "google",
+      "evaluator_model": "gemini-3.1-pro-preview",
+      "evaluator_provider": "google",
+      "embedding_model": "gemini-embedding-001",
+      "ground_truth_hash": "ad15dd1b3138",
+      "total_queries": 80,
+      "success_count": 80,
+      "error_count": 0,
+      "metrics": {
+        "faithfulness": 0.8108,
+        "answer_relevancy": 0.6772,
+        "context_precision": 0.6562,
+        "context_recall": 0.6294,
+        "response_time_seconds": 7.1303
+      },
+      "archive_file": "eval/results/archive/hasil_config_c_20260805_100101_gemini35flash_gemini31propreview.csv",
+      "is_active": true,
+      "nan_summary": {
+        "faithfulness": {
+          "n_nan": 1,
+          "pct_nan": 1.25
+        },
+        "answer_relevancy": {
+          "n_nan": 1,
+          "pct_nan": 1.25
+        },
+        "context_precision": {
+          "n_nan": 0,
+          "pct_nan": 0.0
+        },
+        "context_recall": {
+          "n_nan": 0,
+          "pct_nan": 0.0
+        }
+      }
     }
   ]
 }

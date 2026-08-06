@@ -1,49 +1,108 @@
 ﻿rank,user_input,reference,response,avg_metric_score,failure_type,failure_notes
-1,"Kalau dulu pernah di-DO dari S1, masih ada kesempatan daftar ulang nggak di kampus yang sama?","Tidak ada kesempatan. Mahasiswa yang telah dinyatakan putus studi (Drop Out) dari UNSRAT tidak dapat kembali kuliah lagi di UNSRAT, baik karena DO akademik (evaluasi SKS/IPK semester 4 atau melebihi batas 14 semester), DO administratif (tidak registrasi 4 semester berturut-turut), maupun melalui jalur Rekognisi Pembelajaran Lampau (RPL).","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen regulasi yang tersedia.",0.0,,
-2,"Helo, my name is Andi Pratama and I am a prospektiv undergraduat student who wants to join a top reserch university to develop my akademik and entreprenurial skils. I am trying to figur out how the campus is organized to suport students. Can you tel me what exactly is the role of a Dekan, and what is the duty of a Dosen who helps with final asigments? And also, looking at the list of past Rectors, who was the Rektor in charge from 2008 to 2014 that woud normaly isue the decree to apoint a Dekan?","Dekan adalah pemimpin fakultas UNSRAT yang ditetapkan dengan surat keputusan Rektor. Dosen Pembimbing Tugas Akhir bertugas membimbing mahasiswa dalam menyelesaikan tugas akhir/skripsi/tesis/disertasi. Rektor yang menjabat periode 2008-2014 adalah Prof. Dr. D. A. Rumokoy, SH, MH.","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen regulasi yang tersedia.",0.0,,
-3,"klo sy nnti blajar trkait riset yg wajib ngacu k standar penelitian, mtd pembelajran apa aja yg bsa sy plih?","Metode pembelajaran terkait riset wajib mengacu pada Standar Penelitian. Berdasarkan Pasal 24 ayat (3), terdapat 9 pilihan metode: diskusi kelompok, simulasi, studi kasus, pembelajaran kolaboratif, pembelajaran kooperatif, pembelajaran berbasis proyek, pembelajaran berbasis masalah, pembelajaran daring, atau metode lain yang efektif memfasilitasi capaian pembelajaran lulusan. Setiap mata kuliah dapat menggunakan satu atau gabungan beberapa metode tersebut.","Mohon maaf, saya tidak menemukan informasi mengenai pilihan metode pembelajaran terkait riset dalam dokumen konteks yang disediakan. 
+1,"Kalau dulu pernah di-DO dari S1, masih ada kesempatan daftar ulang nggak di kampus yang sama?","Tidak ada kesempatan (tidak bisa). Mahasiswa yang telah dinyatakan putus studi (DO) dari UNSRAT tidak dapat kembali lagi untuk menempuh studi di Universitas Sam Ratulangi (UNSRAT). 
+Aturan ini berlaku secara mengikat baik untuk mahasiswa yang terkena DO karena alasan akademik (evaluasi SKS/IPK di semester 4 atau melebih batas waktu 14 semester), alasan administratif (tidak registrasi 4 semester berturut-turut), maupun melalui jalur Rekognisi Pembelajaran Lampau (RPL).","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen regulasi yang tersedia.",0.0,,
+2,"Helo, my name is Andi Pratama and I am a prospektiv undergraduat student who wants to join a top reserch university to develop my akademik and entreprenurial skils. I am trying to figur out how the campus is organized to suport students. Can you tel me what exactly is the role of a Dekan, and what is the duty of a Dosen who helps with final asigments? And also, looking at the list of past Rectors, who was the Rektor in charge from 2008 to 2014 that woud normaly isue the decree to apoint a Dekan?","1. Peran Dekan
+Dekan ialah pemimpin fakultas di lingkungan UNSRAT yang ditetapkan dengan surat keputusan Rektor. 
 
-Silakan menghubungi bagian administrasi kampus Universitas Sam Ratulangi untuk mendapatkan informasi lebih lanjut mengenai hal tersebut.",0.0,,
-4,"Bagaimana cara agar bisa lulus dalam 3,5 tahun?","Lulus dalam 3,5 tahun (7 semester) dimungkinkan karena masa tempuh kurikulum S1 memang dirancang 7-8 semester untuk menyelesaikan minimal 144 SKS. Caranya: mengambil beban maksimal (20 SKS di semester 1-2, lalu hingga 24 SKS mulai semester 3), mengontrak KKT setelah lulus minimal 110 SKS, serta menyelesaikan Tugas Akhir/Skripsi (6 SKS) melalui seminar proposal, seminar hasil, dan ujian akhir (atau via kesetaraan PKM tingkat nasional). Syarat kelulusan sarjana mensyaratkan IPK minimal 2,00 dan publikasi jurnal nasional dari Tugas Akhir.","Halo! Berdasarkan dokumen peraturan akademik yang disediakan, tidak ada informasi atau panduan khusus mengenai langkah-langkah konkret (seperti strategi pengambilan SKS atau perencanaan mata kuliah) tentang bagaimana cara agar bisa lulus dalam waktu 3,5 tahun.
+2. Tugas Dosen Pembimbing Tugas Akhir (Skripsi/Tesis/Disertasi)
+Pembimbing tugas akhir/skripsi/tesis/disertasi bertugas membimbing mahasiswa dalam menyelesaikan tugas akhir/skripsi/tesis/disertasi.
 
-Namun, dokumen tersebut menyebutkan ketentuan terkait masa studi maksimum 7 semester (yang setara dengan 3,5 tahun) untuk bisa mendapatkan predikat kelulusan **Dengan Pujian/Cum Laude**, yaitu:
-* Memiliki IPK $\ge$ 3,80 [1].
-* Memperoleh nilai A untuk tugas akhir [1].
-* Tidak pernah mendapatkan sanksi akademik [1].
+3. Rektor UNSRAT Periode 2008 – 2014
+Rektor yang menjabat pada periode 2008 – 2014 adalah Prof. Dr. D. A. Rumokoy, SH, MH.","Maaf, saya tidak menemukan informasi yang relevan mengenai pertanyaan Anda dalam dokumen regulasi yang tersedia.",0.0,,
+3,"klo sy nnti blajar trkait riset yg wajib ngacu k standar penelitian, mtd pembelajran apa aja yg bsa sy plih?","Metode pembelajaran yang dapat dipilih untuk pelaksanaan pembelajaran mata kuliah (termasuk proses pembelajaran yang terkait dengan penelitian mahasiswa yang wajib mengacu pada Standar Penelitian) meliputi:
+1. Diskusi kelompok
+2. Simulasi
+3. Studi kasus
+4. Pembelajaran kolaboratif
+5. Pembelajaran kooperatif
+6. Pembelajaran berbasis proyek
+7. Pembelajaran berbasis masalah
+8. Pembelajaran daring, atau
+9. Metode pembelajaran lain yang dapat secara efektif memfasilitasi pemenuhan capaian pembelajaran lulusan.
 
-Jika Anda membutuhkan informasi lebih detail mengenai kurikulum atau strategi akademik agar dapat lulus dalam waktu 3,5 tahun, silakan menghubungi bagian administrasi kampus Universitas Sam Ratulangi.",0.09375,,
-5,berapa sks untuk magang,"Beban SKS magang dibedakan berdasarkan status mahasiswa: bagi mahasiswa UNSRAT (program MBKM/Pembelajaran di Luar Program Studi), magang setara 20 SKS untuk 1 semester di prodi berbeda (di UNSRAT atau luar UNSRAT), atau maksimal 40 SKS untuk paling lama 2 semester di luar UNSRAT. Bagi mahasiswa asing dari perguruan tinggi luar negeri yang magang/kuliah paruh waktu di UNSRAT, beban minimalnya adalah 14 SKS.","Berdasarkan dokumen yang disediakan, magang merupakan salah satu bentuk pembelajaran untuk memenuhi beban belajar mahasiswa, di mana 1 (satu) satuan kredit semester (SKS) setara dengan 45 jam per semester [1]. 
+Setiap mata kuliah dapat menggunakan satu atau gabungan dari beberapa metode pembelajaran tersebut.","Mohon maaf, saya tidak menemukan informasi mengenai pilihan metode pembelajaran yang dapat Anda pilih terkait riset dalam dokumen konteks yang disediakan. 
 
-Namun, dokumen tersebut tidak menyebutkan secara spesifik berapa jumlah SKS yang dialokasikan khusus untuk kegiatan magang. 
+Untuk informasi lebih lanjut mengenai hal tersebut, silakan langsung menghubungi bagian administrasi kampus Universitas Sam Ratulangi.",0.0,,
+4,"Bagaimana cara agar bisa lulus dalam 3,5 tahun?","Untuk dapat lulus program sarjana dalam waktu 3,5 tahun (setara dengan 7 semester), mahasiswa harus memenuhi ketentuan dan tahapan akademik yang diatur sebagai berikut:
+1. Masa Tempuh Kurikulum: Program sarjana secara teoretis memang dirancang untuk dapat diselesaikan dalam Masa Tempuh Kurikulum selama 7 (tujuh) sampai 8 (delapan) semester.
+2. Pemenuhan Total Beban Belajar: Menyelesaikan seluruh beban belajar program sarjana sekurang-kurangnya 144 (seratus empat puluh empat) SKS.
+3. Pengambilan SKS Maksimal per Semester:
+ Pada semester 1 dan semester 2, mahasiswa mengambil paket mata kuliah paling banyak 20 (dua puluh) SKS.
+ Pada semester 3 dan seterusnya, mahasiswa dapat mengambil beban belajar paling banyak 24 (dua puluh empat) SKS per semester.
+4. Memenuhi Syarat Kuliah Kerja Terpadu (KKT): Mengontrak KKT pada KRS setelah menyelesaikan dan lulus sekurang-kurangnya 110 (seratus sepuluh) SKS.
+5. Penyelesaian Tugas Akhir/Skripsi: Memprogramkan dan menyelesaikan Tugas Akhir/Skripsi (bobot 6 SKS) melalui tahapan seminar proposal, seminar hasil, dan ujian akhir, atau melalui jalur rekognisi/kesetaraan Program Kreativitas Mahasiswa (PKM) yang lolos tingkat nasional.
+6. Syarat Kelulusan Sarjana: Memperoleh IPK sekurang-kurangnya 2,00 dan memiliki publikasi pada jurnal nasional yang merupakan bagian dari Tugas Akhir/Skripsi.","Mohon maaf, saya tidak menemukan informasi mengenai panduan atau cara agar mahasiswa dapat lulus dalam waktu 3,5 tahun di dalam dokumen konteks yang disediakan. Dokumen yang ada hanya menjelaskan ketentuan mengenai predikat kelulusan beserta syarat masa studi maksimumnya untuk masing-masing program studi.
 
-Jika Anda membutuhkan informasi lebih rinci mengenai jumlah SKS untuk program magang, silakan menghubungi bagian administrasi kampus atau program studi Anda di Universitas Sam Ratulangi.",0.2749999999875,,
-6,"Me looking at old UNSRAT archive record for leadership. What exactly is Dekan do, and how many maximum semester for student in Program Sarjana to finish their study?","Dekan adalah pemimpin tertinggi tingkat fakultas yang ditetapkan melalui Keputusan Rektor, bertugas memimpin penyelenggaraan pendidikan/penelitian/pengabdian, mengelola sumber daya fakultas, serta menetapkan status akademik mahasiswa (cuti, banding nilai, kelulusan/yudisium). Masa studi maksimal Program Sarjana (S1) adalah 7 tahun atau 14 semester, dengan beban minimal 144 SKS; melewati batas ini dapat berujung sanksi Drop Out.","Halo! Berdasarkan dokumen peraturan akademik UNSRAT yang disediakan, berikut adalah informasi yang dapat kami temukan:
+Untuk informasi lebih lanjut mengenai perencanaan akademik dan strategi agar dapat lulus lebih cepat, silakan menghubungi bagian administrasi kampus Universitas Sam Ratulangi.",0.15,,
+5,berapa sks untuk magang,"Beban SKS untuk kegiatan magang di Universitas Sam Ratulangi (UNSRAT) dibedakan berdasarkan status mahasiswa sebagai berikut:
+1. Bagi Mahasiswa UNSRAT (Program MBKM / Pembelajaran di Luar Program Studi)
+Kegiatan magang merupakan salah satu bentuk pemenuhan beban belajar resmi. Jumlah SKS yang dapat diakui dan dikonversikan adalah:
+Setara 20 SKS untuk pemenuhan sebagian beban belajar selama 1 (satu) semester di program studi yang berbeda di UNSRAT atau luar UNSRAT.
+Maksimal 40 SKS untuk pemenuhan beban belajar paling lama 2 (dua) semester di luar UNSRAT.
 
-1. **Peran Dekan:** Dekan adalah pemimpin fakultas di lingkungan UNSRAT yang ditetapkan dengan surat keputusan Rektor [2].
-2. **Batas Maksimal Semester untuk Program Sarjana:** Informasi mengenai jumlah maksimal semester yang diperbolehkan bagi mahasiswa Program Sarjana untuk menyelesaikan studinya tidak ditemukan di dalam dokumen konteks yang tersedia. 
-
-Karena informasi mengenai batas masa studi Program Sarjana tidak ada dalam dokumen ini, kami menyarankan Anda untuk menghubungi bagian administrasi kampus atau akademik Universitas Sam Ratulangi untuk mendapatkan informasi resmi lebih lanjut.",0.29166666665416663,,
-7,batas nilai INSPIRE,Batas akhir unggah nilai semester genap 2025/2026 ke Portal INSPIRE adalah 30 Juni 2026 pukul 23:59 WITA; nilai bersifat permanen sejak 1 Juli 2026.,"Halo! Berdasarkan Peraturan Rektor Universitas Sam Ratulangi, berikut adalah aturan dan ketentuan mengenai batas serta penginputan nilai pada Portal INSPIRE:
-
-1. **Pengunggahan Nilai:** Nilai hasil belajar mahasiswa diunggah secara online ke Portal INSPIRE oleh dosen pengampu mata kuliah masing-masing [1].
-2. **Perubahan Nilai:** Setelah nilai diunggah ke Portal INSPIRE, nilai tersebut tidak diperkenankan untuk diubah atau diperbaiki, kecuali mendapatkan persetujuan Rektor melalui permohonan Dekan/Direktur [1]. Perubahan nilai ini pun hanya dapat dilakukan pada semester yang baru saja berakhir [1].
-3. **Konsekuensi Batas Waktu Penginputan Nilai:** 
-   * Apabila dosen pengampu tidak mengunggah atau menginput nilai sampai batas waktu yang telah ditentukan, maka sistem secara otomatis akan memberikan **nilai 100** untuk setiap mahasiswa yang memenuhi syarat untuk mendapat nilai pada mata kuliah tersebut [1].
-   * Bagi dosen pengampu yang tidak menginput semua nilai (hanya menginput sebagian), maka sistem secara otomatis akan memberikan **nilai 0** bagi mahasiswa yang nilainya tidak diinput [1].
-
-Sebagai informasi tambahan, sistem informasi akademik Portal INSPIRE ini dikelola oleh UPT TIK [2]. 
-
-Jika Anda memiliki pertanyaan lebih lanjut mengenai batas waktu spesifik pada semester berjalan atau mengalami kendala, silakan menghubungi bagian administrasi akademik di kampus Anda.",0.329559396417744,,
-8,Wisuda tahun ini ada berapa kali dan sekitar bulan apa saja?,"Wisuda semester genap 2025/2026 diadakan dalam 3 periode: Periode IV pada Februari 2026 (upacara 19 Februari 2026), Periode V pada April 2026 (upacara 16 April 2026), dan Periode VI pada Juni 2026 (upacara 18 Juni 2026).","Halo! Berdasarkan Kalender Akademik Semester Genap 2025/2026 yang disediakan, terdapat **3 kali** pelaksanaan upacara wisuda yang dijadwalkan, yaitu pada bulan-bulan berikut:
+Bagi Mahasiswa Asing (Magang di UNSRAT)
+Mahasiswa asing dari perguruan tinggi luar negeri yang diakui dapat diterima untuk melakukan magang atau kuliah paruh waktu di UNSRAT dengan beban:
+Minimal 14 SKS.",Saya tidak menemukan informasi mengenai jumlah SKS spesifik untuk kegiatan magang di dalam dokumen konteks yang disediakan. Silakan menghubungi bagian administrasi kampus untuk mendapatkan informasi lebih lanjut mengenai hal tersebut.,0.3499999999875,,
+6,Wisuda tahun ini ada berapa kali dan sekitar bulan apa saja?,"Pada Tahun Akademik Semester Genap 2025/2026 (tahun 2026), pelaksanaan wisuda di UNSRAT diselenggarakan sebanyak 3 (tiga) kali (yaitu Periode IV, V, dan VI), yang dilaksanakan pada bulan-bulan berikut: 
+1. Wisuda Periode IV: Februari 2026 (Upacara Wisuda: 19 Februari 2026) 
+2. Wisuda Periode V: April 2026 (Upacara Wisuda: 16 April 2026) 
+3. Wisuda Periode VI: Juni 2026 (Upacara Wisuda: 18 Juni 2026)","Halo! Berdasarkan dokumen Kalender Akademik Universitas Sam Ratulangi (UNSRAT) Semester Genap 2025/2026 yang tersedia, terdapat **3 periode wisuda** yang dijadwalkan, yaitu pada bulan-bulan berikut:
 
 1. **Wisuda Periode IV**: Upacara wisuda dilaksanakan pada bulan **Februari** (tepatnya tanggal 19 Februari 2026) [3].
 2. **Wisuda Periode V**: Upacara wisuda dilaksanakan pada bulan **April** (tepatnya tanggal 16 April 2026) [1].
 3. **Wisuda Periode VI**: Upacara wisuda dilaksanakan pada bulan **Juni** (tepatnya tanggal 18 Juni 2026) [2].
 
-Jika Anda memerlukan informasi mengenai jadwal wisuda di luar periode yang disebutkan di atas, kami sarankan untuk menghubungi bagian administrasi kampus.",0.3788817700151248,,
-9,"In my capacity as a university archivist dedicated to preserving institutional history and maintaining accurate records, I am compiling a comprehensive overview of the operational and strategic frameworks of UNSRAT. Could you please elucidate how UNSRAT structures its vision, mission, and strategies to achieve its long-term objectives, while also detailing the specific administrative protocols students must navigate, such as the system used for student identification coding and the procedures for registering their academic courses on Portal INSPIRE?","Visi UNSRAT adalah 'Bersama menata Universitas Sam Ratulangi menjadi Universitas Unggul dan Berbudaya', diturunkan menjadi misi (dengan filosofi IMANKU), tujuan (T-1-T-4), sasaran (S-1-S-4), dan strategi (ST-1-ST-4) untuk mencapai status Excellent University. NIM mahasiswa terdiri dari 12 digit: digit 1-2 tahun masuk, digit 3-4 kode fakultas, digit 5 jenjang pendidikan, digit 6 status masuk, digit 7-8 kode program studi, digit 9-12 nomor urut. Untuk registrasi KRS di Portal INSPIRE: mahasiswa melunasi UKT (status menjadi Aktif), berkonsultasi dengan PA, mengisi KRS online, lalu KRS disetujui dosen PA; perubahan/pembatalan KRS (KPRS) diperbolehkan paling lambat 2 minggu sejak awal perkuliahan, dengan persetujuan berjenjang PA, Korprodi, hingga Dekan.","Halo! Senang bisa membantu Anda dalam menyusun arsip dan dokumentasi mengenai kerangka strategis serta operasional Universitas Sam Ratulangi (UNSRAT). 
+Jika Anda memerlukan informasi mengenai jadwal wisuda di luar periode semester genap ini, silakan menghubungi bagian administrasi kampus.",0.37214685727643515,,
+7,Sejak kapan sih kampus ini resmi jadi PTN (universitas negeri)?,"Universitas Sam Ratulangi resmi berstatus sebagai Universitas Negeri sejak tanggal 4 Juli 1961 berdasarkan Keputusan Menteri Perguruan Tinggi dan Ilmu Pengetahuan (PTIP) Nomor 22/1961. 
+Saat resmi menjadi PTN pada tahun 1961 tersebut, kampus ini awalnya bernama UNISUT (Universitas Sulawesi Utara dan Tengah) dan membina 5 fakultas. Nama Universitas Sam Ratulangi (UNSRAT) sendiri kemudian disahkan empat tahun setelahnya melalui Surat Keputusan Presiden RI Nomor 277 tanggal 14 September 1965.",Universitas Sam Ratulangi (yang saat itu masih bernama UNISUT) resmi berstatus sebagai Universitas Negeri sejak tanggal **4 Juli 1961** berdasarkan Keputusan Menteri PTIP Nomor 22/1961 [1].,0.43025832237579065,,
+8,Nilai rata-rata berapa yang dibutuhin biar bisa lulus dengan predikat terbaik di S1?,"Untuk lulus dengan predikat terbaik (Dengan Pujian / Cum Laude) pada Program Sarjana (S1), mahasiswa harus meraih Indeks Prestasi Kumulatif (IPK) sebesar 3,76 – 4,00. 
+Secara keseluruhan, predikat Cum Laude S1 mewajibkan seluruh syarat akumulatif berikut: 
+1. IPK: 3,76 – 4,00 
+2. Nilai Tugas Akhir / Skripsi: Wajib mendapat nilai A (nilai rata-rata evaluasi minimal 80,00) 
+3. Masa Studi: Maksimum 8 semester 
+4. Ketentuan Nilai Rendah: Tidak boleh memiliki nilai C maupun C+ 
+5. Riwayat Akademik: Tidak pernah mengulang mata kuliah dan tidak pernah mendapat sanksi akademik","Halo! Berdasarkan Peraturan Rektor Universitas Sam Ratulangi, untuk bisa lulus dengan predikat terbaik, yaitu **Dengan Pujian (Cum Laude)** pada Program Sarjana (S1), Anda membutuhkan nilai rata-rata (IPK) sebesar **3,76 – 4,00** [2].
 
-Berikut adalah penjelasan mengenai struktur visi, misi, dan strategi UNSRAT, serta informasi terkait protokol administrasi mahasiswa berdasarkan dokumen resmi yang tersedia:
+Selain nilai IPK tersebut, terdapat beberapa syarat tambahan yang harus dipenuhi untuk mendapatkan predikat Cum Laude ini, yaitu:
+* Masa studi maksimum 8 semester [2].
+* Nilai Tugas Akhir mendapatkan nilai A [2].
+* Tidak memiliki nilai C dan C+ [2].
+* Tidak pernah mendapatkan sanksi akademik [2].
+* Tidak pernah mengulang mata kuliah [2].",0.4363777091683142,,
+9,"In my capacity as a university archivist dedicated to preserving institutional history and maintaining accurate records, I am compiling a comprehensive overview of the operational and strategic frameworks of UNSRAT. Could you please elucidate how UNSRAT structures its vision, mission, and strategies to achieve its long-term objectives, while also detailing the specific administrative protocols students must navigate, such as the system used for student identification coding and the procedures for registering their academic courses on Portal INSPIRE?","Visi UNSRAT adalah 'Bersama menata Universitas Sam Ratulangi menjadi Universitas Unggul dan Berbudaya', diturunkan menjadi misi (dengan filosofi IMANKU), tujuan (T-1-T-4), sasaran (S-1-S-4), dan strategi (ST-1-ST-4) untuk mencapai status Excellent University. NIM mahasiswa terdiri dari 12 digit: digit 1-2 tahun masuk, digit 3-4 kode fakultas, digit 5 jenjang pendidikan, digit 6 status masuk, digit 7-8 kode program studi, digit 9-12 nomor urut. Untuk registrasi KRS di Portal INSPIRE: mahasiswa melunasi UKT (status menjadi Aktif), berkonsultasi dengan PA, mengisi KRS online, lalu KRS disetujui dosen PA; perubahan/pembatalan KRS (KPRS) diperbolehkan paling lambat 2 minggu sejak awal perkuliahan, dengan persetujuan berjenjang PA, Korprodi, hingga Dekan.","Halo! Sebagai asisten informasi akademik resmi Universitas Sam Ratulangi (UNSRAT), saya akan membantu menjelaskan hal-hal yang Anda tanyakan berdasarkan dokumen resmi yang tersedia.
 
-### 1. Struktur Visi, Misi, Tujuan, Sasaran, dan Strategi UNSRAT",0.4057362129882523,,
-10,Sejak kapan sih kampus ini resmi jadi PTN (universitas negeri)?,"Universitas Sam Ratulangi resmi berstatus Universitas Negeri sejak 4 Juli 1961 berdasarkan Keputusan Menteri PTIP Nomor 22/1961, saat masih bernama UNISUT (Universitas Sulawesi Utara dan Tengah) dengan 5 fakultas. Nama Universitas Sam Ratulangi (UNSRAT) baru disahkan empat tahun kemudian melalui SK Presiden RI Nomor 277 tanggal 14 September 1965.",Halo! Universitas Sam Ratulangi (yang saat itu masih bernama UNISUT) resmi berstatus sebagai Universitas Negeri sejak tanggal **4 Juli 1961** berdasarkan Keputusan Menteri PTIP Nomor 22/1961 [1].,0.43025832237579065,,
+### 1. Struktur Visi, Misi, dan Strategi UNSRAT
+UNSRAT menyusun visi, misi, tujuan, sasaran, dan strateginya secara saling terkait untuk mewujudkan tujuan jangka panjang, yaitu Visi UNSRAT sebagai *Excellent University* [3]. Hubungan struktur tersebut dijabarkan sebagai berikut:
+*   **Visi** UNSRAT menjadi referensi utama dalam penyus",0.45071626653917624,,
+10,"Me looking at old UNSRAT archive record for leadership. What exactly is Dekan do, and how many maximum semester for student in Program Sarjana to finish their study?","1. Peran dan Tugas Dekan
+Dalam struktur kepemimpinan dan tata kelola di UNSRAT, Dekan adalah pimpinan tertinggi pada tingkat Fakultas.
+
+Tugas Utama Dekan:
+
+Memimpin Penyelenggaraan Fakultas: Memimpin dan mengelola penyelenggaraan pendidikan, penelitian, dan pengabdian kepada masyarakat di tingkat fakultas.
+
+Pengelolaan Kebijakan & Sumber Daya: Mengelola sumber daya manusia, keuangan, sarana prasarana, serta administrasi akademik di lingkup fakultas.
+
+Wewenang Akademik Mahasiswa:
+
+Menetapkan dan mengusulkan penetapan status akademik mahasiswa (seperti rekomendasi cuti akademik, permohonan banding/perubahan nilai, dan syarat kelulusan/yudisium).
+
+Membentuk tim khusus untuk penanganan masalah akademik tertentu (misalnya peninjauan kasus nilai atau pelanggaran disiplin mahasiswa).
+
+2. Batas Maksimal Masa Studi Program Sarjana (S1)
+Berdasarkan Peraturan Akademik UNSRAT (Peraturan Rektor No. 01 Tahun 2025):
+
+Batas Maksimal Masa Studi: Masa studi untuk program sarjana (S1) diatur paling lama 7 (tujuh) tahun akademik atau 14 (empat belas) semester.
+
+Beban Kredit: Mahasiswa wajib menyelesaikan beban belajar sekurang-kurangnya 144 (seratus empat puluh empat) SKS dalam kurun waktu tersebut.
+
+Ketentuan Cuti Akademik: Masa cuti akademik resmi yang diambil mahasiswa (maksimal 2 semester selama studi) TIDAK diperhitungkan dalam batas maksimal 14 semester ini.
+
+Konsekuensi: Apabila mahasiswa tidak dapat menyelesaikan studinya dalam batas waktu maksimal 14 semester efektif, maka mahasiswa yang bersangkutan dapat dikenakan sanksi pemutusan hubungan studi (drop out / DO).","Halo! Berdasarkan dokumen peraturan akademik UNSRAT yang Anda sediakan, berikut adalah penjelasan mengenai tugas Dekan:
+
+* **Dekan** adalah pemimpin fakultas di lingkungan UNSRAT yang ditetapkan dengan surat keputusan Rektor [2]. 
+* Dekan juga memiliki wewenang untuk menyampaikan peringatan tertulis tentang batas akhir masa studi bagi mahasiswa yang belum menyelesaikan studinya pada semester 2 untuk program profesi, serta pada semester 5, 7, dan 9 untuk program profesi dokter [3].
+
+Sementara itu, untuk pertanyaan mengenai **batas maksimum semester bagi mahasiswa Program Sarjana** untuk menyelesaikan studinya, informasi tersebut **tidak ditemukan** di dalam dokumen konteks yang disediakan. 
+
+Untuk mendapatkan informasi lengkap mengenai batas masa studi Program Sarjana, kami menyarankan Anda untuk menghubungi bagian administrasi kampus atau akademik Universitas Sam Ratulangi.",0.4916127607582208,,
