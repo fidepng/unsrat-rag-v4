@@ -69,3 +69,6 @@ docs/superpowers/
 # Evaluation Archives
 eval/dataset/archive/*.csv
 eval/results/archive/*.csv
+
+# Thesis specific docs
+prd_srs.md
