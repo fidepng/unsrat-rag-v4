@@ -65,3 +65,7 @@ node_modules/
 # Superpowers
 .superpowers/
 docs/superpowers/
+
+# Evaluation Archives
+eval/dataset/archive/*.csv
+eval/results/archive/*.csv

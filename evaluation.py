@@ -283,6 +283,19 @@ def run_evaluation(
                 "source_doc":           row.get("source_doc", ""),
             })
 
+        # ── FR-CHECKPOINT: simpan hasil generasi SEBELUM Ragas evaluate() ──────
+        # Rationale: fase generasi (get_response per query) mahal & rate-limited.
+        # Jika ragas.evaluate() gagal (rate limit, parsing error, dsb.), hasil
+        # generasi yang sudah didapat tidak boleh hilang begitu saja.
+        checkpoint_path = EVAL_RESULTS_DIR / f"_checkpoint_config_{config}_{run_id}.csv"
+        try:
+            pd.DataFrame(results).to_csv(checkpoint_path, index=False, encoding="utf-8-sig")
+            logger.info(f"Checkpoint hasil generasi disimpan: {checkpoint_path}")
+        except Exception as e:
+            # Kegagalan checkpoint tidak boleh menghentikan pipeline evaluasi,
+            # tapi wajib dicatat sebagai warning karena mengurangi ketahanan run.
+            logger.warning(f"Gagal menyimpan checkpoint hasil generasi: {e}")
+
         # Ragas evaluation
         logger.info("Menjalankan Ragas evaluate()...")
 
@@ -384,6 +397,32 @@ def run_evaluation(
             logger.error("Pastikan Ragas v0.4 terpasang. Error detail di atas.")
             raise
 
+        # ── FR-NAN-AUDIT: laporkan evaluator failure rate per metrik ────────
+        # Rationale: pd.DataFrame.mean() default skipna=True menyembunyikan
+        # kegagalan parsing/judge Ragas secara diam-diam. Log eksplisit di sini
+        # supaya jumlah NaN per metrik tercatat di log DAN manifest, bukan
+        # cuma hilang dari rata-rata akhir.
+        n_total = len(ragas_df)
+        nan_summary = {}
+        ragas_metric_cols = [c for c in METRICS_COLS if c in ragas_df.columns]
+        if extra_metrics:
+            ragas_metric_cols += [m for m in extra_metrics if m in ragas_df.columns]
+
+        logger.info(f"{'='*60}\nEVALUATOR FAILURE RATE (NaN per metrik) — Config {config.upper()}\n{'='*60}")
+        for m_col in ragas_metric_cols:
+            n_nan = int(ragas_df[m_col].isna().sum())
+            pct_nan = (n_nan / n_total * 100) if n_total else 0.0
+            nan_summary[m_col] = {"n_nan": n_nan, "pct_nan": round(pct_nan, 2)}
+            level = logger.warning if pct_nan > 0 else logger.info
+            level(f"  {m_col:25s}: {n_nan}/{n_total} NaN ({pct_nan:.2f}%)")
+
+        if any(v["n_nan"] > 0 for v in nan_summary.values()):
+            logger.warning(
+                "Sebagian skor Ragas gagal dihitung (NaN). Baris ini TETAP masuk "
+                "hasil_config CSV, tapi diabaikan (skipna) saat menghitung mean "
+                "agregat — lihat kolom individual di CSV untuk audit manual."
+            )
+
         # Gabungkan hasil Ragas dengan metadata
         for i, row in ragas_df.iterrows():
             results[i]["faithfulness"]       = row.get("faithfulness",       None)
@@ -410,6 +449,11 @@ def run_evaluation(
             writer.writerows(results)
 
         logger.info(f"Hasil disimpan: {output_path}")
+
+        # Checkpoint sudah tidak diperlukan setelah hasil final tersimpan
+        if checkpoint_path.exists():
+            checkpoint_path.unlink()
+            logger.debug(f"Checkpoint dibersihkan: {checkpoint_path}")
 
         # Agregasi
         df_result = pd.DataFrame(results)
@@ -444,6 +488,7 @@ def run_evaluation(
                 r["success_count"] = success_cnt
                 r["error_count"] = err_cnt
                 r["metrics"] = mean_metrics_dict
+                r["nan_summary"] = nan_summary
                 r["archive_file"] = archive_csv_path.relative_to(ROOT_DIR).as_posix()
                 r["is_active"] = True
             elif r.get("config") == config:
@@ -453,6 +498,10 @@ def run_evaluation(
 
     except BaseException as e:
         logger.error(f"Evaluasi run {run_id} gagal dengan error: {e}")
+        logger.error(
+            f"Hasil generasi (jika sempat di-checkpoint) tersedia di: "
+            f"{EVAL_RESULTS_DIR / f'_checkpoint_config_{config}_{run_id}.csv'}"
+        )
         manifest = _load_manifest()
         for r in manifest["runs"]:
             if r["run_id"] == run_id:
@@ -565,7 +614,7 @@ def run_visualization() -> None:
     BUKAN dikonsumsi UI — UI render dari /api/evaluation. (D-A9, FR-17)
     """
     # Config A is archived. Exclusively plotting Config B vs C.
-    configs = {"b": "Config B (2000)", "c": "Config C (BM25)"}
+    configs = {"b": "Config B", "c": "Config C"}
     metrics = METRICS_COLS
 
     data = {}
@@ -581,7 +630,7 @@ def run_visualization() -> None:
     fig, ax = plt.subplots(figsize=(12, 6))
     x      = range(len(metrics))
     width  = 0.35
-    colors = ["#c9a227", "#4a4a4a"]
+    colors = ["#B63D3D", "#C2C8D3"]
 
     for i, (label, scores) in enumerate(data.items()):
         offset = (i - len(data) / 2) * width + width / 2
@@ -593,7 +642,7 @@ def run_visualization() -> None:
 
     ax.set_xlabel("Metrik Evaluasi")
     ax.set_ylabel("Skor")
-    ax.set_title("Perbandingan Kinerja Config B vs C — UNSRAT RAG")
+    ax.set_title("Perbandingan Config B vs C")
     ax.set_xticks(list(x))
     ax.set_xticklabels(metrics, rotation=15)
     ax.set_ylim(0, 1.1)
