@@ -7,8 +7,8 @@ const RagChatWidget = {
     chatHistory: [],
     isStreaming: false,
     abortController: null,
-    currentConfig: 'rag_gemini_default',
-    currentModel: 'gemini-2.5-flash'
+    currentConfig: 'b',
+    currentModel: 'gemini-3.5-flash'
   },
 
   elements: {},
@@ -150,9 +150,10 @@ const RagChatWidget = {
         headers: { 'Content-Type': 'application/json' },
         signal: this.state.abortController.signal,
         body: JSON.stringify({
-          message: query,
+          query: query,
           config: this.state.currentConfig,
-          history: this.state.chatHistory
+          model: this.state.currentModel,
+          chat_history: this.state.chatHistory
         })
       });
 

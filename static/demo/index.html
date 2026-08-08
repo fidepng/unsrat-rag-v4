@@ -394,6 +394,10 @@ header .multi-column &gt; .dropdown-menu li {
 <link rel='stylesheet' id='rs-plugin-settings-css' href='//www.unsrat.ac.id/wp-content/plugins/revslider/sr6/assets/css/rs6.css?ver=6.7.34' media='all' />
 <style id="rs-plugin-settings-inline-css">
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,800,300,700,600);.tp-caption.medium_bg_red a{color:#253b80;  text-decoration:none}.tp-caption.medium_bg_red a:hover{color:#555555;  text-decoration:underline}.tp-caption.roundedimage img{-webkit-border-radius:300px;  -moz-border-radius:300px;  border-radius:300px}.tp-bullets.simplebullets.navbar{height:35px;  padding:0px 0px}.tp-bullets.simplebullets .bullet{cursor:pointer;  position:relative !important;  background:rgba(0,0,0,0.5) !important;  -webkit-border-radius:10px;  border-radius:10px;  -webkit-box-shadow:none;  -moz-box-shadow:none;  box-shadow:none;  width:6px !important;  height:6px !important;  border:5px solid rgba(0,0,0,0) !important;  display:inline-block;  margin-right:2px !important;  margin-bottom:14px !important;  -webkit-transition:background-color 0.2s,border-color 0.2s;  -moz-transition:background-color 0.2s,border-color 0.2s;  -o-transition:background-color 0.2s,border-color 0.2s;  -ms-transition:background-color 0.2s,border-color 0.2s;  transition:background-color 0.2s,border-color 0.2s;  float:none !important}.tp-bullets.simplebullets .bullet.last{margin-right:0px}.tp-bullets.simplebullets .bullet:hover,.tp-bullets.simplebullets .bullet.selected{-webkit-box-shadow:none;  -moz-box-shadow:none;  box-shadow:none;background:rgba(255,255,255,1) !important;width:6px !important;  height:6px !important;  border:5px solid rgba(0,0,0,1) !important}.tparrows:before{font-family:'revicons';color:#fff;  font-style:normal;  font-weight:normal;  speak:none;  display:inline-block;  text-decoration:inherit;  margin-right:0;  margin-top:0px; margin-left:-2px;  text-align:center;  width:40px;  font-size:20px}.tparrows{cursor:pointer;  background:rgba(0,0,0,0.5) !important;  -webkit-border-radius:5px;  border-radius:5px;  width:40px !important;  height:40px !important}.tparrows:hover{color:#fff}.tp-leftarrow:before{content:'\e824'}.tp-rightarrow:before{content:'\e825'}.tparrows.tp-rightarrow:before{margin-left:1px}.tparrows:hover{background:rgba(0,0,0,1) !important}
+/*# sourceURL=rs-plugin-settings-inline-css */
+</style>
+
+
 <!-- Tailwind CDN dengan Preflight NONAKTIF untuk mencegah kontaminasi CSS WordPress -->
 <script>
   tailwind.config = {
@@ -420,6 +424,7 @@ header .multi-column &gt; .dropdown-menu li {
 
 <!-- Scoped Custom CSS -->
 <link rel="stylesheet" href="/static/demo/css/demo-modal.css">
+
 </head>
 
 <body class="home wp-singular page-template page-template-page-templates page-template-front-page page-template-page-templatesfront-page-php page page-id-891 wp-theme-university full-width template-front-page has-post-thumbnail custom-background-empty wpb-js-composer js-comp-ver-7.8 vc_responsive">
@@ -1678,6 +1683,9 @@ window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {}
 			
 		}} // End of RevInitScript
 
+		if (window.RS_MODULES.checkMinimal!==undefined) { window.RS_MODULES.checkMinimal();};
+	</script>
+
 <!-- RAG Chatbot Widget Container -->
 <div id="rag-chatbot-widget" class="relative z-[999999]">
   <!-- Floating Trigger Button -->
@@ -1710,7 +1718,7 @@ window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {}
       
       <div class="flex items-center space-x-2">
         <!-- Settings Toggle (Gear Icon) -->
-        <button id="rag-settings-btn" title="Pengaturan Model & Config" class="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+        <button id="rag-settings-btn" title="Pengaturan Model &amp; Config" class="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors">
           <i data-lucide="settings" class="w-5 h-5"></i>
         </button>
         <!-- Close Button -->
@@ -1725,8 +1733,8 @@ window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {}
       <div class="flex items-center justify-between gap-2">
         <label for="rag-config-select" class="font-semibold text-stone-700">Profil Config:</label>
         <select id="rag-config-select" class="bg-white border border-stone-300 rounded px-2 py-1 text-xs focus:ring-1 focus:ring-[#7B2D2D]">
-          <option value="rag_gemini_default">RAG Gemini (Default)</option>
-          <option value="rag_gemini_precise">RAG Gemini (Precise)</option>
+          <option value="b">Config B (Default)</option>
+          <option value="c">Config C (Precise)</option>
         </select>
       </div>
       <div class="flex items-center justify-between gap-2">
@@ -1746,7 +1754,7 @@ window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {}
         </div>
         <div class="bg-white border border-stone-200 rounded-2xl rounded-tl-none p-3.5 shadow-xs max-w-[85%] text-stone-800 text-sm">
           <p class="font-semibold mb-1">Selamat datang!</p>
-          <p class="text-xs text-stone-600 relaxed">Saya asisten AI Akademik Universitas Sam Ratulangi. Silakan tanyakan informasi terkait UKT, KRS, wisuda, atau fasilitas kampus.</p>
+          <p class="text-xs text-stone-600 leading-relaxed">Saya asisten AI Akademik Universitas Sam Ratulangi. Silakan tanyakan informasi terkait UKT, KRS, wisuda, atau fasilitas kampus.</p>
         </div>
       </div>
     </div>
@@ -1769,5 +1777,6 @@ window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {}
 
 <!-- Chat Logic Script -->
 <script src="/static/demo/js/chat-widget.js"></script>
+
 </body>
 </html>
