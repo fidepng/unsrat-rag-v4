@@ -1,6 +1,6 @@
 /**
  * UNSRAT RAG Chatbot Widget Module
- * Encapsulated Namespace to avoid global scope pollution.
+ * Encapsulated Namespace - Minimal & Defensif.
  */
 const RagChatWidget = {
   state: {
@@ -82,22 +82,13 @@ const RagChatWidget = {
     if (show) {
       modal.classList.remove('hidden');
       if (overlay) overlay.classList.remove('hidden');
-      setTimeout(() => {
-        modal.classList.add('active');
-        if (overlay) overlay.classList.add('active');
-      }, 10);
       document.body.classList.add('overflow-hidden');
       if (userInput) userInput.focus();
     } else {
-      modal.classList.remove('active');
-      if (overlay) overlay.classList.remove('active');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-        if (overlay) overlay.classList.add('hidden');
-      }, 300);
+      modal.classList.add('hidden');
+      if (overlay) overlay.classList.add('hidden');
       document.body.classList.remove('overflow-hidden');
       
-      // Abort ongoing stream on modal close
       if (this.state.isStreaming && this.state.abortController) {
         this.state.abortController.abort();
       }
@@ -144,6 +135,8 @@ const RagChatWidget = {
     const botBubbleObj = this.renderBotBubblePlaceholder();
     this.scrollToBottom();
 
+    let isFirstToken = true;
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -179,16 +172,23 @@ const RagChatWidget = {
             try {
               const parsed = JSON.parse(dataStr);
               if (parsed.type === 'token') {
+                if (isFirstToken) {
+                  isFirstToken = false;
+                  botBubbleObj.contentElem.innerHTML = '';
+                }
                 fullAnswer += parsed.content;
-                botBubbleObj.contentElem.innerHTML = marked.parse(fullAnswer);
+                botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
                 this.scrollToBottom();
               } else if (parsed.type === 'citation') {
                 citations = parsed.citations || [];
               }
             } catch (e) {
-              // Plain string token fallback
+              if (isFirstToken) {
+                isFirstToken = false;
+                botBubbleObj.contentElem.innerHTML = '';
+              }
               fullAnswer += dataStr;
-              botBubbleObj.contentElem.innerHTML = marked.parse(fullAnswer);
+              botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
               this.scrollToBottom();
             }
           }
@@ -204,7 +204,7 @@ const RagChatWidget = {
 
     } catch (error) {
       if (error.name !== 'AbortError') {
-        botBubbleObj.contentElem.innerHTML = `<span class="text-red-600">Error: ${error.message}</span>`;
+        botBubbleObj.contentElem.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
       }
     } finally {
       this.state.isStreaming = false;
@@ -217,44 +217,41 @@ const RagChatWidget = {
     if (!chatMessages) return;
 
     const div = document.createElement('div');
-    div.className = 'flex items-start justify-end space-x-3';
-    div.innerHTML = `
-      <div class="bg-[#7B2D2D] text-white rounded-2xl rounded-tr-none p-3.5 shadow-xs max-w-[85%] text-sm">
-        <p class="leading-relaxed">${this.escapeHtml(text)}</p>
-      </div>
-    `;
+    div.className = 'rag-msg rag-user-msg';
+    div.innerHTML = `<p style="margin: 0;">${this.escapeHtml(text)}</p>`;
     chatMessages.appendChild(div);
   },
 
   renderBotBubblePlaceholder() {
     const { chatMessages } = this.elements;
     const div = document.createElement('div');
-    div.className = 'flex items-start space-x-3';
+    div.className = 'rag-msg rag-bot-msg';
     div.innerHTML = `
-      <div class="w-8 h-8 rounded-full bg-[#7B2D2D] text-white flex items-center justify-center shrink-0">
-        <i data-lucide="bot" class="w-4 h-4"></i>
-      </div>
-      <div class="bg-white border border-stone-200 rounded-2xl rounded-tl-none p-3.5 shadow-xs max-w-[85%] text-stone-800 text-sm rag-prose">
-        <div class="bot-content text-stone-600 animate-pulse">Mengetik...</div>
+      <div class="rag-msg-content" style="color: #78716c;">
+        <span>Mengetik...</span>
       </div>
     `;
     chatMessages.appendChild(div);
     return {
       bubbleElem: div,
-      contentElem: div.querySelector('.bot-content')
+      contentElem: div.querySelector('.rag-msg-content')
     };
   },
 
   renderCitations(containerElem, citations) {
     const citDiv = document.createElement('div');
-    citDiv.className = 'mt-2 pt-2 border-t border-stone-200 text-xs text-stone-500 space-y-1';
+    citDiv.style.marginTop = '8px';
+    citDiv.style.paddingTop = '8px';
+    citDiv.style.borderTop = '1px solid #e7e5e4';
+    citDiv.style.fontSize = '11px';
+    citDiv.style.color = '#78716c';
     citDiv.innerHTML = `
-      <div class="font-semibold text-stone-700">Sumber Referensi:</div>
-      <ul class="list-disc pl-4 space-y-0.5">
+      <strong style="color: #44403c;">Sumber Referensi:</strong>
+      <ul style="padding-left: 16px; margin-top: 4px; margin-bottom: 0;">
         ${citations.map(c => `<li>${this.escapeHtml(c.title || c.source)}</li>`).join('')}
       </ul>
     `;
-    containerElem.querySelector('.rag-prose').appendChild(citDiv);
+    containerElem.querySelector('.rag-msg-content').appendChild(citDiv);
   },
 
   scrollToBottom() {
@@ -265,7 +262,7 @@ const RagChatWidget = {
   },
 
   escapeHtml(str) {
-    return str.replace(/[&<>"']/g, match => ({
+    return String(str || '').replace(/[&<>"']/g, match => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     })[match]);
   }
