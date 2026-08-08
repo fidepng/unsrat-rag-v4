@@ -1,52 +1,243 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evaluasi RAGAS | Chatbot UNSRAT</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi RAGAS | Chatbot UNSRAT</title>
+    <meta name="description" content="Dashboard Evaluasi RAGAS Standalone - Chatbot UNSRAT">
+    <!-- Google Fonts Inter & Crimson Pro -->
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #D1C9BE;
+            border-radius: 999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #A82040;
+        }
+    </style>
 </head>
-<body class="bg-stone-100 min-h-screen text-stone-800">
-  <!-- Standalone Top Bar -->
-  <header class="bg-[#7B2D2D] text-white shadow-md py-4 px-6 flex items-center justify-between">
-    <div class="flex items-center space-x-3">
-      <h1 class="text-xl font-bold">Evaluasi Kinerja RAGAS - Chatbot UNSRAT</h1>
-    </div>
-    <a href="/" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg border border-white/20 transition-colors">
-      Kembali ke Demo Utama
-    </a>
-  </header>
+<body class="min-h-screen bg-[#FAF9F6] font-sans antialiased text-gray-800 flex flex-col">
 
-  <!-- Main Content -->
-  <main class="max-w-6xl mx-auto p-6 space-y-6">
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-200 flex justify-between items-center">
-      <div>
-        <h2 class="text-lg font-semibold">Hasil Evaluasi Metrik RAGAS</h2>
-        <p class="text-sm text-stone-500">Evaluasi otomatis kuantitatif pipeline RAG menggunakan framework RAGAS.</p>
-      </div>
-      <button id="refresh-eval-btn" class="bg-[#7B2D2D] hover:bg-[#5A1F1F] text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2">
-        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Muat Ulang Data
-      </button>
-    </div>
-
-    <!-- Chart & Table Container -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
-        <h3 class="font-semibold mb-4">Grafik Skor RAGAS</h3>
-        <canvas id="ragasChart"></canvas>
-      </div>
-      
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 space-y-4">
-        <h3 class="font-semibold">Ringkasan Metrik</h3>
-        <div id="eval-metrics-summary" class="text-sm text-stone-600 leading-relaxed">
-          Memuat data evaluasi...
+    <!-- Standalone Top Header Bar (Maroon Klasik UNSRAT) -->
+    <header class="bg-gradient-to-r from-[#4A1515] via-[#5B1A1A] to-[#7B2D2D] text-white py-3.5 px-6 shadow-md flex items-center justify-between z-10 flex-shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="bg-white/10 p-2 rounded-xl border border-white/15 flex items-center justify-center w-9 h-9">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-amber-300"></i>
+            </div>
+            <div>
+                <h1 class="font-serif font-bold text-lg leading-tight tracking-wide uppercase">UNSRAT - Evaluasi RAGAS</h1>
+                <p class="text-white/60 text-[10px] uppercase font-bold tracking-widest">Dashboard Komparasi Performa Sistem</p>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
+        <a href="/" class="flex items-center space-x-2 text-xs bg-white/10 hover:bg-white/20 px-3.5 py-2 rounded-xl border border-white/20 transition-all cursor-pointer font-medium text-white shadow-xs">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span>Kembali ke Demo Utama</span>
+        </a>
+    </header>
 
-  <script src="/static/demo/js/eval-standalone.js"></script>
+    <!-- Main Content Container (Copy Identik tab-eval /testing tanpa Sidebar) -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-6 space-y-6 custom-scrollbar pb-10">
+        
+        <!-- Header Evaluasi Section -->
+        <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+            <div>
+                <h2 class="font-serif font-bold text-2xl text-gray-800 tracking-tight flex items-center space-x-2">
+                    <i data-lucide="line-chart" class="w-5 h-5 text-[#7B2D2D]"></i>
+                    <span>Evaluasi RAGAS</span>
+                </h2>
+            </div>
+            <button id="refresh-eval-btn" class="flex items-center space-x-2 px-3.5 py-2 border border-[#E4DFD9] bg-white hover:bg-[#7B2D2D]/5 hover:border-[#7B2D2D]/20 text-[#7B2D2D] rounded-xl text-xs font-semibold transition duration-150 shadow-sm cursor-pointer active:scale-98">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            </button>
+        </div>
+
+        <!-- CONSISTENCY WARNING BANNER -->
+        <div id="consistency-warning-banner" class="hidden"></div>
+
+        <!-- PANEL METADATA EVALUASI (Section 5.A) -->
+        <div class="bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="space-y-1.5">
+                <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
+                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                    <span>Status Evaluasi Terbaru</span>
+                </div>
+                <div class="flex flex-col space-y-1 text-[10px]">
+                    <div class="flex items-center space-x-1.5">
+                        <span id="dot-run-b" class="w-2 h-2 rounded-full bg-gray-300"></span>
+                        <span class="text-gray-500 font-medium">B (Dense):</span>
+                        <span class="font-bold text-gray-700" id="meta-last-run-b">-</span>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span id="dot-run-c" class="w-2 h-2 rounded-full bg-gray-300"></span>
+                        <span class="text-gray-500 font-medium">C (Sparse):</span>
+                        <span class="font-bold text-gray-700" id="meta-last-run-c">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-1 border-l border-gray-100 pl-3">
+                <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
+                    <i data-lucide="database" class="w-3 h-3"></i>
+                    <span>Dataset Ground-Truth</span>
+                </div>
+                <div class="text-xs font-bold text-gray-800" id="meta-dataset-size">-</div>
+            </div>
+            <div class="space-y-1 border-l border-gray-100 pl-3">
+                <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
+                    <i data-lucide="cpu" class="w-3 h-3"></i>
+                    <span>Model Generator</span>
+                </div>
+                <div class="text-xs font-bold text-gray-800 truncate" id="meta-generator-model">-</div>
+            </div>
+            <div class="space-y-1 border-l border-gray-100 pl-3">
+                <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
+                    <i data-lucide="award" class="w-3 h-3"></i>
+                    <span>Model Evaluator</span>
+                </div>
+                <div class="text-xs font-bold text-gray-800 truncate" id="meta-evaluator-model">-</div>
+            </div>
+            <div class="space-y-1 border-l border-gray-100 pl-3">
+                <div class="text-[9px] font-bold text-gray-400 uppercase tracking-wider flex items-center space-x-1">
+                    <i data-lucide="fingerprint" class="w-3 h-3"></i>
+                    <span>Model Embedding</span>
+                </div>
+                <div class="text-xs font-bold text-gray-800 truncate" id="meta-embedding-model">-</div>
+            </div>
+        </div>
+
+        <!-- Grid Dashboard Utama -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Card Grafik Metrik Ragas -->
+            <div class="lg:col-span-2 bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm space-y-4 flex flex-col">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-xs md:text-sm text-gray-800 flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#7B2D2D]"></span>
+                        <span>Grafik Hasil Evaluasi RAGAS</span>
+                    </h3>
+                </div>
+                <div class="relative h-80 flex-1 flex items-center justify-center">
+                    <canvas id="metricsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Card Ringkasan Statistik Perbandingan (Config B vs C) -->
+            <div class="lg:col-span-1 bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-xs md:text-sm text-gray-800 flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#7B2D2D]"></span>
+                            <span>Ringkasan Metrik</span>
+                        </h3>
+                        <span class="text-[9px] bg-[#7B2D2D]/10 text-[#7B2D2D] px-2 py-0.5 rounded-full font-bold border border-[#7B2D2D]/15">Mean</span>
+                    </div>
+                    
+                    <div class="overflow-x-auto border border-gray-100 rounded-xl">
+                        <table class="w-full text-xs text-left text-gray-600" id="table-comparison">
+                            <thead class="bg-[#FAF9F6] text-gray-800 font-bold uppercase text-[9px] border-b border-gray-100">
+                                <tr>
+                                    <th class="px-3 py-2.5">Metrik</th>
+                                    <th class="px-3 py-2.5 text-center">Config B (Dense)</th>
+                                    <th class="px-3 py-2.5 text-center">Config C (Sparse)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comparison-table-body" class="divide-y divide-gray-100">
+                                <tr><td colspan="3" class="px-3 py-4 text-center text-gray-400">Loading data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Hasil Uji Statistik Wilcoxon -->
+            <div class="hidden bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-xs md:text-sm text-gray-800 flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-[#7B2D2D]"></span>
+                            <span>Signifikansi Statistik Wilcoxon (Config A vs B)</span>
+                        </h3>
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-[9px] bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-bold border border-green-100">Alpha = 0.05</span>
+                            <button id="btn-copy-wilcoxon" class="p-1.5 text-gray-400 hover:text-[#7B2D2D] hover:bg-gray-50 border border-gray-100 hover:border-gray-200 rounded-lg transition cursor-pointer" title="Salin data ke Excel/Word">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto border border-gray-100 rounded-xl">
+                        <table class="w-full text-xs text-left text-gray-600" id="table-wilcoxon">
+                            <thead class="bg-[#FAF9F6] text-gray-800 font-bold uppercase text-[9px] border-b border-gray-100">
+                                <tr>
+                                    <th class="px-4 py-3">Metrik Evaluasi</th>
+                                    <th class="px-4 py-3">P-Value</th>
+                                    <th class="px-4 py-3">Hasil Signifikansi</th>
+                                    <th class="px-4 py-3 text-right">Model Unggul</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wilcoxon-table-body" class="divide-y divide-gray-100">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Audit Log Kuantitatif -->
+        <div class="bg-white border border-[#EBE7E1] rounded-2xl p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="terminal" class="w-4 h-4 text-[#7B2D2D]"></i>
+                    <h3 class="font-bold text-xs md:text-sm text-gray-800">Log Chat Terbaru</h3>
+                </div>
+            </div>
+            <div class="overflow-x-auto border border-gray-100 rounded-xl">
+                <table class="w-full text-xs text-left text-gray-600" id="table-audit">
+                    <thead class="bg-[#FAF9F6] text-gray-800 font-bold uppercase text-[9px] border-b border-gray-100">
+                        <tr>
+                            <th class="px-4 py-3">Waktu</th>
+                            <th class="px-4 py-3">Config</th>
+                            <th class="px-4 py-3">Model</th>
+                            <th class="px-4 py-3">Pertanyaan</th>
+                            <th class="px-4 py-3 text-center">Chunks</th>
+                            <th class="px-4 py-3">Best Score</th>
+                            <th class="px-4 py-3">Latency</th>
+                            <th class="px-4 py-3 text-right">Est. Tokens</th>
+                        </tr>
+                    </thead>
+                    <tbody id="audit-table-body" class="divide-y divide-gray-100">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/static/demo/js/eval-standalone.js"></script>
 </body>
 </html>
