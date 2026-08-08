@@ -157,6 +157,7 @@
 
 .rag-msg {
   display: flex;
+  flex-direction: column;
   max-width: 85%;
 }
 
@@ -180,6 +181,117 @@
   font-size: 13px;
   line-height: 1.5;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Accordion Rujukan Dokumen Akademik */
+.rag-citations-container {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.rag-citation-box {
+  border: 1px solid #e7e5e4;
+  border-radius: 10px;
+  background-color: #ffffff;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.rag-citation-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #faf9f6;
+  border: none;
+  border-bottom: 1px solid #e7e5e4;
+  cursor: pointer;
+  font-weight: 600;
+  color: #44403c;
+  transition: background-color 0.15s ease;
+}
+
+.rag-citation-header:hover {
+  background-color: #f5f5f4;
+}
+
+.rag-citation-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #7B2D2D;
+}
+
+.rag-citation-title svg {
+  width: 14px;
+  height: 14px;
+}
+
+.rag-chevron {
+  width: 14px;
+  height: 14px;
+  color: #a8a29e;
+  transition: transform 0.2s ease;
+}
+
+.rag-chevron.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.rag-citation-content {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #ffffff;
+}
+
+.rag-citation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #f5f5f4;
+}
+
+.rag-citation-item:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.rag-citation-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #7B2D2D;
+}
+
+.rag-citation-badge {
+  background: #f5f5f4;
+  border: 1px solid #e7e5e4;
+  color: #78716c;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 10px;
+}
+
+.rag-citation-snippet {
+  font-size: 11px;
+  color: #57534e;
+  font-style: italic;
+  font-family: monospace;
+  background-color: #faf9f6;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #f5f5f4;
+  line-height: 1.4;
+  word-break: break-word;
 }
 
 .rag-chat-form {

@@ -179,8 +179,8 @@ const RagChatWidget = {
                 fullAnswer += parsed.content;
                 botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
                 this.scrollToBottom();
-              } else if (parsed.type === 'citation') {
-                citations = parsed.citations || [];
+              } else if (parsed.type === 'citations') {
+                citations = parsed.sources || [];
               }
             } catch (e) {
               if (isFirstToken) {
@@ -195,6 +195,7 @@ const RagChatWidget = {
         }
       }
 
+      // Render Rujukan Dokumen Akademik (Accordion) jika tersedia
       if (citations.length > 0) {
         this.renderCitations(botBubbleObj.bubbleElem, citations);
       }
@@ -238,20 +239,68 @@ const RagChatWidget = {
     };
   },
 
-  renderCitations(containerElem, citations) {
+  renderCitations(containerElem, sources) {
+    if (!containerElem || !sources || sources.length === 0) return;
+
+    const citId = `cit-${Date.now()}`;
+    const headerId = `cit-header-${citId}`;
+    const contentId = `cit-content-${citId}`;
+    const chevronId = `cit-chevron-${citId}`;
+
     const citDiv = document.createElement('div');
-    citDiv.style.marginTop = '8px';
-    citDiv.style.paddingTop = '8px';
-    citDiv.style.borderTop = '1px solid #e7e5e4';
-    citDiv.style.fontSize = '11px';
-    citDiv.style.color = '#78716c';
+    citDiv.className = 'rag-citations-container';
     citDiv.innerHTML = `
-      <strong style="color: #44403c;">Sumber Referensi:</strong>
-      <ul style="padding-left: 16px; margin-top: 4px; margin-bottom: 0;">
-        ${citations.map(c => `<li>${this.escapeHtml(c.title || c.source)}</li>`).join('')}
-      </ul>
+      <div class="rag-citation-box">
+        <button id="${headerId}" type="button" class="rag-citation-header">
+          <div class="rag-citation-title">
+            <i data-lucide="book-open"></i>
+            <span>Rujukan Dokumen Akademik (${sources.length} Sumber)</span>
+          </div>
+          <i data-lucide="chevron-down" id="${chevronId}" class="rag-chevron"></i>
+        </button>
+        <div id="${contentId}" class="rag-citation-content hidden">
+          ${sources.map((src, index) => {
+            const title = src.title || "Dokumen Akademik";
+            const docId = src.doc_id || "-";
+            const bab = src.bab ? ` | ${src.bab}` : "";
+            const pasal = src.pasal ? ` | ${src.pasal}` : "";
+            const idx = src.index || (index + 1);
+            return `
+              <div class="rag-citation-item">
+                <div class="rag-citation-meta">
+                  <span class="rag-citation-name">[${this.escapeHtml(idx)}] ${this.escapeHtml(title)}</span>
+                  <span class="rag-citation-badge">ID: ${this.escapeHtml(docId)}${this.escapeHtml(bab)}${this.escapeHtml(pasal)}</span>
+                </div>
+                <div class="rag-citation-snippet">
+                  "${this.escapeHtml(src.content)}"
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
     `;
-    containerElem.querySelector('.rag-msg-content').appendChild(citDiv);
+
+    containerElem.appendChild(citDiv);
+    this.safeCreateIcons();
+
+    const headerBtn = document.getElementById(headerId);
+    const contentDiv = document.getElementById(contentId);
+    const chevronIcon = document.getElementById(chevronId);
+
+    if (headerBtn && contentDiv) {
+      headerBtn.addEventListener('click', () => {
+        const isHidden = contentDiv.classList.contains('hidden');
+        if (isHidden) {
+          contentDiv.classList.remove('hidden');
+          if (chevronIcon) chevronIcon.classList.add('rotate-180');
+        } else {
+          contentDiv.classList.add('hidden');
+          if (chevronIcon) chevronIcon.classList.remove('rotate-180');
+        }
+        this.scrollToBottom();
+      });
+    }
   },
 
   scrollToBottom() {

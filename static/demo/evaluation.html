@@ -44,37 +44,27 @@
 </head>
 <body class="min-h-screen bg-[#FAF9F6] font-sans antialiased text-gray-800 flex flex-col">
 
-    <!-- Standalone Top Header Bar (Maroon Klasik UNSRAT) -->
-    <header class="bg-gradient-to-r from-[#4A1515] via-[#5B1A1A] to-[#7B2D2D] text-white py-3.5 px-6 shadow-md flex items-center justify-between z-10 flex-shrink-0">
-        <div class="flex items-center space-x-3">
-            <div class="bg-white/10 p-2 rounded-xl border border-white/15 flex items-center justify-center w-9 h-9">
-                <i data-lucide="bar-chart-3" class="w-5 h-5 text-amber-300"></i>
-            </div>
-            <div>
-                <h1 class="font-serif font-bold text-lg leading-tight tracking-wide uppercase">UNSRAT - Evaluasi RAGAS</h1>
-                <p class="text-white/60 text-[10px] uppercase font-bold tracking-widest">Dashboard Komparasi Performa Sistem</p>
-            </div>
-        </div>
-        <a href="/" class="flex items-center space-x-2 text-xs bg-white/10 hover:bg-white/20 px-3.5 py-2 rounded-xl border border-white/20 transition-all cursor-pointer font-medium text-white shadow-xs">
-            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-            <span>Kembali ke Demo Utama</span>
-        </a>
-    </header>
-
-    <!-- Main Content Container (Copy Identik tab-eval /testing tanpa Sidebar) -->
+    <!-- Main Content Container (Copy Identik tab-eval /testing tanpa Sidebar & Tanpa Header Topbar) -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-6 space-y-6 custom-scrollbar pb-10">
         
-        <!-- Header Evaluasi Section -->
+        <!-- Header Evaluasi Section dengan Tombol Reload & Kembali -->
         <div class="flex items-center justify-between border-b border-gray-200 pb-3">
             <div>
                 <h2 class="font-serif font-bold text-2xl text-gray-800 tracking-tight flex items-center space-x-2">
-                    <i data-lucide="line-chart" class="w-5 h-5 text-[#7B2D2D]"></i>
+                    <i data-lucide="line-chart" class="w-6 h-6 text-[#7B2D2D]"></i>
                     <span>Evaluasi RAGAS</span>
                 </h2>
+                <p class="text-xs text-gray-500 mt-0.5">Komparasi performa sistem berbasis data ground-truth regulasi akademik Universitas Sam Ratulangi.</p>
             </div>
-            <button id="refresh-eval-btn" class="flex items-center space-x-2 px-3.5 py-2 border border-[#E4DFD9] bg-white hover:bg-[#7B2D2D]/5 hover:border-[#7B2D2D]/20 text-[#7B2D2D] rounded-xl text-xs font-semibold transition duration-150 shadow-sm cursor-pointer active:scale-98">
-                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-            </button>
+            <div class="flex items-center space-x-2">
+                <a href="/" class="flex items-center space-x-1.5 px-3 py-2 border border-[#E4DFD9] bg-white hover:bg-gray-50 text-gray-700 rounded-xl text-xs font-semibold transition duration-150 shadow-sm cursor-pointer">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-[#7B2D2D]"></i>
+                    <span>Demo Utama</span>
+                </a>
+                <button id="refresh-eval-btn" class="flex items-center space-x-2 px-3.5 py-2 border border-[#E4DFD9] bg-white hover:bg-[#7B2D2D]/5 hover:border-[#7B2D2D]/20 text-[#7B2D2D] rounded-xl text-xs font-semibold transition duration-150 shadow-sm cursor-pointer active:scale-98" title="Reload Data">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
         </div>
 
         <!-- CONSISTENCY WARNING BANNER -->
