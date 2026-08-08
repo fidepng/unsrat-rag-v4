@@ -1,1 +1,75 @@
-/* static/demo/css/demo-modal.css */
+/* 
+ * Scoped CSS Reset untuk Widget Chat UNSRAT
+ * Mencegah kebocoran style ke tema WordPress dan sebaliknya.
+ */
+
+#rag-chatbot-widget,
+#rag-chatbot-widget *,
+#rag-chatbot-widget *::before,
+#rag-chatbot-widget *::after {
+  box-sizing: border-box;
+}
+
+/* Modal Open Animation & Display Helpers */
+#rag-modal.active {
+  display: flex !important;
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+#rag-modal-overlay.active {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+/* Prevent scroll bleeding from modal messages to host window */
+#rag-chat-messages {
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar for Chat Messages */
+#rag-chat-messages::-webkit-scrollbar {
+  width: 5px;
+}
+
+#rag-chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#rag-chat-messages::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 10px;
+}
+
+#rag-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* Markdown prose rendering inside chat bubbles */
+.rag-prose p {
+  margin-bottom: 0.5rem;
+}
+
+.rag-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.rag-prose ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.rag-prose ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.rag-prose code {
+  background-color: #F3F4F6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+}
