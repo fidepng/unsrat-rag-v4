@@ -6,6 +6,20 @@ const FEATURE_FLAGS = {
   showConfigModelSelect: true
 };
 
+const RAG_ICONS = {
+  send: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>`,
+  stop: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>`,
+  expand: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V7h10"/><path d="M17 17 7 7"/></svg>`,
+  minimize: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>`,
+  bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 6H20"/></svg>`,
+  compass: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
+  layers: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-8.58 3.91a2 2 0 0 1-1.66 0L3.17 12.5"/><path d="m22 17.5-8.58 3.91a2 2 0 0 1-1.66 0L3.17 17.5"/></svg>`,
+  alertTriangle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  fileText: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>`,
+  chevronRight: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
+  alertCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+};
+
 const RagChatWidget = {
   state: {
     chatHistory: [],
@@ -25,7 +39,6 @@ const RagChatWidget = {
 
     this.bindEvents();
     this.applyFeatureFlags();
-    this.safeCreateIcons();
     this.loadSystemConfig();
   },
 
@@ -64,7 +77,7 @@ const RagChatWidget = {
   bindEvents() {
     const { 
       triggerBtn, closeBtn, expandBtn, resetBtn, overlay, 
-      settingsBtn, chatForm, userInput, sendBtn, 
+      settingsBtn, settingsPanel, chatForm, userInput, sendBtn, 
       configSelect, modelSelect, closeCitationBtn, chatMessages 
     } = this.elements;
 
@@ -75,9 +88,19 @@ const RagChatWidget = {
     if (resetBtn) resetBtn.addEventListener('click', () => this.resetChat());
 
     if (settingsBtn) {
-      settingsBtn.addEventListener('click', () => {
-        if (this.elements.settingsPanel && FEATURE_FLAGS.showConfigModelSelect) {
-          this.elements.settingsPanel.classList.toggle('hidden');
+      settingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (settingsPanel && FEATURE_FLAGS.showConfigModelSelect) {
+          settingsPanel.classList.toggle('hidden');
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (settingsPanel && !settingsPanel.classList.contains('hidden')) {
+          if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+            settingsPanel.classList.add('hidden');
+          }
         }
       });
     }
@@ -165,7 +188,7 @@ const RagChatWidget = {
       modal.classList.add('rag-modal-expanded');
       if (expandBtn) {
         expandBtn.setAttribute('title', 'Mengecilkan Mode Ukuran');
-        expandBtn.innerHTML = '<i data-lucide="minimize-2"></i>';
+        expandBtn.innerHTML = RAG_ICONS.minimize;
       }
     } else {
       this.state.mode = 'compact';
@@ -173,11 +196,10 @@ const RagChatWidget = {
       modal.classList.add('rag-modal-compact');
       if (expandBtn) {
         expandBtn.setAttribute('title', 'Buka Mode Ukuran Besar');
-        expandBtn.innerHTML = '<i data-lucide="maximize-2"></i>';
+        expandBtn.innerHTML = RAG_ICONS.expand;
       }
       this.toggleCitationPanel(false);
     }
-    this.safeCreateIcons();
   },
 
   adjustTextareaHeight() {
@@ -204,37 +226,28 @@ const RagChatWidget = {
           <p class="rag-welcome-desc">Selamat datang! Silakan tanyakan informasi akademik atau pilih contoh pertanyaan cepat di bawah ini.</p>
           <div class="rag-chips-grid">
             <button type="button" class="rag-chip-btn" data-query="Syarat cuti akademik?">
-              <i data-lucide="book-open"></i>
+              ${RAG_ICONS.bookOpen}
               <span>Syarat cuti akademik?</span>
             </button>
             <button type="button" class="rag-chip-btn" data-query="Visi dan Misi UNSRAT?">
-              <i data-lucide="compass"></i>
+              ${RAG_ICONS.compass}
               <span>Visi dan Misi UNSRAT?</span>
             </button>
             <button type="button" class="rag-chip-btn" data-query="Beban SKS semester 1?">
-              <i data-lucide="layers"></i>
+              ${RAG_ICONS.layers}
               <span>Beban SKS semester 1?</span>
             </button>
             <button type="button" class="rag-chip-btn" data-query="Mekanisme evaluasi DO?">
-              <i data-lucide="alert-triangle"></i>
+              ${RAG_ICONS.alertTriangle}
               <span>Mekanisme evaluasi DO?</span>
             </button>
             <button type="button" class="rag-chip-btn" data-query="Prosedur pengisian KRS?">
-              <i data-lucide="file-text"></i>
+              ${RAG_ICONS.fileText}
               <span>Prosedur pengisian KRS?</span>
             </button>
           </div>
         </div>
       `;
-    }
-    this.safeCreateIcons();
-  },
-
-  safeCreateIcons() {
-    if (window.lucide && typeof window.lucide.createIcons === 'function') {
-      window.lucide.createIcons({
-        attrs: { 'stroke-width': 1.5 }
-      });
     }
   },
 
@@ -297,13 +310,12 @@ const RagChatWidget = {
     const { sendBtn } = this.elements;
     if (!sendBtn) return;
     if (isStreaming) {
-      sendBtn.innerHTML = '<i data-lucide="square"></i>';
+      sendBtn.innerHTML = RAG_ICONS.stop;
       sendBtn.setAttribute('title', 'Hentikan Pencarian');
     } else {
-      sendBtn.innerHTML = '<i data-lucide="send"></i>';
+      sendBtn.innerHTML = RAG_ICONS.send;
       sendBtn.setAttribute('title', 'Kirim Pesan');
     }
-    this.safeCreateIcons();
   },
 
   async executeStreamFetch(query, botBubbleObj) {
@@ -381,9 +393,8 @@ const RagChatWidget = {
         } else {
           const warningBadge = document.createElement('div');
           warningBadge.className = 'rag-abort-badge';
-          warningBadge.innerHTML = '<i data-lucide="alert-circle"></i><span>Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.</span>';
+          warningBadge.innerHTML = `${RAG_ICONS.alertCircle}<span>Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.</span>`;
           botBubbleObj.bubbleElem.appendChild(warningBadge);
-          this.safeCreateIcons();
         }
       } else {
         botBubbleObj.contentElem.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
@@ -391,7 +402,6 @@ const RagChatWidget = {
     } finally {
       this.state.status = 'idle';
       this.updateSendButtonState(false);
-      this.safeCreateIcons();
     }
   },
 
@@ -406,35 +416,39 @@ const RagChatWidget = {
     const { chatMessages } = this.elements;
     if (!chatMessages) return;
 
-    const div = document.createElement('div');
-    div.className = 'rag-msg rag-user-msg';
-    div.innerHTML = `
-      <div class="rag-msg-meta">
+    const wrapper = document.createElement('div');
+    wrapper.className = 'rag-msg-wrapper rag-msg-user-wrapper';
+    wrapper.innerHTML = `
+      <div class="rag-msg-meta-header">
+        <span>Anda</span>
+        <span>•</span>
         <span>${this.getTimestamp()}</span>
       </div>
-      <p style="margin: 0;">${this.escapeHtml(text)}</p>
+      <div class="rag-user-msg">${this.escapeHtml(text)}</div>
     `;
-    chatMessages.appendChild(div);
+    chatMessages.appendChild(wrapper);
   },
 
   renderBotBubblePlaceholder() {
     const { chatMessages } = this.elements;
-    const div = document.createElement('div');
-    div.className = 'rag-msg rag-bot-msg';
-    div.innerHTML = `
-      <div class="rag-msg-meta">
+    const wrapper = document.createElement('div');
+    wrapper.className = 'rag-msg-wrapper rag-msg-bot-wrapper';
+    wrapper.innerHTML = `
+      <div class="rag-msg-meta-header">
         <span>Asisten Akademik</span>
         <span>•</span>
         <span>${this.getTimestamp()}</span>
       </div>
-      <div class="rag-msg-content" style="color: #78716c;">
-        <span>Mengetik...</span>
+      <div class="rag-bot-msg">
+        <div class="rag-msg-content" style="color: #78716c;">
+          <span>Mengetik...</span>
+        </div>
       </div>
     `;
-    chatMessages.appendChild(div);
+    chatMessages.appendChild(wrapper);
     return {
-      bubbleElem: div,
-      contentElem: div.querySelector('.rag-msg-content')
+      bubbleElem: wrapper.querySelector('.rag-bot-msg'),
+      contentElem: wrapper.querySelector('.rag-msg-content')
     };
   },
 
@@ -447,16 +461,15 @@ const RagChatWidget = {
       <div class="rag-citation-box">
         <button type="button" class="rag-citation-header">
           <div class="rag-citation-title">
-            <i data-lucide="book-open"></i>
+            ${RAG_ICONS.bookOpen}
             <span>Rujukan Dokumen Akademik (${sources.length} Sumber)</span>
           </div>
-          <i data-lucide="chevron-right" class="rag-chevron"></i>
+          ${RAG_ICONS.chevronRight}
         </button>
       </div>
     `;
 
     containerElem.appendChild(citDiv);
-    this.safeCreateIcons();
 
     const headerBtn = citDiv.querySelector('.rag-citation-header');
     if (headerBtn) {
@@ -495,7 +508,6 @@ const RagChatWidget = {
     }).join('');
 
     sideCitationPanel.classList.remove('hidden');
-    this.safeCreateIcons();
   },
 
   toggleCitationPanel(show) {

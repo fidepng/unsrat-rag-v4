@@ -607,6 +607,16 @@ async def root():
     return FileResponse(index_path, media_type="text/html")
 
 
+@app.get("/unsrat-ac-id.html")
+async def unsrat_homepage_html():
+    """Serve raw scraped UNSRAT homepage for iframe background."""
+    bg_path = Path("unsrat-ac-id.html")
+    if not bg_path.exists():
+        return HTMLResponse("<h1>unsrat-ac-id.html tidak ditemukan.</h1>")
+    return FileResponse(bg_path, media_type="text/html")
+
+
+
 @app.get("/testing")
 async def testing():
     """Serve initial SPA frontend for testing & debugging."""
