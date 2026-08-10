@@ -1677,16 +1677,19 @@ window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {}
   <div id="rag-modal-overlay" class="rag-overlay hidden"></div>
 
   <!-- Chat Modal Window -->
-  <div id="rag-modal" class="rag-modal-window hidden">
+  <div id="rag-modal" class="rag-modal-window rag-modal-compact hidden">
     <!-- Modal Header -->
     <div class="rag-modal-header">
-      <div class="rag-header-title">
-        <i data-lucide="bot"></i>
-        <span>Asisten Akademik UNSRAT</span>
+      <div class="rag-header-left">
+        <button id="rag-expand-btn" type="button" class="rag-icon-btn" title="Buka / Mengecilkan Mode Ukuran">
+          <i data-lucide="maximize-2"></i>
+        </button>
+        <span class="rag-header-title">Asisten Akademik UNSRAT</span>
       </div>
       <div class="rag-header-actions">
-        <button id="rag-settings-btn" type="button" title="Pengaturan"><i data-lucide="settings"></i></button>
-        <button id="rag-modal-close" type="button" title="Tutup"><i data-lucide="x"></i></button>
+        <button id="rag-settings-btn" type="button" class="rag-icon-btn" title="Pengaturan"><i data-lucide="settings"></i></button>
+        <button id="rag-reset-btn" type="button" class="rag-icon-btn" title="Reset Percakapan"><i data-lucide="rotate-ccw"></i></button>
+        <button id="rag-modal-close" type="button" class="rag-icon-btn" title="Tutup"><i data-lucide="x"></i></button>
       </div>
     </div>
 
@@ -1707,20 +1710,60 @@ window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {}
       </div>
     </div>
 
-    <!-- Chat Messages List -->
-    <div id="rag-chat-messages" class="rag-messages-body">
-      <div class="rag-msg rag-bot-msg">
-        <div class="rag-msg-content">
-          <p style="margin: 0 0 6px 0; font-weight: 600;">Selamat datang!</p>
-          <p style="margin: 0;">Saya asisten AI Akademik UNSRAT. Silakan tanyakan informasi layanan akademik.</p>
+    <!-- Main Content & Side Panel Split Container -->
+    <div class="rag-body-container">
+      <!-- Chat Messages List -->
+      <div id="rag-chat-messages" class="rag-messages-body">
+        <!-- Welcome State (Center-Aligned) -->
+        <div id="rag-welcome-state" class="rag-welcome-card">
+          <img src="/static/assets/logo-unsrat.png" alt="UNSRAT Logo" class="rag-welcome-logo" />
+          <h4 class="rag-welcome-title">Asisten Layanan Akademik UNSRAT</h4>
+          <p class="rag-welcome-desc">Selamat datang! Silakan tanyakan informasi akademik atau pilih contoh pertanyaan cepat di bawah ini.</p>
+          <div class="rag-chips-grid">
+            <button type="button" class="rag-chip-btn" data-query="Syarat cuti akademik?">
+              <i data-lucide="book-open"></i>
+              <span>Syarat cuti akademik?</span>
+            </button>
+            <button type="button" class="rag-chip-btn" data-query="Visi dan Misi UNSRAT?">
+              <i data-lucide="compass"></i>
+              <span>Visi dan Misi UNSRAT?</span>
+            </button>
+            <button type="button" class="rag-chip-btn" data-query="Beban SKS semester 1?">
+              <i data-lucide="layers"></i>
+              <span>Beban SKS semester 1?</span>
+            </button>
+            <button type="button" class="rag-chip-btn" data-query="Mekanisme evaluasi DO?">
+              <i data-lucide="alert-triangle"></i>
+              <span>Mekanisme evaluasi DO?</span>
+            </button>
+            <button type="button" class="rag-chip-btn" data-query="Prosedur pengisian KRS?">
+              <i data-lucide="file-text"></i>
+              <span>Prosedur pengisian KRS?</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side-by-Side / Mobile Overlay Citation Panel -->
+      <div id="rag-side-citation-panel" class="rag-side-citation-panel hidden">
+        <div class="rag-side-citation-header">
+          <div class="flex items-center gap-2">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span>Rujukan Dokumen Akademik</span>
+          </div>
+          <button id="rag-close-citation-btn" type="button" class="rag-icon-btn" style="color: #44403c;" title="Tutup Rujukan">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div id="rag-side-citation-body" class="rag-side-citation-body">
         </div>
       </div>
     </div>
 
-    <!-- Input Form -->
+    <!-- Input Form (Textarea Auto-Grow) -->
     <form id="rag-chat-form" class="rag-chat-form">
-      <input id="rag-user-input" type="text" placeholder="Ketik pertanyaan..." autocomplete="off" />
-      <button id="rag-send-btn" type="submit">
+      <textarea id="rag-user-input" rows="1" placeholder="Ketik pertanyaan akademik..." autocomplete="off"></textarea>
+      <button id="rag-send-btn" type="button" class="rag-send-btn" title="Kirim Pesan">
         <i data-lucide="send"></i>
       </button>
     </form>
