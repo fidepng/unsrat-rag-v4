@@ -17,6 +17,7 @@ const RAG_ICONS = {
   alertTriangle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
   fileText: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>`,
   chevronRight: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
+  arrowRight: `<svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
   alertCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
 };
 
@@ -53,8 +54,6 @@ const RagChatWidget = {
       resetBtn: document.getElementById('rag-reset-btn'),
       settingsBtn: document.getElementById('rag-settings-btn'),
       settingsPanel: document.getElementById('rag-settings-panel'),
-      configSelect: document.getElementById('rag-config-select'),
-      modelSelect: document.getElementById('rag-model-select'),
       chatMessages: document.getElementById('rag-chat-messages'),
       welcomeState: document.getElementById('rag-welcome-state'),
       chatForm: document.getElementById('rag-chat-form'),
@@ -64,6 +63,10 @@ const RagChatWidget = {
       sideCitationBody: document.getElementById('rag-side-citation-body'),
       closeCitationBtn: document.getElementById('rag-close-citation-btn')
     };
+
+    if (this.elements.welcomeState) {
+      this.welcomeStateHTML = this.elements.welcomeState.outerHTML;
+    }
   },
 
   applyFeatureFlags() {
@@ -78,10 +81,10 @@ const RagChatWidget = {
     const { 
       triggerBtn, closeBtn, expandBtn, resetBtn, overlay, 
       settingsBtn, settingsPanel, chatForm, userInput, sendBtn, 
-      configSelect, modelSelect, closeCitationBtn, chatMessages 
+      closeCitationBtn, chatMessages 
     } = this.elements;
 
-    if (triggerBtn) triggerBtn.addEventListener('click', () => this.toggleModal(true));
+    if (triggerBtn) triggerBtn.addEventListener('click', () => this.toggleModal());
     if (closeBtn) closeBtn.addEventListener('click', () => this.toggleModal(false));
     if (overlay) overlay.addEventListener('click', () => this.toggleModal(false));
     if (expandBtn) expandBtn.addEventListener('click', () => this.toggleExpand());
@@ -105,15 +108,28 @@ const RagChatWidget = {
       });
     }
 
-    if (configSelect) {
-      configSelect.addEventListener('change', (e) => {
-        this.state.currentConfig = e.target.value;
-      });
-    }
+    if (settingsPanel) {
+      settingsPanel.addEventListener('click', (e) => {
+        const optionBtn = e.target.closest('.rag-submenu-option');
+        if (optionBtn) {
+          const type = optionBtn.getAttribute('data-type');
+          const val = optionBtn.getAttribute('data-value');
+          if (!type || !val) return;
 
-    if (modelSelect) {
-      modelSelect.addEventListener('change', (e) => {
-        this.state.currentModel = e.target.value;
+          if (type === 'config') {
+            this.state.currentConfig = val;
+          } else if (type === 'model') {
+            this.state.currentModel = val;
+          }
+
+          const parentSubmenu = optionBtn.closest('.rag-submenu');
+          if (parentSubmenu) {
+            parentSubmenu.querySelectorAll('.rag-submenu-option').forEach(btn => {
+              const isMatch = btn.getAttribute('data-value') === val;
+              btn.classList.toggle('active', isMatch);
+            });
+          }
+        }
       });
     }
 
@@ -157,19 +173,20 @@ const RagChatWidget = {
     }
   },
 
-  toggleModal(show) {
+  toggleModal(forceState) {
     const { modal, overlay, userInput } = this.elements;
     if (!modal) return;
 
-    if (show) {
+    const isCurrentlyHidden = modal.classList.contains('hidden');
+    const shouldShow = forceState !== undefined ? forceState : isCurrentlyHidden;
+
+    if (shouldShow) {
       modal.classList.remove('hidden');
       if (overlay) overlay.classList.remove('hidden');
-      document.body.classList.add('overflow-hidden');
       if (userInput) userInput.focus();
     } else {
       modal.classList.add('hidden');
       if (overlay) overlay.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden');
       
       if (this.state.status === 'streaming' && this.state.abortController) {
         this.state.abortController.abort();
@@ -218,36 +235,8 @@ const RagChatWidget = {
     this.state.status = 'idle';
     this.toggleCitationPanel(false);
 
-    if (chatMessages) {
-      chatMessages.innerHTML = `
-        <div id="rag-welcome-state" class="rag-welcome-card">
-          <img src="/static/assets/logo-unsrat.png" alt="UNSRAT Logo" class="rag-welcome-logo" />
-          <h4 class="rag-welcome-title">Asisten Layanan Akademik UNSRAT</h4>
-          <p class="rag-welcome-desc">Selamat datang! Silakan tanyakan informasi akademik atau pilih contoh pertanyaan cepat di bawah ini.</p>
-          <div class="rag-chips-grid">
-            <button type="button" class="rag-chip-btn" data-query="Syarat cuti akademik?">
-              ${RAG_ICONS.bookOpen}
-              <span>Syarat cuti akademik?</span>
-            </button>
-            <button type="button" class="rag-chip-btn" data-query="Visi dan Misi UNSRAT?">
-              ${RAG_ICONS.compass}
-              <span>Visi dan Misi UNSRAT?</span>
-            </button>
-            <button type="button" class="rag-chip-btn" data-query="Beban SKS semester 1?">
-              ${RAG_ICONS.layers}
-              <span>Beban SKS semester 1?</span>
-            </button>
-            <button type="button" class="rag-chip-btn" data-query="Mekanisme evaluasi DO?">
-              ${RAG_ICONS.alertTriangle}
-              <span>Mekanisme evaluasi DO?</span>
-            </button>
-            <button type="button" class="rag-chip-btn" data-query="Prosedur pengisian KRS?">
-              ${RAG_ICONS.fileText}
-              <span>Prosedur pengisian KRS?</span>
-            </button>
-          </div>
-        </div>
-      `;
+    if (chatMessages && this.welcomeStateHTML) {
+      chatMessages.innerHTML = this.welcomeStateHTML;
     }
   },
 
@@ -256,6 +245,12 @@ const RagChatWidget = {
       const res = await fetch('/api/config');
       if (res.ok) {
         const data = await res.json();
+        const modelSubmenu = document.getElementById('rag-model-submenu');
+        if (data.available_models && modelSubmenu) {
+          modelSubmenu.innerHTML = data.available_models.map((m, idx) => `
+            <button type="button" class="rag-submenu-option ${idx === 0 ? 'active' : ''}" data-type="model" data-value="${m}">${m}</button>
+          `).join('');
+        }
         if (data.available_models && this.elements.modelSelect) {
           this.elements.modelSelect.innerHTML = data.available_models.map(m => 
             `<option value="${m}">${m}</option>`
@@ -440,8 +435,12 @@ const RagChatWidget = {
         <span>${this.getTimestamp()}</span>
       </div>
       <div class="rag-bot-msg">
-        <div class="rag-msg-content" style="color: #78716c;">
-          <span>Mengetik...</span>
+        <div class="rag-msg-content">
+          <div class="rag-typing-dots">
+            <span class="rag-dot"></span>
+            <span class="rag-dot"></span>
+            <span class="rag-dot"></span>
+          </div>
         </div>
       </div>
     `;
@@ -462,7 +461,7 @@ const RagChatWidget = {
         <button type="button" class="rag-citation-header">
           <div class="rag-citation-title">
             ${RAG_ICONS.bookOpen}
-            <span>Rujukan Dokumen Akademik (${sources.length} Sumber)</span>
+            <span>${sources.length} Sumber Rujukan</span>
           </div>
           ${RAG_ICONS.chevronRight}
         </button>
@@ -488,17 +487,18 @@ const RagChatWidget = {
 
     this.state.activeCitations = sources;
     sideCitationBody.innerHTML = sources.map((src, index) => {
-      const title = src.title || "Dokumen Akademik";
+      const title = src.title || "Dokumen Akademik UNSRAT";
       const docId = src.doc_id || "-";
-      const bab = src.bab ? ` | ${src.bab}` : "";
-      const pasal = src.pasal ? ` | ${src.pasal}` : "";
+      const bab = src.bab ? `${src.bab}` : "";
+      const pasal = src.pasal ? `Pasal ${src.pasal}` : "";
+      const metaSub = [docId, bab, pasal].filter(Boolean).join(" • ");
       const idx = src.index || (index + 1);
 
       return `
         <div class="rag-citation-item">
           <div class="rag-citation-meta">
-            <span class="rag-citation-name">[${this.escapeHtml(idx)}] ${this.escapeHtml(title)}</span>
-            <span class="rag-citation-badge">ID: ${this.escapeHtml(docId)}${this.escapeHtml(bab)}${this.escapeHtml(pasal)}</span>
+            <span class="rag-citation-title-text">[${this.escapeHtml(idx)}] ${this.escapeHtml(title)}</span>
+            <span class="rag-citation-submeta">${this.escapeHtml(metaSub)}</span>
           </div>
           <div class="rag-citation-snippet">
             "${this.escapeHtml(src.content)}"

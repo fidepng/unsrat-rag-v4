@@ -50,7 +50,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     </button>
 
-    <!-- Modal Overlay -->
+    <!-- Modal Overlay (Non-blocking agar background bisa di-scroll) -->
     <div id="rag-modal-overlay" class="rag-overlay hidden"></div>
 
     <!-- Chat Modal Window -->
@@ -75,20 +75,27 @@
           </button>
         </div>
 
-        <!-- Floating Dropdown Settings Panel -->
+        <!-- Floating Dropdown Settings Panel (Minimalist Right-Aligned Context Menu) -->
         <div id="rag-settings-panel" class="rag-settings-dropdown hidden">
-          <div class="rag-setting-item">
-            <label for="rag-config-select">Profil Config:</label>
-            <select id="rag-config-select">
-              <option value="b">Config B (Default)</option>
-              <option value="c">Config C (Precise)</option>
-            </select>
+          <div class="rag-menu-item rag-has-submenu">
+            <div class="rag-menu-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Config</span>
+            </div>
+            <div class="rag-submenu">
+              <button type="button" class="rag-submenu-option active" data-type="config" data-value="b">Config B (Dense)</button>
+              <button type="button" class="rag-submenu-option" data-type="config" data-value="c">Config C (Sparse)</button>
+            </div>
           </div>
-          <div class="rag-setting-item">
-            <label for="rag-model-select">Model Gemini:</label>
-            <select id="rag-model-select">
-              <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
-            </select>
+
+          <div class="rag-menu-item rag-has-submenu">
+            <div class="rag-menu-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Model</span>
+            </div>
+            <div id="rag-model-submenu" class="rag-submenu">
+              <button type="button" class="rag-submenu-option active" data-type="model" data-value="gemini-3.5-flash">Gemini 3.5 Flash</button>
+            </div>
           </div>
         </div>
       </div>
@@ -97,32 +104,40 @@
       <div class="rag-body-container">
         <!-- Chat Messages List -->
         <div id="rag-chat-messages" class="rag-messages-body">
-          <!-- Welcome State (Center-Aligned) -->
+          <!-- Welcome State (2 Level Layout: Level 1 Top Header, Level 2 Bottom Horizontal Chips) -->
           <div id="rag-welcome-state" class="rag-welcome-card">
-            <img src="/static/assets/logo-unsrat.png" alt="UNSRAT Logo" class="rag-welcome-logo" />
-            <h4 class="rag-welcome-title">Asisten Layanan Akademik UNSRAT</h4>
-            <p class="rag-welcome-desc">Selamat datang! Silakan tanyakan informasi akademik atau pilih contoh pertanyaan cepat di bawah ini.</p>
-            <div class="rag-chips-grid">
-              <button type="button" class="rag-chip-btn" data-query="Syarat cuti akademik?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 6H20"/></svg>
-                <span>Syarat cuti akademik?</span>
-              </button>
-              <button type="button" class="rag-chip-btn" data-query="Visi dan Misi UNSRAT?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-                <span>Visi dan Misi UNSRAT?</span>
-              </button>
-              <button type="button" class="rag-chip-btn" data-query="Beban SKS semester 1?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-8.58 3.91a2 2 0 0 1-1.66 0L3.17 12.5"/><path d="m22 17.5-8.58 3.91a2 2 0 0 1-1.66 0L3.17 17.5"/></svg>
-                <span>Beban SKS semester 1?</span>
-              </button>
-              <button type="button" class="rag-chip-btn" data-query="Mekanisme evaluasi DO?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                <span>Mekanisme evaluasi DO?</span>
-              </button>
-              <button type="button" class="rag-chip-btn" data-query="Prosedur pengisian KRS?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
-                <span>Prosedur pengisian KRS?</span>
-              </button>
+            <!-- Level 1: Logo, Title, & Description -->
+            <div class="rag-welcome-top">
+              <img src="/static/assets/logo-unsrat.png" alt="UNSRAT Logo" class="rag-welcome-logo" />
+              <h4 class="rag-welcome-title">SELAMAT DATANG</h4>
+              <p class="rag-welcome-desc">Silakan tanyakan informasi akademik atau pilih contoh pertanyaan rekomendasi di bawah ini.</p>
+            </div>
+
+            <!-- Level 2: 5 Recommendation Chips Disusun Horizontal -->
+            <div class="rag-welcome-bottom">
+              <!-- <span class="rag-chips-label">Rekomendasi Pertanyaan:</span> -->
+              <div class="rag-chips-horizontal">
+                <button type="button" class="rag-chip-btn" data-query="Syarat cuti akademik?">
+                  <span class="rag-chip-text">Syarat cuti akademik?</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+                <button type="button" class="rag-chip-btn" data-query="Visi dan Misi UNSRAT?">
+                  <span class="rag-chip-text">Visi dan Misi UNSRAT?</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+                <button type="button" class="rag-chip-btn" data-query="Beban SKS semester 1?">
+                  <span class="rag-chip-text">Beban SKS semester 1?</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+                <button type="button" class="rag-chip-btn" data-query="Mekanisme evaluasi DO?">
+                  <span class="rag-chip-text">Mekanisme evaluasi DO?</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+                <button type="button" class="rag-chip-btn" data-query="Prosedur pengisian KRS?">
+                  <span class="rag-chip-text">Prosedur pengisian KRS?</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -132,7 +147,7 @@
           <div class="rag-side-citation-header">
             <div style="display:flex; align-items:center; gap:8px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 6H20"/></svg>
-              <span>Rujukan Dokumen Akademik</span>
+              <span>Sumber Rujukan</span>
             </div>
             <button id="rag-close-citation-btn" type="button" class="rag-icon-btn" style="color: #44403c;" title="Tutup Rujukan">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -145,7 +160,7 @@
 
       <!-- Input Form (Textarea Auto-Grow) -->
       <form id="rag-chat-form" class="rag-chat-form">
-        <textarea id="rag-user-input" rows="1" placeholder="Ketik pertanyaan akademik..." autocomplete="off"></textarea>
+        <textarea id="rag-user-input" rows="1" placeholder="Ketik pertanyaan disini..." autocomplete="off"></textarea>
         <button id="rag-send-btn" type="button" class="rag-send-btn" title="Kirim Pesan">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
         </button>
