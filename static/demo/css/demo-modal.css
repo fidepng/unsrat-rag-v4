@@ -1,6 +1,6 @@
 /* 
- * Minimal Scoped CSS Reset & Styles untuk Widget Chat UNSRAT
- * Bebas bentrok dengan layout WordPress & Tailwind.
+ * Scoped Custom CSS untuk Widget Chatbot UNSRAT
+ * Pre-fix: .rag-* (bebas bentrok dengan layout WordPress & Tailwind)
  */
 
 #rag-chatbot-widget,
@@ -15,6 +15,7 @@
   z-index: 999999;
 }
 
+/* Floating Trigger Button */
 .rag-trigger {
   position: fixed;
   bottom: 24px;
@@ -24,8 +25,8 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,8 +35,12 @@
 }
 
 .rag-trigger:hover {
-  background-color: #5A1F1F;
+  background-color: #963E3E;
   transform: scale(1.08);
+}
+
+.rag-trigger:active {
+  background-color: #5C1F1F;
 }
 
 .rag-trigger svg {
@@ -43,84 +48,108 @@
   height: 24px;
 }
 
+/* Modal Overlay Backdrop */
 .rag-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  transition: opacity 0.2s ease;
+  background-color: rgba(0, 0, 0, 0.45);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Modal Window Base */
 .rag-modal-window {
   position: fixed;
-  bottom: 90px;
-  right: 24px;
-  width: 90vw;
-  max-width: 420px;
-  height: 580px;
-  max-height: 80vh;
   background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid #E4DFD9;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Modal Mode: Compact (Default) */
+.rag-modal-compact {
+  bottom: 90px;
+  right: 24px;
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  height: 580px;
+  max-height: calc(100dvh - 110px);
+}
+
+/* Modal Mode: Expanded */
+.rag-modal-expanded {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85vw;
+  height: 85vh;
+  max-width: 1200px;
+  max-height: 900px;
+}
+
+/* Header Modal */
 .rag-modal-header {
   background-color: #7B2D2D;
   color: #ffffff;
-  padding: 14px 18px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #5C1F1F;
+}
+
+.rag-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .rag-header-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   font-weight: 600;
   font-size: 15px;
-}
-
-.rag-header-title svg {
-  width: 20px;
-  height: 20px;
-  color: #fbbf24;
+  color: #ffffff;
 }
 
 .rag-header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
-.rag-header-actions button {
+.rag-icon-btn {
   background: transparent;
   border: none;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   padding: 6px;
   border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.rag-header-actions button:hover {
+.rag-icon-btn:hover {
   color: #ffffff;
-  background: rgba(255,255,255,0.15);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
-.rag-header-actions svg {
+.rag-icon-btn:active {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.rag-icon-btn svg {
   width: 18px;
   height: 18px;
 }
 
+/* Collapsible Settings Panel */
 .rag-settings-panel {
-  background-color: #f5f5f4;
-  border-bottom: 1px solid #e7e5e4;
+  background-color: #FAF9F6;
+  border-bottom: 1px solid #E4DFD9;
   padding: 10px 16px;
   font-size: 12px;
   display: flex;
@@ -135,12 +164,28 @@
   gap: 8px;
 }
 
+.rag-setting-item label {
+  font-weight: 600;
+  color: #44403c;
+}
+
 .rag-setting-item select {
   background: #ffffff;
   border: 1px solid #d6d3d1;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 4px 8px;
   font-size: 12px;
+  outline: none;
+}
+
+/* Main Body & Layout Split */
+.rag-body-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  background-color: #FAF9F6;
 }
 
 .rag-messages-body {
@@ -151,14 +196,91 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background-color: #fcfbf9;
   overscroll-behavior: contain;
 }
 
+/* Welcome State (Center Aligned) */
+.rag-welcome-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 16px;
+  margin: auto;
+  max-width: 360px;
+}
+
+.rag-welcome-logo {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+.rag-welcome-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #7B2D2D;
+  margin-bottom: 6px;
+}
+
+.rag-welcome-desc {
+  font-size: 12px;
+  color: #78716c;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.rag-chips-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.rag-chip-btn {
+  background: #ffffff;
+  border: 1px solid #E4DFD9;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #44403c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.rag-chip-btn:hover {
+  background-color: #FAF9F6;
+  border-color: #7B2D2D;
+  color: #7B2D2D;
+}
+
+.rag-chip-btn svg {
+  width: 14px;
+  height: 14px;
+  color: #7B2D2D;
+  flex-shrink: 0;
+}
+
+/* Chat Message Bubbles */
 .rag-msg {
   display: flex;
   flex-direction: column;
   max-width: 85%;
+}
+
+.rag-msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #a8a29e;
+  margin-bottom: 4px;
 }
 
 .rag-user-msg {
@@ -171,26 +293,52 @@
   line-height: 1.5;
 }
 
+.rag-user-msg .rag-msg-meta {
+  justify-content: flex-end;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .rag-bot-msg {
   align-self: flex-start;
   background-color: #ffffff;
-  border: 1px solid #e7e5e4;
+  border: 1px solid #E4DFD9;
   color: #1c1917;
   padding: 12px 14px;
   border-radius: 14px 14px 14px 2px;
   font-size: 13px;
   line-height: 1.5;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Accordion Rujukan Dokumen Akademik */
+/* Amber Abort Warning Badge */
+.rag-abort-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background-color: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #b58105;
+  font-weight: 500;
+}
+
+.rag-abort-badge svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Accordion & Panel Rujukan Dokumen */
 .rag-citations-container {
   margin-top: 10px;
   width: 100%;
 }
 
 .rag-citation-box {
-  border: 1px solid #e7e5e4;
+  border: 1px solid #E4DFD9;
   border-radius: 10px;
   background-color: #ffffff;
   overflow: hidden;
@@ -203,9 +351,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  background-color: #faf9f6;
+  background-color: #FAF9F6;
   border: none;
-  border-bottom: 1px solid #e7e5e4;
+  border-bottom: 1px solid #E4DFD9;
   cursor: pointer;
   font-weight: 600;
   color: #44403c;
@@ -239,12 +387,46 @@
   transform: rotate(180deg);
 }
 
-.rag-citation-content {
-  padding: 10px 12px;
+/* Side-by-Side & Mobile Overlay Citation Panel */
+.rag-side-citation-panel {
+  width: 380px;
+  max-width: 45%;
+  background: #ffffff;
+  border-left: 1px solid #E4DFD9;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: #ffffff;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rag-side-citation-header {
+  padding: 12px 16px;
+  background-color: #FAF9F6;
+  border-bottom: 1px solid #E4DFD9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 13px;
+  color: #7B2D2D;
+}
+
+.rag-side-citation-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 1023px) {
+  .rag-side-citation-panel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    max-width: 100%;
+    z-index: 10;
+  }
 }
 
 .rag-citation-item {
@@ -273,7 +455,7 @@
 
 .rag-citation-badge {
   background: #f5f5f4;
-  border: 1px solid #e7e5e4;
+  border: 1px solid #E4DFD9;
   color: #78716c;
   padding: 2px 6px;
   border-radius: 4px;
@@ -286,7 +468,7 @@
   color: #57534e;
   font-style: italic;
   font-family: monospace;
-  background-color: #faf9f6;
+  background-color: #FAF9F6;
   padding: 8px 10px;
   border-radius: 6px;
   border: 1px solid #f5f5f4;
@@ -294,29 +476,38 @@
   word-break: break-word;
 }
 
+/* Chat Form & Textarea Auto-Grow */
 .rag-chat-form {
   padding: 12px;
   background: #ffffff;
-  border-top: 1px solid #e7e5e4;
+  border-top: 1px solid #E4DFD9;
   display: flex;
+  align-items: flex-end;
   gap: 8px;
 }
 
-.rag-chat-form input {
+.rag-chat-form textarea {
   flex: 1;
   background-color: #f5f5f4;
   border: 1px solid #d6d3d1;
   border-radius: 10px;
-  padding: 8px 14px;
+  padding: 8px 12px;
   font-size: 13px;
   outline: none;
+  resize: none;
+  min-height: 38px;
+  max-height: 120px;
+  line-height: 1.4;
+  font-family: inherit;
+  overflow-y: auto;
 }
 
-.rag-chat-form input:focus {
+.rag-chat-form textarea:focus {
   border-color: #7B2D2D;
+  background-color: #ffffff;
 }
 
-.rag-chat-form button {
+.rag-send-btn {
   background-color: #7B2D2D;
   color: #ffffff;
   border: none;
@@ -327,13 +518,19 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
 }
 
-.rag-chat-form button:hover {
-  background-color: #5A1F1F;
+.rag-send-btn:hover {
+  background-color: #963E3E;
 }
 
-.rag-chat-form button svg {
+.rag-send-btn:active {
+  background-color: #5C1F1F;
+}
+
+.rag-send-btn svg {
   width: 16px;
   height: 16px;
 }
@@ -343,15 +540,21 @@
 }
 
 /* Custom Scrollbar */
-.rag-messages-body::-webkit-scrollbar {
+.rag-messages-body::-webkit-scrollbar,
+.rag-side-citation-body::-webkit-scrollbar,
+.rag-chat-form textarea::-webkit-scrollbar {
   width: 5px;
 }
 
-.rag-messages-body::-webkit-scrollbar-track {
+.rag-messages-body::-webkit-scrollbar-track,
+.rag-side-citation-body::-webkit-scrollbar-track,
+.rag-chat-form textarea::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.rag-messages-body::-webkit-scrollbar-thumb {
+.rag-messages-body::-webkit-scrollbar-thumb,
+.rag-side-citation-body::-webkit-scrollbar-thumb,
+.rag-chat-form textarea::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 10px;
 }
