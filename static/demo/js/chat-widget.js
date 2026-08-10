@@ -12,12 +12,7 @@ const RAG_ICONS = {
   expand: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V7h10"/><path d="M17 17 7 7"/></svg>`,
   minimize: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>`,
   bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 6H20"/></svg>`,
-  compass: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
-  layers: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-8.58 3.91a2 2 0 0 1-1.66 0L3.17 12.5"/><path d="m22 17.5-8.58 3.91a2 2 0 0 1-1.66 0L3.17 17.5"/></svg>`,
-  alertTriangle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
-  fileText: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>`,
   chevronRight: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
-  arrowRight: `<svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`,
   alertCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
 };
 
@@ -38,9 +33,16 @@ const RagChatWidget = {
     this.cacheElements();
     if (!this.elements.widget) return;
 
+    this.stripButtonTitles();
     this.bindEvents();
     this.applyFeatureFlags();
     this.loadSystemConfig();
+  },
+
+  stripButtonTitles() {
+    if (this.elements.widget) {
+      this.elements.widget.querySelectorAll('button[title]').forEach(btn => btn.removeAttribute('title'));
+    }
   },
 
   cacheElements() {
@@ -204,7 +206,6 @@ const RagChatWidget = {
       modal.classList.remove('rag-modal-compact');
       modal.classList.add('rag-modal-expanded');
       if (expandBtn) {
-        expandBtn.setAttribute('title', 'Mengecilkan Mode Ukuran');
         expandBtn.innerHTML = RAG_ICONS.minimize;
       }
     } else {
@@ -212,7 +213,6 @@ const RagChatWidget = {
       modal.classList.remove('rag-modal-expanded');
       modal.classList.add('rag-modal-compact');
       if (expandBtn) {
-        expandBtn.setAttribute('title', 'Buka Mode Ukuran Besar');
         expandBtn.innerHTML = RAG_ICONS.expand;
       }
       this.toggleCitationPanel(false);
@@ -306,10 +306,8 @@ const RagChatWidget = {
     if (!sendBtn) return;
     if (isStreaming) {
       sendBtn.innerHTML = RAG_ICONS.stop;
-      sendBtn.setAttribute('title', 'Hentikan Pencarian');
     } else {
       sendBtn.innerHTML = RAG_ICONS.send;
-      sendBtn.setAttribute('title', 'Kirim Pesan');
     }
   },
 
@@ -488,21 +486,25 @@ const RagChatWidget = {
     this.state.activeCitations = sources;
     sideCitationBody.innerHTML = sources.map((src, index) => {
       const title = src.title || "Dokumen Akademik UNSRAT";
-      const docId = src.doc_id || "-";
+      const docId = src.doc_id ? `ID: ${src.doc_id}` : "";
       const bab = src.bab ? `${src.bab}` : "";
-      const pasal = src.pasal ? `Pasal ${src.pasal}` : "";
-      const metaSub = [docId, bab, pasal].filter(Boolean).join(" • ");
+      const bagian = src.bagian ? `${src.bagian}` : "";
+      const pasal = src.pasal ? (String(src.pasal).toLowerCase().startsWith('pasal') ? `${src.pasal}` : `Pasal ${src.pasal}`) : "";
+      const breadcrumbList = [bab, bagian, pasal].filter(Boolean);
+      const breadcrumbsHTML = breadcrumbList.length > 0 
+        ? `<div class="rag-citation-breadcrumbs">${breadcrumbList.map(b => `<span>${this.escapeHtml(b)}</span>`).join('<span class="rag-dot-sep">•</span>')}</div>`
+        : '';
       const idx = src.index || (index + 1);
 
       return `
         <div class="rag-citation-item">
-          <div class="rag-citation-meta">
-            <span class="rag-citation-title-text">[${this.escapeHtml(idx)}] ${this.escapeHtml(title)}</span>
-            <span class="rag-citation-submeta">${this.escapeHtml(metaSub)}</span>
+          <div class="rag-citation-topbar">
+            <span class="rag-citation-idx-badge">[${this.escapeHtml(idx)}]</span>
+            ${docId ? `<span class="rag-citation-docid-badge">${this.escapeHtml(docId)}</span>` : ''}
           </div>
-          <div class="rag-citation-snippet">
-            "${this.escapeHtml(src.content)}"
-          </div>
+          <h5 class="rag-citation-title-text">${this.escapeHtml(title)}</h5>
+          ${breadcrumbsHTML}
+          <div class="rag-citation-snippet">${this.escapeHtml(src.content)}</div>
         </div>
       `;
     }).join('');
