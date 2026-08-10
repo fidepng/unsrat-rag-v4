@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse
+from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -600,11 +600,39 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def root():
-    """Serve SPA frontend."""
-    index_path = Path("static/index.html")
+    """Serve demo UNSRAT replica homepage."""
+    index_path = Path("static/demo/index.html")
     if not index_path.exists():
-        return HTMLResponse("<h1>Frontend belum tersedia. Buat static/index.html.</h1>")
-    return HTMLResponse(index_path.read_text(encoding="utf-8"))
+        return HTMLResponse("<h1>Frontend demo belum tersedia. Buat static/demo/index.html.</h1>")
+    return FileResponse(index_path, media_type="text/html")
+
+
+@app.get("/unsrat-ac-id.html")
+async def unsrat_homepage_html():
+    """Serve raw scraped UNSRAT homepage for iframe background."""
+    bg_path = Path("unsrat-ac-id.html")
+    if not bg_path.exists():
+        return HTMLResponse("<h1>unsrat-ac-id.html tidak ditemukan.</h1>")
+    return FileResponse(bg_path, media_type="text/html")
+
+
+
+@app.get("/testing")
+async def testing():
+    """Serve initial SPA frontend for testing & debugging."""
+    testing_path = Path("static/index.html")
+    if not testing_path.exists():
+        return HTMLResponse("<h1>Frontend testing tidak ditemukan di static/index.html.</h1>")
+    return FileResponse(testing_path, media_type="text/html")
+
+
+@app.get("/evaluation")
+async def evaluation():
+    """Serve standalone RAGAS evaluation page."""
+    eval_path = Path("static/demo/evaluation.html")
+    if not eval_path.exists():
+        return HTMLResponse("<h1>Halaman evaluasi belum tersedia. Buat static/demo/evaluation.html.</h1>")
+    return FileResponse(eval_path, media_type="text/html")
 
 
 # ── Entry Point ───────────────────────────────────────────────────────────────
