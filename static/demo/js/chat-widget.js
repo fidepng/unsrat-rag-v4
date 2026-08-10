@@ -3,7 +3,8 @@
  * Encapsulated Namespace - Minimal & Defensif.
  */
 const FEATURE_FLAGS = {
-  showConfigModelSelect: true
+  showConfigModelSelect: true,
+  showModelSelect: true
 };
 
 const RAG_ICONS = {
@@ -56,6 +57,7 @@ const RagChatWidget = {
       resetBtn: document.getElementById('rag-reset-btn'),
       settingsBtn: document.getElementById('rag-settings-btn'),
       settingsPanel: document.getElementById('rag-settings-panel'),
+      modelMenuItem: document.getElementById('rag-model-menu-item'),
       chatMessages: document.getElementById('rag-chat-messages'),
       welcomeState: document.getElementById('rag-welcome-state'),
       chatForm: document.getElementById('rag-chat-form'),
@@ -72,10 +74,23 @@ const RagChatWidget = {
   },
 
   applyFeatureFlags() {
-    const { settingsBtn, settingsPanel } = this.elements;
+    const { settingsBtn, settingsPanel, modelMenuItem } = this.elements;
+
     if (!FEATURE_FLAGS.showConfigModelSelect) {
       if (settingsBtn) settingsBtn.classList.add('hidden');
       if (settingsPanel) settingsPanel.classList.add('hidden');
+    } else {
+      if (settingsBtn) settingsBtn.classList.remove('hidden');
+
+      if (settingsPanel) {
+        if (!FEATURE_FLAGS.showModelSelect) {
+          settingsPanel.classList.add('rag-settings-flat');
+          if (modelMenuItem) modelMenuItem.classList.add('hidden');
+        } else {
+          settingsPanel.classList.remove('rag-settings-flat');
+          if (modelMenuItem) modelMenuItem.classList.remove('hidden');
+        }
+      }
     }
   },
 

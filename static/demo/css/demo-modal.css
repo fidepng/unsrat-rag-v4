@@ -282,6 +282,25 @@
   font-weight: 600;
 }
 
+/* Flat Dropdown Mode (Single Config Tier - No Submenu Arrow / Flyout) */
+.rag-settings-dropdown.rag-settings-flat .rag-menu-label {
+  display: none !important;
+}
+
+.rag-settings-dropdown.rag-settings-flat .rag-menu-item {
+  padding: 0 !important;
+}
+
+.rag-settings-dropdown.rag-settings-flat .rag-submenu {
+  position: static !important;
+  display: flex !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
 /* Main Body & Layout Split */
 .rag-body-container {
   flex: 1;
