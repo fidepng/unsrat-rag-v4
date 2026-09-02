@@ -22,16 +22,24 @@ def test_google_embedding() -> dict:
     try:
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-        from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+        import os
+        from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID, IS_CLOUD_RUN
         
         kwargs = {"model": EMBEDDING_MODEL_NAME}
-        if GOOGLE_APPLICATION_CREDENTIALS:
+        if GOOGLE_APPLICATION_CREDENTIALS and os.path.exists(GOOGLE_APPLICATION_CREDENTIALS):
             from google.oauth2 import service_account
             kwargs["credentials"] = service_account.Credentials.from_service_account_file(
                 GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
             )
             kwargs["project"] = GCP_PROJECT_ID
-        else:
+        elif IS_CLOUD_RUN or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT_ID"):
+            import google.auth
+            credentials, project_id = google.auth.default(
+                scopes=["https://www.googleapis.com/auth/cloud-platform"]
+            )
+            kwargs["credentials"] = credentials
+            kwargs["project"] = GCP_PROJECT_ID or project_id
+        elif GOOGLE_API_KEY:
             kwargs["google_api_key"] = GOOGLE_API_KEY
 
         embeddings = GoogleGenerativeAIEmbeddings(**kwargs)
@@ -72,7 +80,7 @@ def test_nim_generator(model_name: str | None = None) -> dict:
             from langchain_google_genai import ChatGoogleGenerativeAI
             from langchain_core.messages import HumanMessage
 
-            from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+            from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID, IS_CLOUD_RUN
             kwargs = {
                 "model": target_model,
                 "temperature": 0.0,
@@ -80,13 +88,20 @@ def test_nim_generator(model_name: str | None = None) -> dict:
                 "max_retries": 1,
                 "timeout": 15,
             }
-            if GOOGLE_APPLICATION_CREDENTIALS:
+            if GOOGLE_APPLICATION_CREDENTIALS and os.path.exists(GOOGLE_APPLICATION_CREDENTIALS):
                 from google.oauth2 import service_account
                 kwargs["credentials"] = service_account.Credentials.from_service_account_file(
                     GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
                 )
                 kwargs["project"] = GCP_PROJECT_ID
-            else:
+            elif IS_CLOUD_RUN or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT_ID"):
+                import google.auth
+                credentials, project_id = google.auth.default(
+                    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                kwargs["credentials"] = credentials
+                kwargs["project"] = GCP_PROJECT_ID or project_id
+            elif GOOGLE_API_KEY:
                 kwargs["google_api_key"] = GOOGLE_API_KEY
                 
             llm = ChatGoogleGenerativeAI(**kwargs)
@@ -144,7 +159,7 @@ def test_ragas_evaluator(evaluator_model: str | None = None) -> dict:
         else:
             from langchain_google_genai import ChatGoogleGenerativeAI
 
-            from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+            from src.config import GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID, IS_CLOUD_RUN
             kwargs = {
                 "model": target_evaluator,
                 "temperature": 0.0,
@@ -152,13 +167,20 @@ def test_ragas_evaluator(evaluator_model: str | None = None) -> dict:
                 "max_retries": 1,
                 "timeout": 15,
             }
-            if GOOGLE_APPLICATION_CREDENTIALS:
+            if GOOGLE_APPLICATION_CREDENTIALS and os.path.exists(GOOGLE_APPLICATION_CREDENTIALS):
                 from google.oauth2 import service_account
                 kwargs["credentials"] = service_account.Credentials.from_service_account_file(
                     GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
                 )
                 kwargs["project"] = GCP_PROJECT_ID
-            else:
+            elif IS_CLOUD_RUN or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT_ID"):
+                import google.auth
+                credentials, project_id = google.auth.default(
+                    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                kwargs["credentials"] = credentials
+                kwargs["project"] = GCP_PROJECT_ID or project_id
+            elif GOOGLE_API_KEY:
                 kwargs["google_api_key"] = GOOGLE_API_KEY
                 
             llm = ChatGoogleGenerativeAI(**kwargs)

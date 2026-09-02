@@ -174,18 +174,24 @@ FALLBACK_RESPONSE = (
 
 # ── API ──────────────────────────────────────────────────────
 API_HOST = "0.0.0.0"
-API_PORT = 8501
+API_PORT = int(os.getenv("PORT", 8080))
 
 # ── API KEY ──────────────────────────────────────────────────
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_API_KEY                 = os.getenv("GOOGLE_API_KEY")
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
+GCP_PROJECT_ID                 = os.getenv("GCP_PROJECT_ID") or os.getenv("GOOGLE_CLOUD_PROJECT") or "unsrat-rag"
+
+# Running inside Cloud Run detection
+IS_CLOUD_RUN = bool(os.getenv("K_SERVICE"))
 
 if not GOOGLE_API_KEY and not GOOGLE_APPLICATION_CREDENTIALS:
-    raise ValueError(
-        "Kredensial Google tidak ditemukan!\n"
-        "Sediakan GOOGLE_API_KEY (untuk AI Studio) ATAU GOOGLE_APPLICATION_CREDENTIALS & GCP_PROJECT_ID (untuk Vertex AI)."
-    )
+    if IS_CLOUD_RUN or os.getenv("GCP_PROJECT_ID") or os.getenv("GOOGLE_CLOUD_PROJECT"):
+        print("[INFO] Menggunakan Native Cloud Run IAM Application Default Credentials (ADC).")
+    else:
+        warnings.warn(
+            "GOOGLE_API_KEY dan GOOGLE_APPLICATION_CREDENTIALS tidak ditemukan di .env. "
+            "Aplikasi akan mencoba menggunakan default ADC jika tersedia."
+        )
 
 # NVIDIA NIM API Key (opsional — hanya dibutuhkan jika menggunakan provider NIM)
 NVIDIA_NIM_API_KEY = os.getenv("NVIDIA_NIM_API_KEY")  # None jika tidak di-set, tidak crash

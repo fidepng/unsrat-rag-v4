@@ -316,7 +316,10 @@ def run_evaluation(
             "timeout": 60,
         }
         
-        if GOOGLE_APPLICATION_CREDENTIALS:
+        import os
+        from src.config import IS_CLOUD_RUN
+        
+        if GOOGLE_APPLICATION_CREDENTIALS and os.path.exists(GOOGLE_APPLICATION_CREDENTIALS):
             from google.oauth2 import service_account
             creds = service_account.Credentials.from_service_account_file(
                 GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
@@ -325,7 +328,16 @@ def run_evaluation(
             gemini_llm_kwargs["project"] = GCP_PROJECT_ID
             gemini_emb_kwargs["credentials"] = creds
             gemini_emb_kwargs["project"] = GCP_PROJECT_ID
-        else:
+        elif IS_CLOUD_RUN or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT_ID"):
+            import google.auth
+            credentials, project_id = google.auth.default(
+                scopes=["https://www.googleapis.com/auth/cloud-platform"]
+            )
+            gemini_llm_kwargs["credentials"] = credentials
+            gemini_llm_kwargs["project"] = GCP_PROJECT_ID or project_id
+            gemini_emb_kwargs["credentials"] = credentials
+            gemini_emb_kwargs["project"] = GCP_PROJECT_ID or project_id
+        elif GOOGLE_API_KEY:
             gemini_llm_kwargs["google_api_key"] = GOOGLE_API_KEY
             gemini_emb_kwargs["google_api_key"] = GOOGLE_API_KEY
 

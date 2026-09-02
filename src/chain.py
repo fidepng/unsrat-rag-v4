@@ -69,7 +69,7 @@ def _get_llm(model_name: str) -> Any:
                 max_tokens=LLM_MAX_OUTPUT_TOKENS,
             )
         else:
-            from src.config import GOOGLE_API_KEY, GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID
+            from src.config import GOOGLE_API_KEY, GOOGLE_APPLICATION_CREDENTIALS, GCP_PROJECT_ID, IS_CLOUD_RUN
             logger.info(f"Menggunakan Google Gemini untuk generator model: {model_name}")
             
             kwargs = {
@@ -81,13 +81,20 @@ def _get_llm(model_name: str) -> Any:
                 "timeout": 60,
             }
             
-            if GOOGLE_APPLICATION_CREDENTIALS:
+            if GOOGLE_APPLICATION_CREDENTIALS and os.path.exists(GOOGLE_APPLICATION_CREDENTIALS):
                 from google.oauth2 import service_account
                 kwargs["credentials"] = service_account.Credentials.from_service_account_file(
                     GOOGLE_APPLICATION_CREDENTIALS, scopes=["https://www.googleapis.com/auth/cloud-platform"]
                 )
                 kwargs["project"] = GCP_PROJECT_ID
-            else:
+            elif IS_CLOUD_RUN or os.getenv("GOOGLE_CLOUD_PROJECT") or os.getenv("GCP_PROJECT_ID"):
+                import google.auth
+                credentials, project_id = google.auth.default(
+                    scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                )
+                kwargs["credentials"] = credentials
+                kwargs["project"] = GCP_PROJECT_ID or project_id
+            elif GOOGLE_API_KEY:
                 kwargs["google_api_key"] = GOOGLE_API_KEY
                 
             _llm_cache[model_name] = ChatGoogleGenerativeAI(**kwargs)
