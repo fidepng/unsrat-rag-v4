@@ -1,0 +1,136 @@
+<svg viewBox="0 0 980 1120" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="background-color: #ffffff; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <defs>
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="4" stdDeviation="5" flood-opacity="0.06" flood-color="#0f172a" />
+        </filter>
+
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+        </marker>
+        
+        <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#059669" />
+        </marker>
+
+        <marker id="arrow-rose" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#e11d48" />
+        </marker>
+    </defs>
+
+    <rect width="100%" height="100%" fill="#ffffff"/>
+
+
+    <g id="user-query" filter="url(#shadow)">
+        <rect x="340" y="90" width="300" height="50" rx="25" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+        <text x="490" y="120" text-anchor="middle" font-weight="800" fill="#1e293b" font-size="14">User Query</text>
+    </g>
+
+    <path d="M 490 140 L 490 175" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="embed-query" filter="url(#shadow)">
+        <rect x="315" y="175" width="350" height="50" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+        <text x="490" y="197" text-anchor="middle" font-weight="700" fill="#1e3a8a" font-size="13">Embed Query</text>
+        <text x="490" y="213" text-anchor="middle" font-weight="600" fill="#2563eb" font-size="11">Model: gemini-embedding-001 (task_type=retrieval_query)</text>
+    </g>
+
+    <path d="M 490 225 L 490 255" stroke="#64748b" stroke-width="2"/>
+    <path d="M 240 255 L 740 255" stroke="#64748b" stroke-width="2"/>
+    
+    <path d="M 240 255 L 240 285" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M 740 255 L 740 285" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="config-b" filter="url(#shadow)">
+        <rect x="50" y="285" width="380" height="60" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="2"/>
+        <text x="240" y="310" text-anchor="middle" font-weight="800" fill="#065f46" font-size="13">Dense Retrieval (Config B)</text>
+        <text x="240" y="330" text-anchor="middle" font-weight="600" fill="#059669" font-size="11">Cosine Similarity Metric | Top-k = 4</text>
+    </g>
+
+    <path d="M 240 345 L 240 380" stroke="#059669" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="similarity-filter" filter="url(#shadow)">
+        <rect x="50" y="380" width="380" height="55" rx="8" fill="#fffbeb" stroke="#fef08a" stroke-width="1.5"/>
+        <text x="240" y="404" text-anchor="middle" font-weight="700" fill="#78350f" font-size="13">Filter Threshold Kemiripan</text>
+        <text x="240" y="421" text-anchor="middle" font-weight="600" fill="#d97706" font-size="11">Parameter: SIMILARITY_THRESHOLD = 0.31</text>
+    </g>
+
+    <path d="M 240 435 L 240 465" stroke="#d97706" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="decision-diamond" filter="url(#shadow)">
+        <polygon points="240,465 350,515 240,565 130,515" fill="#fffbeb" stroke="#facc15" stroke-width="2"/>
+        <text x="240" y="514" text-anchor="middle" font-weight="700" fill="#854d0e" font-size="11">Apakah ada chunk</text>
+        <text x="240" y="528" text-anchor="middle" font-weight="700" fill="#854d0e" font-size="11">yang lolos threshold?</text>
+    </g>
+
+    <path d="M 350 515 L 490 515" stroke="#e11d48" stroke-width="2" marker-end="url(#arrow-rose)"/>
+    <text x="420" y="507" text-anchor="middle" font-weight="700" fill="#e11d48" font-size="11">Tidak Ada</text>
+
+    <path d="M 240 565 L 240 610 L 290 610" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+    <text x="230" y="590" text-anchor="end" font-weight="700" fill="#059669" font-size="11">Ada</text>
+
+    <g id="fallback-box" filter="url(#shadow)">
+        <rect x="490" y="485" width="260" height="60" rx="8" fill="#fff1f2" stroke="#fecdd3" stroke-width="2"/>
+        <text x="620" y="512" text-anchor="middle" font-weight="800" fill="#9f1239" font-size="13">FALLBACK_RESPONSE</text>
+        <text x="620" y="530" text-anchor="middle" font-weight="600" fill="#e11d48" font-size="11">Respons Bawaan (Tanpa LLM)</text>
+    </g>
+
+    <path d="M 750 515 L 900 515 L 900 1025 L 645 1025" fill="none" stroke="#e11d48" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrow-rose)"/>
+    <text x="890" y="750" text-anchor="end" font-weight="700" fill="#9f1239" font-size="11">Bypass Generasi LLM</text>
+
+    <g id="config-c" filter="url(#shadow)">
+        <rect x="550" y="285" width="380" height="60" rx="8" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="2"/>
+        <text x="740" y="310" text-anchor="middle" font-weight="800" fill="#4c1d95" font-size="13">Sparse Retrieval (Config C)</text>
+        <text x="740" y="330" text-anchor="middle" font-weight="600" fill="#6d28d9" font-size="11">Algoritma BM25Okapi | Top-k = 4</text>
+    </g>
+
+    <path d="M 740 345 L 740 610 L 690 610" fill="none" stroke="#4c1d95" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="format-context" filter="url(#shadow)">
+        <rect x="290" y="580" width="400" height="60" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+        <text x="490" y="605" text-anchor="middle" font-weight="800" fill="#1e293b" font-size="13">Format Konteks Dokumen</text>
+        <text x="490" y="625" text-anchor="middle" font-weight="600" fill="#475569" font-size="12">Struktur: [Sumber N: judul — bab]</text>
+    </g>
+
+    <path d="M 490 640 L 490 675" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="llm-gemini" filter="url(#shadow)">
+        <rect x="215" y="675" width="550" height="65" rx="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="2"/>
+        <text x="490" y="700" text-anchor="middle" font-weight="800" fill="#115e59" font-size="14">Generasi Jawaban: LLM Gemini</text>
+        <text x="490" y="720" text-anchor="middle" font-weight="600" fill="#0d9488" font-size="12">Input: SYSTEM_PROMPT + Konteks + Chat History</text>
+    </g>
+
+    <path d="M 490 740 L 490 775" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="citation-parser" filter="url(#shadow)">
+        <rect x="290" y="775" width="400" height="55" rx="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="1.5"/>
+        <text x="490" y="798" text-anchor="middle" font-weight="700" fill="#115e59" font-size="13">Parse Inline Citation [N]</text>
+        <text x="490" y="814" text-anchor="middle" font-weight="500" fill="#0d9488" font-size="11">Ekstraksi sitasi sumber menggunakan Regex</text>
+    </g>
+
+    <path d="M 490 830 L 490 865" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <g id="sse-stream" filter="url(#shadow)">
+        <rect x="240" y="865" width="500" height="90" rx="12" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="2"/>
+        <text x="490" y="890" text-anchor="middle" font-weight="800" fill="#065f46" font-size="14">Streaming SSE (Server-Sent Events)</text>
+        
+        <g transform="translate(265, 905)">
+            <rect x="0" y="0" width="105" height="32" rx="6" fill="#ffffff" stroke="#34d399" stroke-width="1.2"/>
+            <text x="52.5" y="20" text-anchor="middle" font-weight="700" fill="#065f46" font-size="11">event: thinking</text>
+            
+            <rect x="115" y="0" width="95" height="32" rx="6" fill="#ffffff" stroke="#34d399" stroke-width="1.2"/>
+            <text x="162.5" y="20" text-anchor="middle" font-weight="700" fill="#065f46" font-size="11">event: token</text>
+            
+            <rect x="220" y="0" width="115" height="32" rx="6" fill="#ffffff" stroke="#34d399" stroke-width="1.2"/>
+            <text x="277.5" y="20" text-anchor="middle" font-weight="700" fill="#065f46" font-size="11">event: citations</text>
+            
+            <rect x="345" y="0" width="105" height="32" rx="6" fill="#ffffff" stroke="#34d399" stroke-width="1.2"/>
+            <text x="397.5" y="20" text-anchor="middle" font-weight="700" fill="#065f46" font-size="11">event: done</text>
+        </g>
+    </g>
+
+    <path d="M 490 955 L 490 1000" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+
+    <g id="client-target" filter="url(#shadow)">
+        <rect x="340" y="1000" width="300" height="50" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+        <text x="490" y="1030" text-anchor="middle" font-weight="800" fill="#1e293b" font-size="14">Frontend (Embedded Widget)</text>
+    </g>
+</svg>
