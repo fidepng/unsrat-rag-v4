@@ -4,7 +4,7 @@
  */
 const FEATURE_FLAGS = {
   showConfigModelSelect: true,
-  showModelSelect: true
+  showModelSelect: false
 };
 
 const RAG_ICONS = {
@@ -348,42 +348,54 @@ const RagChatWidget = {
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
+      let buffer = '';
 
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split('\n');
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // Pertahankan baris parsial yang belum lengkap
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const dataStr = line.slice(6).trim();
-            if (!dataStr) continue;
+          const trimmed = line.trim();
+          if (!trimmed || !trimmed.startsWith('data: ')) continue;
 
-            try {
-              const parsed = JSON.parse(dataStr);
-              if (parsed.type === 'token') {
-                if (isFirstToken) {
-                  isFirstToken = false;
-                  botBubbleObj.contentElem.innerHTML = '';
-                }
-                fullAnswer += parsed.content;
-                botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
-                this.scrollToBottom();
-              } else if (parsed.type === 'citations') {
-                citations = parsed.sources || [];
-              }
-            } catch (e) {
+          const dataStr = trimmed.slice(6).trim();
+          if (!dataStr) continue;
+
+          try {
+            const parsed = JSON.parse(dataStr);
+            if (parsed.type === 'token') {
               if (isFirstToken) {
                 isFirstToken = false;
                 botBubbleObj.contentElem.innerHTML = '';
               }
-              fullAnswer += dataStr;
+              fullAnswer += parsed.content;
               botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
               this.scrollToBottom();
+            } else if (parsed.type === 'citations') {
+              citations = parsed.sources || [];
             }
+          } catch (e) {
+            console.warn('Gagal parse JSON SSE line:', dataStr, e);
           }
+        }
+      }
+
+      if (buffer && buffer.trim().startsWith('data: ')) {
+        const dataStr = buffer.trim().slice(6).trim();
+        try {
+          const parsed = JSON.parse(dataStr);
+          if (parsed.type === 'token') {
+            fullAnswer += parsed.content;
+            botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
+          } else if (parsed.type === 'citations') {
+            citations = parsed.sources || [];
+          }
+        } catch (e) {
+          // ignore
         }
       }
 
