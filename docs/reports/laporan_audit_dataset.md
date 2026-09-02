@@ -1,6 +1,6 @@
 # Laporan Audit Kualitas Dataset RAG - ground_truth.csv
 
-*Dihasilkan secara otomatis pada: 2026-08-06 19:49:07 WITA*
+*Dihasilkan secara otomatis pada: 2026-08-11 02:23:30 WITA*
 
 
 ## 1. Statistik Volume & Cakupan Dokumen

@@ -1,6 +1,6 @@
 # Laporan Analisis Mendalam Evaluasi RAGAS (n=80)
 
-*Dihasilkan secara otomatis pada: 2026-08-06 19:49:40 WITA*
+*Dihasilkan secara otomatis pada: 2026-08-11 02:24:22 WITA*
 
 
 ## 1. Statistik Volume Dataset
