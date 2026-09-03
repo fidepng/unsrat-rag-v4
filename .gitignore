@@ -40,8 +40,12 @@ logs/*
 # AI Agent & Developer Tooling
 .agents/
 .claude/
+.codex/
 .cursor/
 .gemini/
+.github/agents/
+.github/hooks/
+.github/skills/
 .impeccable/
 .kiro/
 .playwright-mcp/
