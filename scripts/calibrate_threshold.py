@@ -176,8 +176,6 @@ def main():
         f1 = (2 * precision * recall / (precision + recall)
               if (precision == precision and recall == recall and (precision + recall) > 0)
               else float("nan"))
-        accuracy = (tp + tn) / total_queries if total_queries > 0 else float("nan")
-        specificity = tn / (tn + fp) if (tn + fp) > 0 else float("nan")
 
         sweep_rows.append({
             "threshold": t,
@@ -186,20 +184,18 @@ def main():
             "precision": round(precision, 4) if precision == precision else None,
             "recall": round(recall, 4) if recall == recall else None,
             "f1": round(f1, 4) if f1 == f1 else None,
-            "accuracy": round(accuracy, 4) if accuracy == accuracy else None,
-            "specificity": round(specificity, 4) if specificity == specificity else None,
         })
 
     sweep_df = pd.DataFrame(sweep_rows)
     EVAL_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     sweep_df.to_csv(sweep_output_path, index=False)
 
-    print(f"\n{'='*95}")
-    print("[SWEEP REPORT] thresh | sim_equiv | TP | FN | FP | TN | precision | recall |   f1   | accuracy | specificity")
-    print(f"{'='*95}")
+    print(f"\n{'='*75}")
+    print("[SWEEP REPORT] thresh | sim_equiv | TP | FN | FP | TN | precision | recall |   f1")
+    print(f"{'='*75}")
     for _, r in sweep_df.iterrows():
         tp_val, fn_val, fp_val, tn_val = int(r['TP']), int(r['FN']), int(r['FP']), int(r['TN'])
-        print(f"  {r['threshold']:.2f}   |   {r['cosine_sim_equiv']:.2f}    | {tp_val:2d} | {fn_val:2d} | {fp_val:2d} | {tn_val:2d} |   {r['precision']}  | {r['recall']} | {r['f1']} |  {r['accuracy']}  |   {r['specificity']}")
+        print(f"  {r['threshold']:.2f}   |   {r['cosine_sim_equiv']:.2f}    | {tp_val:2d} | {fn_val:2d} | {fp_val:2d} | {tn_val:2d} |   {r['precision']}  | {r['recall']} | {r['f1']}")
 
     # ── 6. Automated Empirical Justification Reporter ────────────────────
     best_f1_row = sweep_df.loc[sweep_df["f1"].idxmax()] if sweep_df["f1"].notna().any() else None
