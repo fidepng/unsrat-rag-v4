@@ -600,11 +600,20 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def root():
-    """Serve demo UNSRAT replica homepage."""
+    """Serve demo INSPIRE UNSRAT replica homepage."""
     index_path = Path("static/demo/index.html")
     if not index_path.exists():
         return HTMLResponse("<h1>Frontend demo belum tersedia. Buat static/demo/index.html.</h1>")
     return FileResponse(index_path, media_type="text/html")
+
+
+@app.get("/unsratacid")
+async def unsrat_acid_page():
+    """Serve legacy UNSRAT homepage mock with chatbot widget."""
+    legacy_path = Path("static/demo/unsratacid.html")
+    if not legacy_path.exists():
+        return HTMLResponse("<h1>Mock unsratacid belum tersedia di static/demo/unsratacid.html.</h1>")
+    return FileResponse(legacy_path, media_type="text/html")
 
 
 @app.get("/unsrat-ac-id.html")
@@ -613,6 +622,15 @@ async def unsrat_homepage_html():
     bg_path = Path("unsrat-ac-id.html")
     if not bg_path.exists():
         return HTMLResponse("<h1>unsrat-ac-id.html tidak ditemukan.</h1>")
+    return FileResponse(bg_path, media_type="text/html")
+
+
+@app.get("/inspire-unsrat-ac-id.html")
+async def inspire_homepage_html():
+    """Serve raw scraped INSPIRE UNSRAT portal for iframe background."""
+    bg_path = Path("inspire-unsrat-ac-id.html")
+    if not bg_path.exists():
+        return HTMLResponse("<h1>inspire-unsrat-ac-id.html tidak ditemukan.</h1>")
     return FileResponse(bg_path, media_type="text/html")
 
 
