@@ -14,7 +14,9 @@ def test_root_serves_inspire_mock():
     assert "Portal INSPIRE - Universitas Sam Ratulangi" in response.text
     assert 'src="/inspire-unsrat-ac-id.html"' in response.text
     assert 'id="rag-chatbot-widget"' in response.text
-    assert '/static/demo/js/chat-widget.js' in response.text
+    assert '/static/demo/js/inspire-chat.js' in response.text
+    assert '/static/demo/css/inspire-chat.css' in response.text
+    assert 'rag-welcome-msg-wrapper' in response.text
 
 @pytest.mark.offline
 def test_unsratacid_serves_legacy_mock():
@@ -25,6 +27,8 @@ def test_unsratacid_serves_legacy_mock():
     assert "Universitas Sam Ratulangi | Official Website" in response.text
     assert 'src="/unsrat-ac-id.html"' in response.text
     assert 'id="rag-chatbot-widget"' in response.text
+    assert '/static/demo/js/chat-widget.js' in response.text
+    assert '/static/demo/css/demo-modal.css' in response.text
 
 @pytest.mark.offline
 def test_raw_html_endpoints():
