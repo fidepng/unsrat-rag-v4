@@ -15,6 +15,7 @@ from src.config import (
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from src.retriever import retrieve_chunks
+from src.router import check_greeting_intent
 from src.logger_manager import get_logger, log_chat_transaction
 
 logger = get_logger("chain")
@@ -210,6 +211,24 @@ def _get_response_sync(
     start_time = time.time()
     logger.info(f"Query: '{query[:80]}' | Config: {config} | Model: {model_name}")
 
+    # Pre-RAG Intent Routing untuk Sapaan Murni
+    greeting_reply = check_greeting_intent(query)
+    if greeting_reply:
+        elapsed = time.time() - start_time
+        logger.info(f"Intent Router: Sapaan terdeteksi ('{query[:40]}') -> Menjawab via fast routing")
+        _log_transaction(
+            config=config, model_llm=model_name, query=query,
+            chunks=[], answer=greeting_reply,
+            elapsed=elapsed, found=True,
+        )
+        return {
+            "answer": greeting_reply,
+            "citation_sources": [],
+            "retrieved_contexts": [],
+            "found": True,
+            "cited_indices": [],
+        }
+
     # Retrieval
     chunks = retrieve_chunks(query, config)
 
@@ -304,6 +323,22 @@ def _get_response_streaming(
     Event types: thinking, token, citations, done, error (FR-27)
     """
     import json
+
+    start_time = time.time()
+
+    # Pre-RAG Intent Routing untuk Sapaan Murni
+    greeting_reply = check_greeting_intent(query)
+    if greeting_reply:
+        elapsed = time.time() - start_time
+        logger.info(f"Intent Router: Sapaan terdeteksi ('{query[:40]}') -> Menjawab via fast routing SSE")
+        _log_transaction(
+            config=config, model_llm=model_name, query=query,
+            chunks=[], answer=greeting_reply, elapsed=elapsed, found=True,
+        )
+        yield f'data: {json.dumps({"type": "token", "content": greeting_reply})}\n\n'
+        yield f'data: {json.dumps({"type": "citations", "sources": []})}\n\n'
+        yield f'data: {json.dumps({"type": "done"})}\n\n'
+        return
 
     yield f'data: {json.dumps({"type": "thinking", "content": "Sedang mencari informasi..."})}\n\n'
 
