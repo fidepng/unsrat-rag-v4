@@ -83,6 +83,45 @@ def test_empty_or_invalid_inputs():
         assert check_greeting_intent(inv) is None
 
 @pytest.mark.offline
+def test_identity_queries_detected():
+    """Verifikasi kueri menanyakan identitas bot dijawab dengan perkenalan Asisten Akademik."""
+    identity_queries = [
+        "siapa anda", "siapa anda?", "kamu siapa", "siapa kamu",
+        "siapakah anda", "anda siapa", "siapakah kamu?"
+    ]
+    for q in identity_queries:
+        res = check_greeting_intent(q)
+        assert res is not None, f"Gagal mengenali kueri identitas: {q}"
+        assert "Asisten Akademik UNSRAT" in res
+
+@pytest.mark.offline
+def test_capability_queries_detected():
+    """Verifikasi kueri menanyakan fungsi/kapabilitas bot dijawab dengan panduan fitur."""
+    capability_queries = [
+        "apa bisa anda lakukan", "apa yang bisa anda lakukan",
+        "apa yang bisa kamu lakukan?", "kamu bisa apa", "anda bisa apa",
+        "apa fungsi anda", "bisa bantu apa", "apa kegunaan anda"
+    ]
+    for q in capability_queries:
+        res = check_greeting_intent(q)
+        assert res is not None, f"Gagal mengenali kueri kapabilitas: {q}"
+        assert "membantu" in res or "akademik UNSRAT" in res
+
+@pytest.mark.offline
+def test_academic_who_and_what_queries_pass_to_rag():
+    """Verifikasi kueri siapa/apa yang menyangkut pejabat/kebijakan akademik kampus tetap lolos ke RAG."""
+    queries = [
+        "Siapa rektor UNSRAT?",
+        "Siapa dekan fakultas teknik?",
+        "Apa yang harus dilakukan jika terlambat bayar UKT?",
+        "Apa sanksi jika melanggar aturan akademik?",
+        "Siapa yang menandatangani KRS?",
+    ]
+    for q in queries:
+        res = check_greeting_intent(q)
+        assert res is None, f"Kueri akademik siapa/apa keliru dicegat router: {q}"
+
+@pytest.mark.offline
 def test_ground_truth_never_intercepted():
     """Verifikasi seluruh 361 pertanyaan evaluasi di ground_truth.csv 100% lolos ke RAG."""
     import pandas as pd
@@ -95,4 +134,5 @@ def test_ground_truth_never_intercepted():
         q = str(row["user_input"])
         res = check_greeting_intent(q)
         assert res is None, f"Pertanyaan evaluasi baris {idx} terintercept oleh router: '{q}'"
+
 

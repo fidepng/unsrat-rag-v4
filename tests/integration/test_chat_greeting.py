@@ -65,3 +65,37 @@ def test_streaming_closing_api():
     events = [json.loads(l.strip()[6:]) for l in response.text.split("\n") if l.strip().startswith("data: ")]
     token_text = "".join(e.get("content", "") for e in events if e.get("type") == "token")
     assert "Sama-sama" in token_text
+
+@pytest.mark.offline
+def test_streaming_identity_api():
+    """Verifikasi pertanyaan siapa anda dijawab via SSE dengan perkenalan Asisten Akademik."""
+    payload = {
+        "query": "Siapa anda?",
+        "config": "b",
+        "model": "gemini-3.5-flash",
+        "chat_history": []
+    }
+    response = client.post("/api/chat", json=payload)
+    assert response.status_code == 200
+
+    events = [json.loads(l.strip()[6:]) for l in response.text.split("\n") if l.strip().startswith("data: ")]
+    token_text = "".join(e.get("content", "") for e in events if e.get("type") == "token")
+    assert "Asisten Akademik UNSRAT" in token_text
+
+@pytest.mark.offline
+def test_streaming_capability_api():
+    """Verifikasi pertanyaan apa yang bisa anda lakukan dijawab via SSE dengan daftar kapabilitas."""
+    payload = {
+        "query": "Apa yang bisa anda lakukan?",
+        "config": "b",
+        "model": "gemini-3.5-flash",
+        "chat_history": []
+    }
+    response = client.post("/api/chat", json=payload)
+    assert response.status_code == 200
+
+    events = [json.loads(l.strip()[6:]) for l in response.text.split("\n") if l.strip().startswith("data: ")]
+    token_text = "".join(e.get("content", "") for e in events if e.get("type") == "token")
+    assert "KRS" in token_text
+    assert "cuti akademik" in token_text
+

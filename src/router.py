@@ -34,7 +34,7 @@ TIME_PATTERNS = [
 # Pola salam religius / kultural
 RELIGIOUS_PATTERNS = [
     (re.compile(r"^(assalamu'?alaikum|assalamualaikum|assalam)\b", re.IGNORECASE), "Assalamu'alaikum! Saya Asisten Akademik UNSRAT. Ada yang bisa saya bantu seputar informasi akademik atau perkuliahan di UNSRAT?"),
-    (re.compile(r"^(shalom|salom)\b", re.IGNORECASE), "Shalom! Saya Asisten Akademik UNSRAT. Ada yang bisa saya bantu seputar informasi akademik atau perkuliahan di UNSRAT?"),
+    (re.compile(r"^(shalom|salom|syalom)\b", re.IGNORECASE), "Shalom! Saya Asisten Akademik UNSRAT. Ada yang bisa saya bantu seputar informasi akademik atau perkuliahan di UNSRAT?"),
     (re.compile(r"^salam\b", re.IGNORECASE), "Salam! Saya Asisten Akademik UNSRAT. Ada yang bisa saya bantu seputar informasi akademik atau perkuliahan di UNSRAT?"),
 ]
 
@@ -47,6 +47,33 @@ GENERAL_PATTERNS = [
 CLOSING_PATTERNS = [
     re.compile(r"^(terima\s*kasih|makasih|thanks|thank\s*you|makasi)\b", re.IGNORECASE),
 ]
+
+# Pola pertanyaan identitas bot (siapa anda / kamu siapa)
+IDENTITY_PATTERNS = [
+    re.compile(r"^(siapa\s+(anda|kamu|bot|asisten)|(anda|kamu)\s+siapa|siapakah\s+(anda|kamu))\b", re.IGNORECASE),
+]
+
+IDENTITY_REPLY = (
+    "Saya adalah Asisten Akademik UNSRAT, sistem cerdas berbasis "
+    "Retrieval-Augmented Generation (RAG) yang dirancang untuk membantu mahasiswa "
+    "dan civitas akademika memahami peraturan akademik, kurikulum, prosedur KRS, "
+    "cuti, serta layanan akademik di Universitas Sam Ratulangi."
+)
+
+# Pola pertanyaan kapabilitas bot (apa yang bisa anda lakukan / bisa apa saja)
+CAPABILITY_PATTERNS = [
+    re.compile(r"^(apa\s+(saja\s+)?(yang\s+)?bisa\s+(anda|kamu)\s+(lakukan|bantu)|(anda|kamu)\s+bisa\s+apa|apa\s+(fungsi|kegunaan|peran)\s+(anda|kamu)|bisa\s+(bantu|tolong)\s+apa(\s+saja)?)\b", re.IGNORECASE),
+]
+
+CAPABILITY_REPLY = (
+    "Saya dapat membantu Anda menemukan dan memahami informasi resmi akademik UNSRAT, seperti:\n"
+    "1. Prosedur pengisian, persetujuan, dan perubahan KRS\n"
+    "2. Ketentuan cuti akademik dan batas masa studi\n"
+    "3. Beban SKS per semester dan syarat kelulusan\n"
+    "4. Informasi pelaksanaan KKT/KKN dan wisuda\n"
+    "5. Hak, kewajiban, dan sanksi akademik mahasiswa\n\n"
+    "Silakan ketik pertanyaan spesifik yang ingin Anda ketahui!"
+)
 
 
 def _normalize_text(text: str) -> str:
@@ -67,10 +94,10 @@ def _normalize_text(text: str) -> str:
 
 def check_greeting_intent(query: str) -> str | None:
     """
-    Evaluasi apakah query merupakan sapaan murni (small talk).
+    Evaluasi apakah query merupakan sapaan murni, pertanyaan identitas, atau kapabilitas.
     
     Returns:
-        str: Pesan jawaban ramah jika kueri terdeteksi sebagai sapaan murni.
+        str: Pesan jawaban ramah/deskripsi jika terdeteksi.
         None: Jika kueri adalah pertanyaan akademik atau mengandung substansi (wajib diteruskan ke RAG).
     """
     if not query or not query.strip():
@@ -83,17 +110,29 @@ def check_greeting_intent(query: str) -> str | None:
     words = normalized.split()
     word_count = len(words)
 
-    # ── GUARD 1: Panjang kata maksimum untuk sapaan murni ──────────────────────
-    # Sapaan murni jarang melebihi 6 kata. Jika lebih panjang, hampir pasti kueri substantif.
-    if word_count > 6:
+    # ── GUARD 1: Panjang kata maksimum untuk intent percakapan ringan ───────────
+    if word_count > 8:
         return None
 
-    # ── GUARD 2: Jangan cegat jika mengandung kata tanya atau istilah akademik ───
+    # ── GUARD 2: Jangan cegat jika mengandung istilah regulasi akademik ────────
     words_set = set(words)
-    if words_set.intersection(QUESTION_WORDS) or words_set.intersection(ACADEMIC_TERMS):
+    if words_set.intersection(ACADEMIC_TERMS):
         return None
 
-    # ── EVALUASI POLA SAPAAN ───────────────────────────────────────────────────
+    # ── IDENTITAS & KAPABILITAS ASISTEN ────────────────────────────────────────
+    for pattern in IDENTITY_PATTERNS:
+        if pattern.search(normalized):
+            return IDENTITY_REPLY
+
+    for pattern in CAPABILITY_PATTERNS:
+        if pattern.search(normalized):
+            return CAPABILITY_REPLY
+
+    # ── GUARD 3: Untuk sapaan standar, abaikan jika mengandung kata tanya ───────
+    if words_set.intersection(QUESTION_WORDS):
+        return None
+
+    # ── EVALUASI POLA SAPAAN STANDAR ───────────────────────────────────────────
 
     # 1. Salam Waktu
     for pattern, reply in TIME_PATTERNS:
