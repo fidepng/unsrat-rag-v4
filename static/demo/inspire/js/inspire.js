@@ -66,7 +66,8 @@ const RagChatWidget = {
       sendBtn: document.getElementById('rag-send-btn'),
       sideCitationPanel: document.getElementById('rag-side-citation-panel'),
       sideCitationBody: document.getElementById('rag-side-citation-body'),
-      closeCitationBtn: document.getElementById('rag-close-citation-btn')
+      closeCitationBtn: document.getElementById('rag-close-citation-btn'),
+      sheetBackdrop: document.getElementById('rag-sheet-backdrop')
     };
 
     if (this.elements.welcomeState) {
@@ -99,7 +100,7 @@ const RagChatWidget = {
     const { 
       triggerBtn, closeBtn, expandBtn, resetBtn, overlay, 
       settingsBtn, settingsPanel, chatForm, userInput, sendBtn, 
-      closeCitationBtn, chatMessages 
+      closeCitationBtn, chatMessages, sheetBackdrop 
     } = this.elements;
 
     if (triggerBtn) triggerBtn.addEventListener('click', () => this.toggleModal());
@@ -232,6 +233,10 @@ const RagChatWidget = {
       closeCitationBtn.addEventListener('click', () => this.toggleCitationPanel(false));
     }
 
+    if (sheetBackdrop) {
+      sheetBackdrop.addEventListener('click', () => this.toggleCitationPanel(false));
+    }
+
     // Single Entry Handler for Send / Stop Button
     if (sendBtn) {
       sendBtn.addEventListener('click', () => this.handleActionClick());
@@ -306,8 +311,12 @@ const RagChatWidget = {
     if (headerGuideBtn) headerGuideBtn.addEventListener('click', toggleGuideModal);
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && guideModal && guideModal.classList.contains('active')) {
-        closeGuideModal();
+      if (e.key === 'Escape') {
+        if (guideModal && guideModal.classList.contains('active')) {
+          closeGuideModal();
+        } else if (this.elements.sideCitationPanel && !this.elements.sideCitationPanel.classList.contains('hidden')) {
+          this.toggleCitationPanel(false);
+        }
       }
     });
 
@@ -672,7 +681,8 @@ const RagChatWidget = {
     const headerBtn = citDiv.querySelector('.rag-citation-header');
     if (headerBtn) {
       headerBtn.addEventListener('click', () => {
-        if (this.state.mode === 'compact') {
+        const isMobile = window.innerWidth <= 768;
+        if (!isMobile && this.state.mode === 'compact') {
           this.toggleExpand(true);
         }
         this.openSideCitationPanel(sources);
@@ -681,7 +691,7 @@ const RagChatWidget = {
   },
 
   openSideCitationPanel(sources) {
-    const { sideCitationPanel, sideCitationBody } = this.elements;
+    const { sideCitationPanel, sideCitationBody, sheetBackdrop } = this.elements;
     if (!sideCitationPanel || !sideCitationBody) return;
 
     this.state.activeCitations = sources;
@@ -711,15 +721,51 @@ const RagChatWidget = {
     }).join('');
 
     sideCitationPanel.classList.remove('hidden');
+
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      void sideCitationPanel.offsetWidth;
+      sideCitationPanel.classList.add('rag-sheet-open');
+      if (sheetBackdrop) {
+        sheetBackdrop.classList.remove('hidden');
+        void sheetBackdrop.offsetWidth;
+        sheetBackdrop.classList.add('active');
+      }
+    }
   },
 
   toggleCitationPanel(show) {
-    const { sideCitationPanel } = this.elements;
+    const { sideCitationPanel, sheetBackdrop } = this.elements;
     if (!sideCitationPanel) return;
+
     if (show) {
-      sideCitationPanel.classList.remove('hidden');
+      this.openSideCitationPanel(this.state.activeCitations);
+      return;
+    }
+
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      sideCitationPanel.classList.remove('rag-sheet-open');
+      if (sheetBackdrop) {
+        sheetBackdrop.classList.remove('active');
+        setTimeout(() => {
+          if (!sheetBackdrop.classList.contains('active')) {
+            sheetBackdrop.classList.add('hidden');
+          }
+        }, 240);
+      }
+      setTimeout(() => {
+        if (!sideCitationPanel.classList.contains('rag-sheet-open')) {
+          sideCitationPanel.classList.add('hidden');
+        }
+      }, 280);
     } else {
+      sideCitationPanel.classList.remove('rag-sheet-open');
       sideCitationPanel.classList.add('hidden');
+      if (sheetBackdrop) {
+        sheetBackdrop.classList.remove('active');
+        sheetBackdrop.classList.add('hidden');
+      }
     }
   },
 

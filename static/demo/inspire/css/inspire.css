@@ -975,6 +975,15 @@
   display: block;
 }
 
+/* Mobile Bottom Sheet Handle & Backdrop Defaults (Hidden on Desktop) */
+.rag-sheet-drag-handle {
+  display: none;
+}
+
+.rag-sheet-backdrop {
+  display: none;
+}
+
 /* Side-by-Side & Mobile Overlay Citation Panel (2-Layer Color Harmony) */
 .rag-side-citation-panel {
   width: 420px;
@@ -1302,6 +1311,64 @@
     padding: 8px 14px !important;
     font-size: 12px !important;
     min-height: 40px !important;
+  }
+
+  /* Mobile Citation Bottom Sheet Drawer */
+  .rag-sheet-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 12, 10, 0.45);
+    z-index: 100001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.24s ease;
+  }
+
+  .rag-sheet-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .rag-side-citation-panel {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 80vh !important;
+    max-height: 85dvh !important;
+    border-radius: 20px 20px 0 0 !important;
+    background: #FAF9F6 !important;
+    box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid #E4DFD9 !important;
+    border-bottom: none !important;
+    z-index: 100002 !important;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .rag-side-citation-panel.rag-sheet-open {
+    transform: translateY(0) !important;
+  }
+
+  .rag-side-citation-panel.hidden {
+    display: none !important;
+    transform: translateY(100%) !important;
+  }
+
+  .rag-sheet-drag-handle {
+    display: block;
+    width: 38px;
+    height: 4px;
+    border-radius: 2px;
+    background: #D6D0C7;
+    margin: 8px auto 4px auto;
+    flex-shrink: 0;
   }
 }
 
