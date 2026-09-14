@@ -360,27 +360,52 @@ const RagChatWidget = {
     const { modal, overlay, userInput, triggerBtn } = this.elements;
     if (!modal) return;
 
-    const isCurrentlyHidden = modal.classList.contains('hidden');
-    const shouldShow = forceState !== undefined ? forceState : isCurrentlyHidden;
+    const isCurrentlyOpen = !modal.classList.contains('hidden') && modal.classList.contains('rag-modal-open');
+    const shouldShow = forceState !== undefined ? forceState : !isCurrentlyOpen;
+
+    if (this.modalCloseTimeout) {
+      clearTimeout(this.modalCloseTimeout);
+      this.modalCloseTimeout = null;
+    }
 
     if (shouldShow) {
       modal.classList.remove('hidden');
-      if (overlay) overlay.classList.remove('hidden');
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        void overlay.offsetWidth;
+        overlay.classList.add('active');
+        if (this.state.mode === 'expanded') {
+          overlay.classList.add('rag-overlay-expanded');
+        }
+      }
       if (triggerBtn) triggerBtn.classList.add('rag-trigger-hidden');
+      void modal.offsetWidth; // Force reflow for smooth transition
+      modal.classList.add('rag-modal-open');
       if (userInput) userInput.focus();
     } else {
-      modal.classList.add('hidden');
-      if (overlay) overlay.classList.add('hidden');
+      modal.classList.remove('rag-modal-open');
+      if (overlay) {
+        overlay.classList.remove('active');
+        overlay.classList.remove('rag-overlay-expanded');
+      }
       if (triggerBtn) triggerBtn.classList.remove('rag-trigger-hidden');
       
       if (this.state.status === 'streaming' && this.state.abortController) {
         this.state.abortController.abort();
       }
+
+      this.modalCloseTimeout = setTimeout(() => {
+        if (!modal.classList.contains('rag-modal-open')) {
+          modal.classList.add('hidden');
+          if (overlay) overlay.classList.add('hidden');
+        }
+        this.modalCloseTimeout = null;
+      }, 300);
     }
   },
 
   toggleExpand(forceState) {
-    const { modal, expandBtn } = this.elements;
+    const { modal, expandBtn, overlay } = this.elements;
     if (!modal) return;
 
     const shouldExpand = forceState !== undefined ? forceState : this.state.mode === 'compact';
@@ -388,6 +413,9 @@ const RagChatWidget = {
       this.state.mode = 'expanded';
       modal.classList.remove('rag-modal-compact');
       modal.classList.add('rag-modal-expanded');
+      if (overlay && modal.classList.contains('rag-modal-open')) {
+        overlay.classList.add('rag-overlay-expanded');
+      }
       if (expandBtn) {
         expandBtn.innerHTML = RAG_ICONS.minimize;
       }
@@ -395,6 +423,9 @@ const RagChatWidget = {
       this.state.mode = 'compact';
       modal.classList.remove('rag-modal-expanded');
       modal.classList.add('rag-modal-compact');
+      if (overlay) {
+        overlay.classList.remove('rag-overlay-expanded');
+      }
       if (expandBtn) {
         expandBtn.innerHTML = RAG_ICONS.expand;
       }

@@ -62,17 +62,30 @@
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
-/* Modal Overlay Backdrop - Tanpa Blur & Non-blocking agar background bisa di-scroll */
+/* Modal Overlay Backdrop - Non-blocking on compact desktop, focused on expanded & mobile */
 .rag-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(15, 12, 10, 0.25);
   pointer-events: none;
-  transition: opacity 0.15s ease;
+  opacity: 0;
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 999998;
 }
 
-/* Modal Window Base - Tanpa Animasi Transisi (Instan) */
+.rag-overlay.active {
+  opacity: 1;
+}
+
+@media (min-width: 769px) {
+  .rag-overlay.rag-overlay-expanded {
+    opacity: 1;
+    pointer-events: auto;
+    background-color: rgba(15, 12, 10, 0.35);
+  }
+}
+
+/* Modal Window Base - Orchestrated Motion System */
 .rag-modal-window {
   position: fixed;
   background-color: #FAF9F6;
@@ -82,8 +95,26 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: none !important;
   z-index: 999999;
+  transform-origin: bottom right;
+  opacity: 0;
+  transform: scale(0.92) translateY(16px);
+  pointer-events: none;
+  transition: 
+    opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    right 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    bottom 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.rag-modal-window.rag-modal-open {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
 }
 
 /* Modal Mode: Compact (Default) - Melayang Presisi dengan Ruang Napas 36px */
@@ -92,24 +123,23 @@
   left: auto !important;
   bottom: 96px !important;
   right: 36px !important;
-  transform: none !important;
   width: 420px;
   max-width: calc(100vw - 48px);
   height: 600px;
   max-height: calc(100dvh - 116px);
 }
 
-/* Modal Mode: Expanded (Fullscreen Centered Overlay) */
+/* Modal Mode: Expanded (Fullscreen Centered Window with Smooth Morph) */
 .rag-modal-expanded {
-  bottom: auto !important;
-  right: auto !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 92vw;
-  height: 90vh;
+  top: auto !important;
+  left: auto !important;
+  right: calc((100vw - min(92vw, 1360px)) / 2) !important;
+  bottom: calc((100vh - min(90vh, 900px)) / 2) !important;
+  width: min(92vw, 1360px);
+  height: min(90vh, 900px);
   max-width: 1360px;
   max-height: 900px;
+  box-shadow: 0 24px 54px -10px rgba(28, 25, 23, 0.25), 0 8px 20px -4px rgba(28, 25, 23, 0.12);
 }
 
 /* Header Modal */
@@ -178,6 +208,17 @@
   align-items: center;
 }
 
+@keyframes ragPopoverEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .rag-reset-popover {
   position: absolute;
   top: calc(100% + 8px);
@@ -192,7 +233,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  animation: ragFadeIn 0.15s ease-out;
+  transform-origin: top right;
+  animation: ragPopoverEnter 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .rag-reset-popover.hidden {
@@ -248,6 +290,17 @@
   border-color: #632222;
 }
 
+@keyframes ragDropdownEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Settings Dropdown Minimalist Context Menu (Relative Width to Text) */
 .rag-settings-dropdown {
   position: absolute;
@@ -264,6 +317,11 @@
   flex-direction: column;
   gap: 2px;
   font-size: 12px;
+  transform-origin: top right;
+}
+
+.rag-settings-dropdown:not(.hidden) {
+  animation: ragDropdownEnter 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .rag-menu-item {
@@ -984,6 +1042,17 @@
   display: none;
 }
 
+@keyframes ragCitationSlideInDesktop {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Side-by-Side & Mobile Overlay Citation Panel (2-Layer Color Harmony) */
 .rag-side-citation-panel {
   width: 420px;
@@ -992,6 +1061,12 @@
   border-left: 1px solid #E4DFD9;
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 769px) {
+  .rag-side-citation-panel:not(.hidden) {
+    animation: ragCitationSlideInDesktop 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 }
 
 .rag-modal-expanded .rag-side-citation-panel {
@@ -1221,24 +1296,65 @@
   background: #94a3b8;
 }
 
-/* Mobile-First Fullscreen Shell (<= 768px) */
+/* Mobile-First Peek-Through Sheet (<= 768px) - Leaves Portal INSPIRE header visible */
 @media (max-width: 768px) {
   .rag-modal-window.rag-modal-compact,
   .rag-modal-window.rag-modal-expanded {
     position: fixed !important;
-    top: 0 !important;
+    top: calc(env(safe-area-inset-top, 0px) + 54px) !important;
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
     width: 100% !important;
-    height: 100% !important;
-    height: 100dvh !important;
+    height: calc(100dvh - 54px - env(safe-area-inset-top, 0px)) !important;
     max-width: 100vw !important;
-    max-height: 100dvh !important;
-    border-radius: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    transform: none !important;
+    max-height: calc(100dvh - 54px - env(safe-area-inset-top, 0px)) !important;
+    border-radius: 22px 22px 0 0 !important;
+    border: 1px solid rgba(228, 223, 217, 0.9) !important;
+    border-bottom: none !important;
+    box-shadow: 0 -12px 36px rgba(15, 12, 10, 0.22) !important;
+    transform-origin: center bottom !important;
+    transform: translateY(100%) !important;
+    opacity: 0.96 !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease !important;
+  }
+
+  .rag-modal-window.rag-modal-compact.rag-modal-open,
+  .rag-modal-window.rag-modal-expanded.rag-modal-open {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+  }
+
+  /* Sheet Header with grab handle indicator */
+  .rag-modal-header {
+    border-radius: 21px 21px 0 0 !important;
+    padding-top: 18px !important;
+  }
+
+  .rag-modal-header::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.42);
+    pointer-events: none;
+  }
+
+  /* Mobile Peek Overlay (Dims Portal INSPIRE header, tap-to-dismiss) */
+  .rag-overlay {
+    background-color: rgba(15, 12, 10, 0.48) !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease !important;
+  }
+
+  .rag-overlay.active {
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
 
   #rag-expand-btn {
@@ -1246,7 +1362,7 @@
   }
 
   .rag-chat-form {
-    padding-bottom: max(14px, env(safe-area-inset-bottom)) !important;
+    padding-bottom: max(14px, env(safe-area-inset-bottom, 0px)) !important;
   }
 
   /* Mobile Welcome State Scale */
@@ -1345,11 +1461,12 @@
     box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.2) !important;
     border: 1px solid #E4DFD9 !important;
     border-bottom: none !important;
-    z-index: 100002 !important;
+    z-index: 1000002 !important;
     transform: translateY(100%);
-    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
     display: flex !important;
     flex-direction: column !important;
+    animation: none !important;
   }
 
   .rag-side-citation-panel.rag-sheet-open {
@@ -1369,6 +1486,16 @@
     background: #D6D0C7;
     margin: 8px auto 4px auto;
     flex-shrink: 0;
+  }
+}
+
+/* Accessibility: Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
