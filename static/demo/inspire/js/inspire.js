@@ -348,7 +348,7 @@ const RagChatWidget = {
   },
 
   toggleModal(forceState) {
-    const { modal, overlay, userInput } = this.elements;
+    const { modal, overlay, userInput, triggerBtn } = this.elements;
     if (!modal) return;
 
     const isCurrentlyHidden = modal.classList.contains('hidden');
@@ -357,10 +357,12 @@ const RagChatWidget = {
     if (shouldShow) {
       modal.classList.remove('hidden');
       if (overlay) overlay.classList.remove('hidden');
+      if (triggerBtn) triggerBtn.classList.add('rag-trigger-hidden');
       if (userInput) userInput.focus();
     } else {
       modal.classList.add('hidden');
       if (overlay) overlay.classList.add('hidden');
+      if (triggerBtn) triggerBtn.classList.remove('rag-trigger-hidden');
       
       if (this.state.status === 'streaming' && this.state.abortController) {
         this.state.abortController.abort();
