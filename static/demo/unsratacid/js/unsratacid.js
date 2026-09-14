@@ -1,7 +1,6 @@
 /**
- * INSPIRE UNSRAT RAG Chatbot Widget Module
- * Dedicated Script untuk Portal INSPIRE — Terpisah penuh dari legacy widget unsrat.ac.id.
- * Fitur: Single conversational onboarding bubble, zero layout-shift, responsive SSE streaming.
+ * UNSRAT RAG Chatbot Widget Module
+ * Encapsulated Namespace - Minimal & Defensif.
  */
 const FEATURE_FLAGS = {
   showConfigModelSelect: true,
@@ -18,7 +17,7 @@ const RAG_ICONS = {
   alertCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
 };
 
-const RagInspireChat = {
+const RagChatWidget = {
   state: {
     chatHistory: [],
     status: 'idle', // 'idle' | 'streaming'
@@ -60,6 +59,7 @@ const RagInspireChat = {
       settingsPanel: document.getElementById('rag-settings-panel'),
       modelMenuItem: document.getElementById('rag-model-menu-item'),
       chatMessages: document.getElementById('rag-chat-messages'),
+      welcomeState: document.getElementById('rag-welcome-state'),
       chatForm: document.getElementById('rag-chat-form'),
       userInput: document.getElementById('rag-user-input'),
       sendBtn: document.getElementById('rag-send-btn'),
@@ -68,9 +68,8 @@ const RagInspireChat = {
       closeCitationBtn: document.getElementById('rag-close-citation-btn')
     };
 
-    const initialWelcome = document.querySelector('.rag-welcome-msg-wrapper');
-    if (initialWelcome) {
-      this.initialWelcomeHTML = initialWelcome.outerHTML;
+    if (this.elements.welcomeState) {
+      this.welcomeStateHTML = this.elements.welcomeState.outerHTML;
     }
   },
 
@@ -99,7 +98,7 @@ const RagInspireChat = {
     const { 
       triggerBtn, closeBtn, expandBtn, resetBtn, overlay, 
       settingsBtn, settingsPanel, chatForm, userInput, sendBtn, 
-      closeCitationBtn 
+      closeCitationBtn, chatMessages 
     } = this.elements;
 
     if (triggerBtn) triggerBtn.addEventListener('click', () => this.toggleModal());
@@ -116,6 +115,7 @@ const RagInspireChat = {
         }
       });
 
+      // Close dropdown when clicking outside
       document.addEventListener('click', (e) => {
         if (settingsPanel && !settingsPanel.classList.contains('hidden')) {
           if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
@@ -128,22 +128,25 @@ const RagInspireChat = {
     if (settingsPanel) {
       settingsPanel.addEventListener('click', (e) => {
         const optionBtn = e.target.closest('.rag-submenu-option');
-        if (!optionBtn) return;
+        if (optionBtn) {
+          const type = optionBtn.getAttribute('data-type');
+          const val = optionBtn.getAttribute('data-value');
+          if (!type || !val) return;
 
-        const type = optionBtn.getAttribute('data-type');
-        const val = optionBtn.getAttribute('data-value');
+          if (type === 'config') {
+            this.state.currentConfig = val;
+          } else if (type === 'model') {
+            this.state.currentModel = val;
+          }
 
-        if (type === 'config') {
-          this.state.currentConfig = val;
-          settingsPanel.querySelectorAll('[data-type="config"]').forEach(btn => btn.classList.remove('active'));
-          optionBtn.classList.add('active');
-        } else if (type === 'model') {
-          this.state.currentModel = val;
-          settingsPanel.querySelectorAll('[data-type="model"]').forEach(btn => btn.classList.remove('active'));
-          optionBtn.classList.add('active');
+          const parentSubmenu = optionBtn.closest('.rag-submenu');
+          if (parentSubmenu) {
+            parentSubmenu.querySelectorAll('.rag-submenu-option').forEach(btn => {
+              const isMatch = btn.getAttribute('data-value') === val;
+              btn.classList.toggle('active', isMatch);
+            });
+          }
         }
-
-        settingsPanel.classList.add('hidden');
       });
     }
 
@@ -151,6 +154,7 @@ const RagInspireChat = {
       closeCitationBtn.addEventListener('click', () => this.toggleCitationPanel(false));
     }
 
+    // Single Entry Handler for Send / Stop Button
     if (sendBtn) {
       sendBtn.addEventListener('click', () => this.handleActionClick());
     }
@@ -171,13 +175,28 @@ const RagInspireChat = {
         }
       });
     }
+
+    // Quick-Question Chips Delegation (Auto-Submit)
+    if (chatMessages) {
+      chatMessages.addEventListener('click', (e) => {
+        const chipBtn = e.target.closest('.rag-chip-btn');
+        if (chipBtn) {
+          const query = chipBtn.getAttribute('data-query');
+          if (query) {
+            this.submitQueryDirectly(query);
+          }
+        }
+      });
+    }
   },
 
   toggleModal(forceState) {
     const { modal, overlay, userInput } = this.elements;
     if (!modal) return;
 
-    const shouldShow = forceState !== undefined ? forceState : modal.classList.contains('hidden');
+    const isCurrentlyHidden = modal.classList.contains('hidden');
+    const shouldShow = forceState !== undefined ? forceState : isCurrentlyHidden;
+
     if (shouldShow) {
       modal.classList.remove('hidden');
       if (overlay) overlay.classList.remove('hidden');
@@ -231,8 +250,8 @@ const RagInspireChat = {
     this.state.status = 'idle';
     this.toggleCitationPanel(false);
 
-    if (chatMessages && this.initialWelcomeHTML) {
-      chatMessages.innerHTML = this.initialWelcomeHTML;
+    if (chatMessages && this.welcomeStateHTML) {
+      chatMessages.innerHTML = this.welcomeStateHTML;
     }
   },
 
@@ -246,6 +265,11 @@ const RagInspireChat = {
           modelSubmenu.innerHTML = data.available_models.map((m, idx) => `
             <button type="button" class="rag-submenu-option ${idx === 0 ? 'active' : ''}" data-type="model" data-value="${m}">${m}</button>
           `).join('');
+        }
+        if (data.available_models && this.elements.modelSelect) {
+          this.elements.modelSelect.innerHTML = data.available_models.map(m => 
+            `<option value="${m}">${m}</option>`
+          ).join('');
         }
       }
     } catch (err) {
@@ -274,7 +298,7 @@ const RagInspireChat = {
   submitQueryDirectly(query) {
     if (this.state.status === 'streaming') return;
 
-    // Tambahkan user message tanpa menghapus welcome bubble
+    this.hideWelcomeState();
     this.renderUserBubble(query);
 
     this.state.status = 'streaming';
@@ -285,6 +309,11 @@ const RagInspireChat = {
     this.scrollToBottom();
 
     this.executeStreamFetch(query, botBubbleObj);
+  },
+
+  hideWelcomeState() {
+    const welcome = document.getElementById('rag-welcome-state');
+    if (welcome) welcome.remove();
   },
 
   updateSendButtonState(isStreaming) {
@@ -310,14 +339,12 @@ const RagInspireChat = {
         body: JSON.stringify({
           query: query,
           config: this.state.currentConfig,
-          chat_history: this.state.chatHistory,
-          model: this.state.currentModel
+          model: this.state.currentModel,
+          chat_history: this.state.chatHistory
         })
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -329,7 +356,7 @@ const RagInspireChat = {
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
-        buffer = lines.pop();
+        buffer = lines.pop(); // Pertahankan baris parsial yang belum lengkap
 
         for (const line of lines) {
           const trimmed = line.trim();
@@ -428,10 +455,7 @@ const RagInspireChat = {
     wrapper.className = 'rag-msg-wrapper rag-msg-bot-wrapper';
     wrapper.innerHTML = `
       <div class="rag-msg-meta-header">
-        <div class="rag-meta-author">
-          <img src="/static/assets/logo-unsrat.png" alt="UNSRAT" class="rag-bot-avatar" />
-          <span>Asisten Akademik</span>
-        </div>
+        <span>Asisten Akademik</span>
         <span>•</span>
         <span>${this.getTimestamp()}</span>
       </div>
@@ -486,36 +510,42 @@ const RagInspireChat = {
     const { sideCitationPanel, sideCitationBody } = this.elements;
     if (!sideCitationPanel || !sideCitationBody) return;
 
-    sideCitationBody.innerHTML = sources.map(src => `
-      <div class="rag-citation-card">
-        <div class="rag-card-header">
-          <span class="rag-badge-index">[Sumber ${src.index}]</span>
-          <span class="rag-card-doc">${this.escapeHtml(src.doc_id || '')}</span>
-        </div>
-        <div class="rag-card-title">${this.escapeHtml(src.title || '')}</div>
-        ${src.bab || src.pasal ? `
-          <div class="rag-card-meta">
-            ${src.bab ? `<span>${this.escapeHtml(src.bab)}</span>` : ''}
-            ${src.bagian ? `<span>• ${this.escapeHtml(src.bagian)}</span>` : ''}
-            ${src.pasal ? `<span>• ${this.escapeHtml(src.pasal)}</span>` : ''}
+    this.state.activeCitations = sources;
+    sideCitationBody.innerHTML = sources.map((src, index) => {
+      const title = src.title || "Dokumen Akademik UNSRAT";
+      const docId = src.doc_id ? `ID: ${src.doc_id}` : "";
+      const bab = src.bab ? `${src.bab}` : "";
+      const bagian = src.bagian ? `${src.bagian}` : "";
+      const pasal = src.pasal ? (String(src.pasal).toLowerCase().startsWith('pasal') ? `${src.pasal}` : `Pasal ${src.pasal}`) : "";
+      const breadcrumbList = [bab, bagian, pasal].filter(Boolean);
+      const breadcrumbsHTML = breadcrumbList.length > 0 
+        ? `<div class="rag-citation-breadcrumbs">${breadcrumbList.map(b => `<span>${this.escapeHtml(b)}</span>`).join('<span class="rag-dot-sep">•</span>')}</div>`
+        : '';
+      const idx = src.index || (index + 1);
+
+      return `
+        <div class="rag-citation-item">
+          <div class="rag-citation-topbar">
+            <span class="rag-citation-idx-badge">[${this.escapeHtml(idx)}]</span>
+            ${docId ? `<span class="rag-citation-docid-badge">${this.escapeHtml(docId)}</span>` : ''}
           </div>
-        ` : ''}
-        <div class="rag-card-content">${this.escapeHtml(src.content || '')}</div>
-      </div>
-    `).join('');
+          <h5 class="rag-citation-title-text">${this.escapeHtml(title)}</h5>
+          ${breadcrumbsHTML}
+          <div class="rag-citation-snippet">${this.escapeHtml(src.content)}</div>
+        </div>
+      `;
+    }).join('');
 
     sideCitationPanel.classList.remove('hidden');
   },
 
-  toggleCitationPanel(forceState) {
+  toggleCitationPanel(show) {
     const { sideCitationPanel } = this.elements;
     if (!sideCitationPanel) return;
-
-    if (forceState !== undefined) {
-      if (forceState) sideCitationPanel.classList.remove('hidden');
-      else sideCitationPanel.classList.add('hidden');
+    if (show) {
+      sideCitationPanel.classList.remove('hidden');
     } else {
-      sideCitationPanel.classList.toggle('hidden');
+      sideCitationPanel.classList.add('hidden');
     }
   },
 
@@ -527,13 +557,10 @@ const RagInspireChat = {
   },
 
   escapeHtml(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+    return String(str || '').replace(/[&<>"']/g, match => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[match]);
   }
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  RagInspireChat.init();
-});
+document.addEventListener('DOMContentLoaded', () => RagChatWidget.init());
