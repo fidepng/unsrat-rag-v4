@@ -639,9 +639,9 @@ async def inspire_homepage_html():
 @app.get("/testing")
 async def testing():
     """Serve initial SPA frontend for testing & debugging."""
-    testing_path = Path("static/index.html")
+    testing_path = Path("static/testing/index.html")
     if not testing_path.exists():
-        return HTMLResponse("<h1>Frontend testing tidak ditemukan di static/index.html.</h1>")
+        return HTMLResponse("<h1>Frontend testing tidak ditemukan di static/testing/index.html.</h1>")
     return FileResponse(testing_path, media_type="text/html")
 
 
