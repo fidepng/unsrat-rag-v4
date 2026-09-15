@@ -7,7 +7,7 @@ class TestBM25Retriever:
         tokens = _tokenize("Halo! Ini adalah kueri BM25.")
         assert "halo" in tokens
         assert "ini" in tokens
-        assert "adalah" in tokens
+        assert "adalah" not in tokens  # Stopword Bahasa Indonesia difilter oleh Sastrawi
         assert "kueri" in tokens
         assert "bm25" in tokens
         assert "halo!" not in tokens
