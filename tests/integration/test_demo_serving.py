@@ -61,4 +61,13 @@ def test_evaluation_page_served():
     assert "Evaluasi RAGAS | Chatbot UNSRAT" in resp_eval.text
     assert "/static/evaluation/js/evaluation.js" in resp_eval.text
 
+@pytest.mark.offline
+def test_dev_page_served():
+    """Verifikasi endpoint /dev menyajikan developer control center dengan benar."""
+    resp_dev = client.get("/dev")
+    assert resp_dev.status_code == 200
+    assert "text/html" in resp_dev.headers["content-type"]
+    assert "Dev Control Panel" in resp_dev.text or "Developer" in resp_dev.text
+    assert "/static/dev/js/dev.js" in resp_dev.text
+
 

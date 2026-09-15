@@ -336,7 +336,7 @@ async def get_evaluation():
 
 @app.get("/dev", response_class=HTMLResponse)
 async def dev_page():
-    dev_html = ROOT_DIR / "static" / "dev.html"
+    dev_html = ROOT_DIR / "static" / "dev" / "index.html"
     if not dev_html.exists():
         raise HTTPException(status_code=404, detail="Dev page not found")
     return HTMLResponse(content=dev_html.read_text(encoding="utf-8"))
