@@ -1279,7 +1279,7 @@
 }
 
 .rag-sheet-backdrop {
-  display: none;
+  display: none !important;
 }
 
 @keyframes ragCitationFadeInDesktop {
@@ -1735,11 +1735,11 @@
 
   /* Mobile Citation Bottom Sheet Drawer */
   .rag-sheet-backdrop {
-    display: block;
+    display: block !important;
     position: fixed !important;
     inset: 0 !important;
     background-color: rgba(15, 12, 10, 0.48) !important;
-    z-index: 1000001 !important;
+    z-index: 100 !important;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.24s ease;
@@ -1764,7 +1764,7 @@
     background: #FAF9F6 !important;
     box-shadow: var(--rag-shadow-sheet) !important;
     border: none !important;
-    z-index: 1000002 !important;
+    z-index: 200 !important;
     transform: translateY(100%);
     transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
     display: flex !important;

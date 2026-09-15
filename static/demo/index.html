@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS Scoped khusus Demo Chatbot UNSRAT (Portal INSPIRE) -->
-  <link rel="stylesheet" href="/static/demo/inspire/css/inspire.css?v=19">
+  <link rel="stylesheet" href="/static/demo/inspire/css/inspire.css?v=20">
 
   <!-- Marked.js for Markdown Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -51,9 +51,6 @@
 
     <!-- Modal Overlay Backdrop (Transparent/Non-blocking) -->
     <div id="rag-modal-overlay" class="rag-overlay hidden"></div>
-
-    <!-- Mobile Bottom Sheet Backdrop (Direct Root Child - Fullscreen Reach) -->
-    <div id="rag-sheet-backdrop" class="rag-sheet-backdrop hidden"></div>
 
     <!-- Chat Modal Window -->
     <div id="rag-modal" class="rag-modal-window rag-modal-compact hidden" role="dialog" aria-modal="true" aria-labelledby="rag-header-title">
@@ -184,6 +181,9 @@
           </div>
         </div>
 
+        <!-- Mobile Bottom Sheet Backdrop (Inside Modal Stacking Context) -->
+        <div id="rag-sheet-backdrop" class="rag-sheet-backdrop hidden"></div>
+
         <!-- Side-by-Side / Mobile Overlay Citation Panel -->
         <div id="rag-side-citation-panel" class="rag-side-citation-panel hidden">
           <div class="rag-sheet-drag-handle"></div>
@@ -255,6 +255,6 @@
     </div>
   </div>
 
-  <script src="/static/demo/inspire/js/inspire.js?v=19"></script>
+  <script src="/static/demo/inspire/js/inspire.js?v=20"></script>
 </body>
 </html>
