@@ -52,6 +52,7 @@ const RagChatWidget = {
     }
 
     this.bindEvents();
+    this.setupSheetGesture();
     this.bindNetworkEvents();
     this.applyFeatureFlags();
     this.loadSystemConfig();
@@ -98,6 +99,7 @@ const RagChatWidget = {
       sideCitationBody: document.getElementById('rag-side-citation-body'),
       closeCitationBtn: document.getElementById('rag-close-citation-btn'),
       sheetBackdrop: document.getElementById('rag-sheet-backdrop'),
+      sheetDragHandle: document.querySelector('.rag-sheet-drag-handle'),
       guideAckBtn: document.getElementById('rag-guide-ack-btn'),
       offlineBanner: document.getElementById('rag-offline-banner')
     };
@@ -1132,9 +1134,13 @@ const RagChatWidget = {
 
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
+      sideCitationPanel.style.removeProperty('transform');
+      sideCitationPanel.style.removeProperty('transition');
       void sideCitationPanel.offsetWidth;
       sideCitationPanel.classList.add('rag-sheet-open');
       if (sheetBackdrop) {
+        sheetBackdrop.style.removeProperty('opacity');
+        sheetBackdrop.style.removeProperty('transition');
         sheetBackdrop.classList.remove('hidden');
         void sheetBackdrop.offsetWidth;
         sheetBackdrop.classList.add('active');
@@ -1252,6 +1258,109 @@ const RagChatWidget = {
     }
   },
 
+  setupSheetGesture() {
+    const { sideCitationPanel, sheetBackdrop } = this.elements;
+    if (!sideCitationPanel) return;
+
+    const dragHandle = sideCitationPanel.querySelector('.rag-sheet-drag-handle');
+    const header = sideCitationPanel.querySelector('.rag-side-citation-header');
+    if (!dragHandle) return;
+
+    let isDragging = false;
+    let startY = 0;
+    let currentDeltaY = 0;
+    let activePointerId = null;
+
+    const onPointerDown = (e) => {
+      // Gesture only applies on mobile viewports (<= 768px)
+      if (window.innerWidth > 768) return;
+      // Filter non-primary pointer/touch
+      if (!e.isPrimary) return;
+      // Do not engage drag if user tapped close button
+      if (e.target.closest && e.target.closest('#rag-close-citation-btn')) return;
+
+      isDragging = true;
+      activePointerId = e.pointerId;
+      startY = e.clientY;
+      currentDeltaY = 0;
+
+      dragHandle.classList.add('rag-dragging');
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId);
+      } catch (_) {}
+
+      // Disable transition for instantaneous 1:1 tactile drag response
+      sideCitationPanel.style.setProperty('transition', 'none', 'important');
+      if (sheetBackdrop) {
+        sheetBackdrop.style.setProperty('transition', 'none', 'important');
+      }
+    };
+
+    const onPointerMove = (e) => {
+      if (!isDragging || e.pointerId !== activePointerId) return;
+
+      const deltaY = e.clientY - startY;
+      if (deltaY < 0) {
+        // Rubber-band resistance when pulling up beyond top edge
+        currentDeltaY = deltaY * 0.2;
+      } else {
+        // Direct tracking when dragging downwards
+        currentDeltaY = deltaY;
+      }
+
+      sideCitationPanel.style.setProperty('transform', `translateY(${currentDeltaY}px)`, 'important');
+
+      if (sheetBackdrop && currentDeltaY > 0) {
+        // Linearly fade backdrop opacity as sheet is pulled towards dismissal threshold
+        const progress = Math.max(0, Math.min(1, 1 - (currentDeltaY / 240)));
+        sheetBackdrop.style.setProperty('opacity', progress.toFixed(2), 'important');
+      }
+    };
+
+    const onPointerEnd = (e) => {
+      if (!isDragging || e.pointerId !== activePointerId) return;
+      isDragging = false;
+      dragHandle.classList.remove('rag-dragging');
+
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+
+      // Restore CSS transitions for smooth dismissal or snap-back release
+      sideCitationPanel.style.removeProperty('transition');
+      if (sheetBackdrop) {
+        sheetBackdrop.style.removeProperty('transition');
+        sheetBackdrop.style.removeProperty('opacity');
+      }
+
+      // If dragged down > 80px, dismiss the bottom sheet
+      if (currentDeltaY > 80) {
+        sideCitationPanel.style.removeProperty('transform');
+        this.toggleCitationPanel(false);
+      } else {
+        // Snap back to fully open sheet
+        sideCitationPanel.style.removeProperty('transform');
+      }
+
+      currentDeltaY = 0;
+      activePointerId = null;
+    };
+
+    // Attach listeners to drag handle
+    dragHandle.addEventListener('pointerdown', onPointerDown);
+    dragHandle.addEventListener('pointermove', onPointerMove);
+    dragHandle.addEventListener('pointerup', onPointerEnd);
+    dragHandle.addEventListener('pointercancel', onPointerEnd);
+
+    // Also attach to header bar for comfortable swipe-down target area
+    if (header) {
+      header.addEventListener('pointerdown', onPointerDown);
+      header.addEventListener('pointermove', onPointerMove);
+      header.addEventListener('pointerup', onPointerEnd);
+      header.addEventListener('pointercancel', onPointerEnd);
+    }
+  },
+
   toggleCitationPanel(show) {
     const { sideCitationPanel, sheetBackdrop } = this.elements;
     if (!sideCitationPanel) return;
@@ -1263,8 +1372,12 @@ const RagChatWidget = {
 
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
+      sideCitationPanel.style.removeProperty('transform');
+      sideCitationPanel.style.removeProperty('transition');
       sideCitationPanel.classList.remove('rag-sheet-open');
       if (sheetBackdrop) {
+        sheetBackdrop.style.removeProperty('opacity');
+        sheetBackdrop.style.removeProperty('transition');
         sheetBackdrop.classList.remove('active');
         setTimeout(() => {
           if (!sheetBackdrop.classList.contains('active')) {
@@ -1278,9 +1391,13 @@ const RagChatWidget = {
         }
       }, 280);
     } else {
+      sideCitationPanel.style.removeProperty('transform');
+      sideCitationPanel.style.removeProperty('transition');
       sideCitationPanel.classList.remove('rag-sheet-open');
       sideCitationPanel.classList.add('hidden');
       if (sheetBackdrop) {
+        sheetBackdrop.style.removeProperty('opacity');
+        sheetBackdrop.style.removeProperty('transition');
         sheetBackdrop.classList.remove('active');
         sheetBackdrop.classList.add('hidden');
       }

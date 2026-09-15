@@ -1783,12 +1783,40 @@
 
   .rag-sheet-drag-handle {
     display: block;
-    width: 38px;
-    height: 4px;
-    border-radius: 2px;
-    background: #D6D0C7;
-    margin: 8px auto 4px auto;
+    width: 44px;
+    height: 5px;
+    border-radius: 9999px;
+    background: #D1C9BE;
+    margin: 10px auto 6px auto;
     flex-shrink: 0;
+    cursor: grab;
+    touch-action: none;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 0.16s ease, width 0.16s ease;
+  }
+
+  .rag-sheet-drag-handle::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    bottom: -14px;
+    left: -24px;
+    right: -24px;
+  }
+
+  .rag-sheet-drag-handle:active,
+  .rag-sheet-drag-handle.rag-dragging {
+    cursor: grabbing;
+    background: #A8A29E;
+    width: 50px;
+  }
+
+  .rag-side-citation-header {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
   }
 }
 
