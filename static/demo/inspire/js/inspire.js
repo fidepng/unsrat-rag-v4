@@ -8,13 +8,13 @@ const FEATURE_FLAGS = {
 };
 
 const RAG_ICONS = {
-  send: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>`,
-  stop: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>`,
-  expand: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V7h10"/><path d="M17 17 7 7"/></svg>`,
-  minimize: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10"/><path d="M17 7v10H7"/></svg>`,
-  bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 6H20"/></svg>`,
+  send: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>`,
+  stop: `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect width="14" height="14" x="5" y="5" rx="3"/></svg>`,
+  expand: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>`,
+  minimize: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" x2="21" y1="10" y2="3"/><line x1="3" x2="10" y1="21" y2="14"/></svg>`,
+  bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
   chevronRight: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
-  alertCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+  alertCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`
 };
 
 const RagChatWidget = {
@@ -25,7 +25,9 @@ const RagChatWidget = {
     abortController: null,
     currentConfig: 'b',
     currentModel: 'gemini-3.5-flash',
-    activeCitations: []
+    activeCitations: [],
+    lastQuery: '',
+    isTimedOut: false
   },
 
   elements: {},
@@ -34,16 +36,42 @@ const RagChatWidget = {
     this.cacheElements();
     if (!this.elements.widget) return;
 
-    this.stripButtonTitles();
+    if (window.marked && typeof window.marked.use === 'function') {
+      window.marked.use({
+        gfm: true,
+        breaks: true,
+        async: false
+      });
+    } else if (window.marked && typeof window.marked.setOptions === 'function') {
+      window.marked.setOptions({
+        breaks: true,
+        gfm: true
+      });
+    }
+
     this.bindEvents();
+    this.bindNetworkEvents();
     this.applyFeatureFlags();
     this.loadSystemConfig();
   },
 
-  stripButtonTitles() {
-    if (this.elements.widget) {
-      this.elements.widget.querySelectorAll('button[title]').forEach(btn => btn.removeAttribute('title'));
+  bindNetworkEvents() {
+    window.addEventListener('online', () => this.handleNetworkChange());
+    window.addEventListener('offline', () => this.handleNetworkChange());
+    this.handleNetworkChange();
+  },
+
+  handleNetworkChange() {
+    const isOffline = typeof navigator !== 'undefined' && !navigator.onLine;
+    const { offlineBanner } = this.elements;
+    if (offlineBanner) {
+      offlineBanner.classList.toggle('hidden', !isOffline);
     }
+  },
+
+  retryLastQuery() {
+    if (!this.state.lastQuery || this.state.status === 'streaming') return;
+    this.submitQueryDirectly(this.state.lastQuery);
   },
 
   cacheElements() {
@@ -67,7 +95,9 @@ const RagChatWidget = {
       sideCitationPanel: document.getElementById('rag-side-citation-panel'),
       sideCitationBody: document.getElementById('rag-side-citation-body'),
       closeCitationBtn: document.getElementById('rag-close-citation-btn'),
-      sheetBackdrop: document.getElementById('rag-sheet-backdrop')
+      sheetBackdrop: document.getElementById('rag-sheet-backdrop'),
+      guideAckBtn: document.getElementById('rag-guide-ack-btn'),
+      offlineBanner: document.getElementById('rag-offline-banner')
     };
 
     if (this.elements.welcomeState) {
@@ -103,10 +133,22 @@ const RagChatWidget = {
       closeCitationBtn, chatMessages, sheetBackdrop 
     } = this.elements;
 
-    if (triggerBtn) triggerBtn.addEventListener('click', () => this.toggleModal());
-    if (closeBtn) closeBtn.addEventListener('click', () => this.toggleModal(false));
-    if (overlay) overlay.addEventListener('click', () => this.toggleModal(false));
-    if (expandBtn) expandBtn.addEventListener('click', () => this.toggleExpand());
+    if (triggerBtn) triggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleModal();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleModal(false);
+    });
+    if (overlay) overlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleModal(false);
+    });
+    if (expandBtn) expandBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleExpand();
+    });
 
     // Reset confirmation popover controls
     const resetConfirmPopover = document.getElementById('rag-reset-confirm');
@@ -230,21 +272,31 @@ const RagChatWidget = {
     }
 
     if (closeCitationBtn) {
-      closeCitationBtn.addEventListener('click', () => this.toggleCitationPanel(false));
+      closeCitationBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleCitationPanel(false);
+      });
     }
 
     if (sheetBackdrop) {
-      sheetBackdrop.addEventListener('click', () => this.toggleCitationPanel(false));
+      sheetBackdrop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleCitationPanel(false);
+      });
     }
 
     // Single Entry Handler for Send / Stop Button
     if (sendBtn) {
-      sendBtn.addEventListener('click', () => this.handleActionClick());
+      sendBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.handleActionClick();
+      });
     }
 
     if (chatForm) {
       chatForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         this.handleActionClick();
       });
     }
@@ -306,16 +358,59 @@ const RagChatWidget = {
       }
     };
 
-    if (guideCloseBtn) guideCloseBtn.addEventListener('click', closeGuideModal);
-    if (guideBackdrop) guideBackdrop.addEventListener('click', closeGuideModal);
-    if (headerGuideBtn) headerGuideBtn.addEventListener('click', toggleGuideModal);
+    if (guideCloseBtn) guideCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeGuideModal();
+    });
+    if (guideBackdrop) guideBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeGuideModal();
+    });
+    if (this.elements.guideAckBtn) this.elements.guideAckBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeGuideModal();
+    });
+    if (headerGuideBtn) headerGuideBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleGuideModal();
+    });
 
+    // Universal outside-click dismiss for main modal window (Hardened against detached node bubbling)
+    document.addEventListener('click', (e) => {
+      const { modal, triggerBtn } = this.elements;
+      if (!modal || modal.classList.contains('hidden') || !modal.classList.contains('rag-modal-open')) return;
+
+      // 1. If click originated inside modal, do not dismiss
+      const path = e.composedPath ? e.composedPath() : [];
+      if (path.includes(modal) || modal.contains(e.target)) return;
+
+      // 2. If click was on trigger button, ignore here (handled by trigger button's own listener)
+      if (triggerBtn && (path.includes(triggerBtn) || triggerBtn.contains(e.target))) return;
+
+      // 3. If element was detached from the DOM during event dispatch (e.g. innerHTML swaps or welcome card removal), ignore
+      if (e.target && !document.body.contains(e.target)) return;
+
+      // 4. Don't close main modal if guide dialog is active or clicked
+      if (guideModal && guideModal.classList.contains('active')) return;
+      if (e.target.closest && e.target.closest('#rag-guide-modal')) return;
+
+      // Valid outside click: dismiss modal
+      this.toggleModal(false);
+    });
+
+    // Hierarchical keyboard Escape handler
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         if (guideModal && guideModal.classList.contains('active')) {
           closeGuideModal();
+        } else if (resetConfirmPopover && !resetConfirmPopover.classList.contains('hidden')) {
+          hideResetConfirm();
+        } else if (settingsPanel && !settingsPanel.classList.contains('hidden')) {
+          settingsPanel.classList.add('hidden');
         } else if (this.elements.sideCitationPanel && !this.elements.sideCitationPanel.classList.contains('hidden')) {
           this.toggleCitationPanel(false);
+        } else if (this.elements.modal && !this.elements.modal.classList.contains('hidden') && this.elements.modal.classList.contains('rag-modal-open')) {
+          this.toggleModal(false);
         }
       }
     });
@@ -340,6 +435,16 @@ const RagChatWidget = {
             userInput.focus();
             userInput.classList.add('rag-pulse-focus');
             setTimeout(() => userInput.classList.remove('rag-pulse-focus'), 500);
+          }
+          return;
+        }
+
+        // 3. Inline Citation Click ([1], [2], etc.)
+        const inlineCitationBtn = e.target.closest('.rag-inline-citation');
+        if (inlineCitationBtn) {
+          const citIdx = inlineCitationBtn.getAttribute('data-cit-idx');
+          if (citIdx) {
+            this.handleInlineCitationClick(citIdx);
           }
           return;
         }
@@ -508,6 +613,9 @@ const RagChatWidget = {
   submitQueryDirectly(query) {
     if (this.state.status === 'streaming') return;
 
+    this.state.lastQuery = query;
+    this.state.isTimedOut = false;
+
     this.hideWelcomeState();
     this.renderUserBubble(query);
 
@@ -544,12 +652,68 @@ const RagChatWidget = {
     let isFirstToken = true;
     let fullAnswer = '';
     let citations = [];
+    let renderRafId = null;
+    let timeoutId = null;
+    let fetchSignal;
+
+    // Timeout guard: 45s maximum duration (Context7 MDN Web Docs best practice)
+    if (typeof AbortSignal.timeout === 'function' && typeof AbortSignal.any === 'function') {
+      try {
+        const timeoutSignal = AbortSignal.timeout(45000);
+        fetchSignal = AbortSignal.any([this.state.abortController.signal, timeoutSignal]);
+      } catch (e) {
+        fetchSignal = this.state.abortController.signal;
+      }
+    } else {
+      fetchSignal = this.state.abortController.signal;
+      timeoutId = setTimeout(() => {
+        this.state.isTimedOut = true;
+        if (this.state.abortController) {
+          this.state.abortController.abort();
+        }
+      }, 45000);
+    }
+
+    const flushRender = () => {
+      const { chatMessages } = this.elements;
+      // 1. Read phase BEFORE DOM mutation (Google web.dev: avoid forced synchronous layout)
+      const wasNearBottom = chatMessages 
+        ? (chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight) < 120
+        : true;
+
+      // 2. DOM write phase
+      if (isFirstToken && fullAnswer.length > 0) {
+        isFirstToken = false;
+        botBubbleObj.contentElem.innerHTML = '';
+      }
+      if (fullAnswer.length > 0) {
+        let html = window.marked 
+          ? window.marked.parse(fullAnswer) 
+          : this.escapeHtml(fullAnswer);
+        html = html.replace(/\[(\d+)\]/g, '<button type="button" class="rag-inline-citation" data-cit-idx="$1" title="Lihat Sumber Rujukan [$1]">[$1]</button>');
+        botBubbleObj.contentElem.innerHTML = html;
+      }
+      
+      // 3. Batched scroll write phase
+      if (chatMessages && (wasNearBottom || isFirstToken)) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    };
+
+    const scheduleRender = () => {
+      if (!renderRafId) {
+        renderRafId = requestAnimationFrame(() => {
+          renderRafId = null;
+          flushRender();
+        });
+      }
+    };
 
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        signal: this.state.abortController.signal,
+        signal: fetchSignal,
         body: JSON.stringify({
           query: query,
           config: this.state.currentConfig,
@@ -581,14 +745,13 @@ const RagChatWidget = {
 
           try {
             const parsed = JSON.parse(dataStr);
-            if (parsed.type === 'token') {
-              if (isFirstToken) {
-                isFirstToken = false;
-                botBubbleObj.contentElem.innerHTML = '';
+            if (parsed.type === 'thinking') {
+              if (isFirstToken && botBubbleObj.statusElem) {
+                botBubbleObj.statusElem.textContent = parsed.content || 'Mencari rujukan akademik...';
               }
+            } else if (parsed.type === 'token') {
               fullAnswer += parsed.content;
-              botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
-              this.scrollToBottom();
+              scheduleRender();
             } else if (parsed.type === 'citations') {
               citations = parsed.sources || [];
             }
@@ -604,7 +767,6 @@ const RagChatWidget = {
           const parsed = JSON.parse(dataStr);
           if (parsed.type === 'token') {
             fullAnswer += parsed.content;
-            botBubbleObj.contentElem.innerHTML = window.marked ? window.marked.parse(fullAnswer) : this.escapeHtml(fullAnswer);
           } else if (parsed.type === 'citations') {
             citations = parsed.sources || [];
           }
@@ -612,6 +774,18 @@ const RagChatWidget = {
           // ignore
         }
       }
+
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+
+      // Final synchronous flush to ensure 100% of tokens are rendered
+      if (renderRafId) {
+        cancelAnimationFrame(renderRafId);
+        renderRafId = null;
+      }
+      flushRender();
 
       if (citations.length > 0) {
         this.renderCitations(botBubbleObj.bubbleElem, citations);
@@ -621,21 +795,97 @@ const RagChatWidget = {
       this.state.chatHistory.push({ role: 'assistant', content: fullAnswer });
 
     } catch (error) {
-      if (error.name === 'AbortError') {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      if (renderRafId) {
+        cancelAnimationFrame(renderRafId);
+        renderRafId = null;
+      }
+
+      const isAbortByUser = error.name === 'AbortError' && !this.state.isTimedOut;
+      const isTimeout = error.name === 'TimeoutError' || this.state.isTimedOut || error.message.includes('504') || error.message.includes('timeout');
+      const isOffline = (typeof navigator !== 'undefined' && !navigator.onLine) || error.message.includes('Failed to fetch') || error.message.includes('NetworkError');
+
+      if (isAbortByUser) {
         if (isFirstToken) {
-          botBubbleObj.contentElem.innerHTML = '<span style="color: #b58105; font-size: 12px; font-style: italic;">Pencarian dihentikan sebelum ada jawaban.</span>';
+          botBubbleObj.contentElem.innerHTML = '<span style="color: var(--rag-warning); font-size: 12px; font-style: italic;">Pencarian dihentikan sebelum ada jawaban.</span>';
         } else {
+          flushRender();
           const warningBadge = document.createElement('div');
           warningBadge.className = 'rag-abort-badge';
           warningBadge.innerHTML = `${RAG_ICONS.alertCircle}<span>Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.</span>`;
           botBubbleObj.bubbleElem.appendChild(warningBadge);
         }
+      } else if (isTimeout) {
+        if (!isFirstToken) flushRender();
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card rag-error-timeout';
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>Waktu Permintaan Habis (Request Timeout)</span>
+          </div>
+          <p>Asisten membutuhkan waktu lebih dari 45 detik untuk merespons karena beban server atau antrean model AI. Pertanyaan Anda tersimpan.</p>
+          <button type="button" class="rag-retry-btn" onclick="RagChatWidget.retryLastQuery()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Kirim Ulang</span>
+          </button>
+        `;
+        if (isFirstToken) {
+          botBubbleObj.contentElem.innerHTML = '';
+          botBubbleObj.contentElem.appendChild(errCard);
+        } else {
+          botBubbleObj.bubbleElem.appendChild(errCard);
+        }
+      } else if (isOffline) {
+        if (!isFirstToken) flushRender();
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card rag-error-offline';
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+            <span>Koneksi Internet Terputus</span>
+          </div>
+          <p>Tidak dapat terhubung ke server Portal INSPIRE. Pastikan koneksi internet aktif, lalu coba lagi.</p>
+          <button type="button" class="rag-retry-btn" onclick="RagChatWidget.retryLastQuery()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Coba Lagi</span>
+          </button>
+        `;
+        if (isFirstToken) {
+          botBubbleObj.contentElem.innerHTML = '';
+          botBubbleObj.contentElem.appendChild(errCard);
+        } else {
+          botBubbleObj.bubbleElem.appendChild(errCard);
+        }
       } else {
-        botBubbleObj.contentElem.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
+        if (!isFirstToken) flushRender();
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card';
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>Layanan Mengalami Kendala</span>
+          </div>
+          <p>Terjadi kendala teknis saat memproses respons (${RagChatWidget.escapeHtml(error.message)}). Silakan coba sesaat lagi.</p>
+          <button type="button" class="rag-retry-btn" onclick="RagChatWidget.retryLastQuery()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Coba Lagi</span>
+          </button>
+        `;
+        if (isFirstToken) {
+          botBubbleObj.contentElem.innerHTML = '';
+          botBubbleObj.contentElem.appendChild(errCard);
+        } else {
+          botBubbleObj.bubbleElem.appendChild(errCard);
+        }
       }
     } finally {
       this.state.status = 'idle';
       this.updateSendButtonState(false);
+      this.scrollToBottom();
     }
   },
 
@@ -654,9 +904,9 @@ const RagChatWidget = {
     wrapper.className = 'rag-msg-wrapper rag-msg-user-wrapper';
     wrapper.innerHTML = `
       <div class="rag-msg-meta-header">
-        <span>Anda</span>
-        <span>•</span>
-        <span>${this.getTimestamp()}</span>
+        <span class="rag-meta-sender">Anda</span>
+        <span class="rag-meta-dot">•</span>
+        <span class="rag-meta-time">${this.getTimestamp()}</span>
       </div>
       <div class="rag-user-msg">${this.escapeHtml(text)}</div>
     `;
@@ -669,16 +919,19 @@ const RagChatWidget = {
     wrapper.className = 'rag-msg-wrapper rag-msg-bot-wrapper';
     wrapper.innerHTML = `
       <div class="rag-msg-meta-header">
-        <span>Asisten Akademik</span>
-        <span>•</span>
-        <span>${this.getTimestamp()}</span>
+        <span class="rag-meta-sender">Asisten Akademik</span>
+        <span class="rag-meta-dot">•</span>
+        <span class="rag-meta-time">${this.getTimestamp()}</span>
       </div>
       <div class="rag-bot-msg">
         <div class="rag-msg-content">
           <div class="rag-typing-dots">
-            <span class="rag-dot"></span>
-            <span class="rag-dot"></span>
-            <span class="rag-dot"></span>
+            <div class="rag-dot-group">
+              <span class="rag-dot"></span>
+              <span class="rag-dot"></span>
+              <span class="rag-dot"></span>
+            </div>
+            <span class="rag-typing-text">Mencari rujukan akademik...</span>
           </div>
         </div>
       </div>
@@ -686,12 +939,14 @@ const RagChatWidget = {
     chatMessages.appendChild(wrapper);
     return {
       bubbleElem: wrapper.querySelector('.rag-bot-msg'),
-      contentElem: wrapper.querySelector('.rag-msg-content')
+      contentElem: wrapper.querySelector('.rag-msg-content'),
+      statusElem: wrapper.querySelector('.rag-typing-text')
     };
   },
 
   renderCitations(containerElem, sources) {
     if (!containerElem || !sources || sources.length === 0) return;
+    this.state.activeCitations = sources;
 
     const citDiv = document.createElement('div');
     citDiv.className = 'rag-citations-container';
@@ -712,6 +967,16 @@ const RagChatWidget = {
     const headerBtn = citDiv.querySelector('.rag-citation-header');
     if (headerBtn) {
       headerBtn.addEventListener('click', () => {
+        const { sideCitationPanel } = this.elements;
+        const isPanelOpen = sideCitationPanel && 
+          !sideCitationPanel.classList.contains('hidden') && 
+          (sideCitationPanel.classList.contains('rag-sheet-open') || window.innerWidth > 768);
+        
+        if (isPanelOpen && this.state.activeCitations === sources) {
+          this.toggleCitationPanel(false);
+          return;
+        }
+
         const isMobile = window.innerWidth <= 768;
         if (!isMobile && this.state.mode === 'compact') {
           this.toggleExpand(true);
@@ -739,7 +1004,7 @@ const RagChatWidget = {
       const idx = src.index || (index + 1);
 
       return `
-        <div class="rag-citation-item">
+        <div class="rag-citation-item" id="rag-cit-item-${idx}" data-idx="${idx}">
           <div class="rag-citation-topbar">
             <span class="rag-citation-idx-badge">[${this.escapeHtml(idx)}]</span>
             ${docId ? `<span class="rag-citation-docid-badge">${this.escapeHtml(docId)}</span>` : ''}
@@ -763,6 +1028,28 @@ const RagChatWidget = {
         sheetBackdrop.classList.add('active');
       }
     }
+  },
+
+  handleInlineCitationClick(citIdx) {
+    if (!this.state.activeCitations || this.state.activeCitations.length === 0) return;
+
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile && this.state.mode === 'compact') {
+      this.toggleExpand(true);
+    }
+    this.openSideCitationPanel(this.state.activeCitations);
+
+    setTimeout(() => {
+      const { sideCitationBody } = this.elements;
+      if (!sideCitationBody) return;
+      const targetItem = sideCitationBody.querySelector(`[data-idx="${citIdx}"]`);
+      if (targetItem) {
+        targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        targetItem.classList.remove('rag-citation-highlight');
+        void targetItem.offsetWidth;
+        targetItem.classList.add('rag-citation-highlight');
+      }
+    }, 100);
   },
 
   toggleCitationPanel(show) {

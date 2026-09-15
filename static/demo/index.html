@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal INSPIRE - Universitas Sam Ratulangi</title>
   
-  <!-- Google Fonts: Inter & Open Sans -->
+  <!-- High-Performance Resource Hints -->
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS Scoped khusus Demo Chatbot UNSRAT (Portal INSPIRE) -->
-  <link rel="stylesheet" href="/static/demo/inspire/css/inspire.css?v=4">
+  <link rel="stylesheet" href="/static/demo/inspire/css/inspire.css?v=13">
 
   <!-- Marked.js for Markdown Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -44,34 +46,34 @@
   <div id="rag-chatbot-widget" class="rag-widget-root">
     <!-- Floating Trigger Icon (Bottom-Right, 96px above bottom) -->
     <button id="rag-trigger-btn" class="rag-trigger" aria-label="Buka Chatbot Asisten Akademik UNSRAT">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>
     </button>
 
     <!-- Modal Overlay Backdrop (Transparent/Non-blocking) -->
     <div id="rag-modal-overlay" class="rag-overlay hidden"></div>
 
     <!-- Chat Modal Window -->
-    <div id="rag-modal" class="rag-modal-window rag-modal-compact hidden">
+    <div id="rag-modal" class="rag-modal-window rag-modal-compact hidden" role="dialog" aria-modal="true" aria-labelledby="rag-header-title">
       <!-- Modal Header -->
       <div class="rag-modal-header">
         <div class="rag-header-left">
-          <button id="rag-expand-btn" type="button" class="rag-icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V7h10"/><path d="M17 17 7 7"/></svg>
+          <button id="rag-expand-btn" type="button" class="rag-icon-btn" aria-label="Perluas atau Kecilkan Jendela Chat" title="Perluas/Kecilkan Tampilan">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>
           </button>
-          <span class="rag-header-title">Asisten Akademik UNSRAT</span>
+          <span id="rag-header-title" class="rag-header-title">Asisten Akademik UNSRAT</span>
         </div>
         <div class="rag-header-actions">
           <button id="rag-header-guide-btn" type="button" class="rag-icon-btn rag-guide-header-btn rag-header-btn-hidden" aria-label="Panduan Cara Bertanya" title="Panduan Cara Bertanya">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
           </button>
-          <button id="rag-settings-btn" type="button" class="rag-icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          <button id="rag-settings-btn" type="button" class="rag-icon-btn" aria-label="Pengaturan Model dan RAG" title="Pengaturan Model">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
           <div class="rag-reset-wrapper">
-            <button id="rag-reset-btn" type="button" class="rag-icon-btn" title="Mulai Ulang Percakapan">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <button id="rag-reset-btn" type="button" class="rag-icon-btn" aria-label="Mulai Ulang Percakapan" title="Mulai Ulang Percakapan">
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
             </button>
-            <div id="rag-reset-confirm" class="rag-reset-popover hidden">
+            <div id="rag-reset-confirm" class="rag-reset-popover hidden" role="dialog" aria-modal="true" aria-label="Konfirmasi Reset">
               <span class="rag-reset-confirm-text">Hapus percakapan &amp; mulai baru?</span>
               <div class="rag-reset-confirm-actions">
                 <button type="button" id="rag-reset-cancel-btn" class="rag-reset-btn-cancel">Batal</button>
@@ -79,13 +81,13 @@
               </div>
             </div>
           </div>
-          <button id="rag-modal-close" type="button" class="rag-icon-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          <button id="rag-modal-close" type="button" class="rag-icon-btn" aria-label="Tutup Jendela Asisten" title="Tutup">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
           </button>
         </div>
 
         <!-- Floating Dropdown Settings Panel (Minimalist Right-Aligned Context Menu) -->
-        <div id="rag-settings-panel" class="rag-settings-dropdown hidden">
+        <div id="rag-settings-panel" class="rag-settings-dropdown hidden" role="menu">
           <div id="rag-config-menu-item" class="rag-menu-item rag-has-submenu">
             <div class="rag-menu-label">
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -109,10 +111,16 @@
         </div>
       </div>
 
+      <!-- Offline Status Banner -->
+      <div id="rag-offline-banner" class="rag-offline-banner hidden" role="status" aria-live="assertive">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        <span>Koneksi internet terputus. Menunggu jaringan kembali aktif...</span>
+      </div>
+
       <!-- Main Content & Side Panel Split Container -->
       <div class="rag-body-container">
         <!-- Chat Messages List -->
-        <div id="rag-chat-messages" class="rag-messages-body">
+        <div id="rag-chat-messages" class="rag-messages-body" role="log" aria-live="polite">
           <!-- Welcome State (Clean Academic Portal with 5 Topic Chips) -->
           <div id="rag-welcome-state" class="rag-welcome-card">
             <!-- Level 1: Logo, Title, Description & Contextual Guide Action -->
@@ -121,81 +129,36 @@
               <h4 class="rag-welcome-title">SELAMAT DATANG</h4>
               <p class="rag-welcome-desc">Layanan informasi regulasi dan kebijakan akademik resmi Universitas Sam Ratulangi.</p>
               <button type="button" id="rag-guide-toggle-btn" class="rag-guide-inline-btn" aria-haspopup="dialog" aria-expanded="false" title="Panduan Cara Bertanya">
-                <svg class="rag-guide-icon-help" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                <svg class="rag-guide-icon-help" xmlns="http://www.w3.org/2000/svg" width="13.5" height="13.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
                 <span>Panduan Cara Bertanya</span>
               </button>
             </div>
 
             <!-- Level 2: Topic Section (Pure Topic Navigation) -->
             <div class="rag-welcome-bottom">
-              <span class="rag-chips-label">PILIH TOPIK UNTUK MEMULAI:</span>
-              <div class="rag-chips-horizontal">
-                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Bagaimana prosedur dan batas waktu pengisian KRS di UNSRAT?">
+              <span class="rag-chips-label">PILIHAN TOPIK PERTANYAAN</span>
+              <div class="rag-chips-horizontal" role="region" aria-label="Rekomendasi Topik Akademik">
+                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Bagaimana prosedur dan batas waktu pengisian KRS di UNSRAT?" aria-label="Topik: Prosedur Pengisian KRS">
                   <span class="rag-chip-text">Prosedur Pengisian KRS</span>
-                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                 </button>
-                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Bagaimana syarat dan batas waktu pengajuan cuti akademik di UNSRAT?">
+                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Bagaimana syarat dan batas waktu pengajuan cuti akademik di UNSRAT?" aria-label="Topik: Syarat Cuti Akademik">
                   <span class="rag-chip-text">Syarat Cuti Akademik</span>
-                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                 </button>
-                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Berapa batas maksimal SKS dan batas masa studi program sarjana di UNSRAT?">
-                  <span class="rag-chip-text">Batas SKS & Masa Studi</span>
-                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Berapa batas maksimal beban SKS yang boleh diambil mahasiswa semester 1 di UNSRAT?" aria-label="Topik: Beban SKS Semester 1">
+                  <span class="rag-chip-text">Beban SKS Semester 1</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                 </button>
-                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Apa saja syarat pendaftaran wisuda dan kelulusan mahasiswa di UNSRAT?">
-                  <span class="rag-chip-text">Syarat & Jadwal Wisuda</span>
-                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Wisuda tahun ini ada berapa kali dan sekitar bulan apa saja?" aria-label="Topik: Jadwal Wisuda Tahun Ini">
+                  <span class="rag-chip-text">Jadwal Wisuda Tahun Ini</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                 </button>
-                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Bagaimana aturan dan batas nilai untuk mengulang mata kuliah di UNSRAT?">
-                  <span class="rag-chip-text">Aturan Mengulang Matkul</span>
-                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Apa visi dan misi Universitas Sam Ratulangi (UNSRAT)?" aria-label="Topik: Visi & Misi UNSRAT">
+                  <span class="rag-chip-text">Visi & Misi UNSRAT</span>
+                  <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Popup Modal Panduan Cara Bertanya (Clean Centered Dialog) -->
-        <div id="rag-guide-modal" class="rag-guide-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rag-guide-modal-title">
-          <div id="rag-guide-modal-backdrop" class="rag-guide-modal-backdrop"></div>
-          <div class="rag-guide-modal-card">
-            <div class="rag-guide-modal-header">
-              <div class="rag-guide-modal-title-group">
-                <div class="rag-guide-title-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-                </div>
-                <h5 id="rag-guide-modal-title" class="rag-guide-modal-title">Panduan Cara Bertanya</h5>
-              </div>
-              <button type="button" id="rag-guide-modal-close" class="rag-guide-close-btn" aria-label="Tutup Panduan">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-              </button>
-            </div>
-            <div class="rag-guide-modal-body">
-              <div class="rag-guide-modal-item">
-                <span class="rag-guide-num">1</span>
-                <div class="rag-guide-text">
-                  <strong>Gunakan Bahasa Formal & Baku</strong>
-                  <span>Sistem dilatih membaca dokumen regulasi resmi. Hindari singkatan atau bahasa gaul agar penarikan pasal akurat.</span>
-                </div>
-              </div>
-              <div class="rag-guide-modal-item">
-                <span class="rag-guide-num">2</span>
-                <div class="rag-guide-text">
-                  <strong>Sebutkan Topik Secara Spesifik</strong>
-                  <span>Sertakan jenjang studi atau kata kunci resmi (misalnya: <em>"syarat cuti mahasiswa S1"</em> bukan sekadar <em>"info cuti"</em>).</span>
-                </div>
-              </div>
-              <div class="rag-guide-modal-item">
-                <span class="rag-guide-num">3</span>
-                <div class="rag-guide-text">
-                  <strong>Satu Pokok Masalah per Pertanyaan</strong>
-                  <span>Fokus pada satu topik agar kutipan Bab dan Pasal yang dihasilkan tepat sasaran tanpa ambiguitas rujukan.</span>
-                </div>
-              </div>
-            </div>
-            <div class="rag-guide-modal-footer">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              <span>Klik salah satu contoh topik di layar utama untuk mengisi draf pertanyaan secara otomatis.</span>
             </div>
           </div>
         </div>
@@ -208,11 +171,11 @@
           <div class="rag-sheet-drag-handle"></div>
           <div class="rag-side-citation-header">
             <div style="display:flex; align-items:center; gap:8px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6.5 6H20"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
               <span>Sumber Rujukan</span>
             </div>
-            <button id="rag-close-citation-btn" type="button" class="rag-icon-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <button id="rag-close-citation-btn" type="button" class="rag-icon-btn" aria-label="Tutup Sumber Rujukan" title="Tutup Sumber Rujukan">
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
           </div>
           <div id="rag-side-citation-body" class="rag-side-citation-body">
@@ -222,14 +185,58 @@
 
       <!-- Input Form (Textarea Auto-Grow) -->
       <form id="rag-chat-form" class="rag-chat-form">
-        <textarea id="rag-user-input" rows="1" placeholder="Ketik pertanyaan disini..." autocomplete="off"></textarea>
-        <button id="rag-send-btn" type="button" class="rag-send-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        <textarea id="rag-user-input" rows="1" placeholder="Tanyakan regulasi atau kebijakan akademik UNSRAT..." autocomplete="off"></textarea>
+        <button id="rag-send-btn" type="button" class="rag-send-btn" aria-label="Kirim Pertanyaan" title="Kirim Pertanyaan">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
         </button>
       </form>
+
+      <!-- Popup Modal Panduan Cara Bertanya (Full Widget Coverage Dialog) -->
+      <div id="rag-guide-modal" class="rag-guide-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rag-guide-modal-title">
+        <div id="rag-guide-modal-backdrop" class="rag-guide-modal-backdrop"></div>
+        <div class="rag-guide-modal-card">
+          <div class="rag-guide-modal-header">
+            <div class="rag-guide-modal-title-group">
+              <div class="rag-guide-title-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+              </div>
+              <h5 id="rag-guide-modal-title" class="rag-guide-modal-title">Panduan Cara Bertanya</h5>
+            </div>
+            <button type="button" id="rag-guide-modal-close" class="rag-guide-close-btn" aria-label="Tutup Panduan">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+          <div class="rag-guide-modal-body">
+            <div class="rag-guide-modal-item">
+              <span class="rag-guide-num">1</span>
+              <div class="rag-guide-text">
+                <strong>Gunakan Bahasa Formal &amp; Baku</strong>
+                <span>Sistem dilatih membaca dokumen regulasi resmi. Hindari singkatan atau bahasa gaul agar penarikan pasal akurat.</span>
+              </div>
+            </div>
+            <div class="rag-guide-modal-item">
+              <span class="rag-guide-num">2</span>
+              <div class="rag-guide-text">
+                <strong>Sebutkan Topik Secara Spesifik</strong>
+                <span>Sertakan jenjang studi atau kata kunci resmi (misalnya: <em>"syarat cuti mahasiswa S1"</em> bukan sekadar <em>"info cuti"</em>).</span>
+              </div>
+            </div>
+            <div class="rag-guide-modal-item">
+              <span class="rag-guide-num">3</span>
+              <div class="rag-guide-text">
+                <strong>Satu Pokok Masalah per Pertanyaan</strong>
+                <span>Fokus pada satu topik agar kutipan Bab dan Pasal yang dihasilkan tepat sasaran tanpa ambiguitas rujukan.</span>
+              </div>
+            </div>
+          </div>
+          <div class="rag-guide-modal-footer">
+            <button type="button" id="rag-guide-ack-btn" class="rag-guide-ack-btn">Mengerti</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <script src="/static/demo/inspire/js/inspire.js?v=4"></script>
+  <script src="/static/demo/inspire/js/inspire.js?v=13"></script>
 </body>
 </html>
