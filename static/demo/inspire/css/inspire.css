@@ -1304,6 +1304,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  position: relative;
+}
+
+.rag-side-citation-panel::after {
+  display: none;
 }
 
 @media (min-width: 769px) {
@@ -1733,16 +1738,23 @@
     min-height: 40px !important;
   }
 
-  /* Mobile Citation Bottom Sheet Drawer */
+  /* Mobile Citation Bottom Sheet Drawer & Unified Deep Backdrop */
+  .rag-overlay.rag-citations-active {
+    background-color: rgba(15, 12, 10, 0.64) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transition: opacity 0.24s ease, background-color 0.24s ease !important;
+  }
+
   .rag-sheet-backdrop {
     display: block !important;
     position: fixed !important;
     inset: 0 !important;
-    background-color: rgba(15, 12, 10, 0.48) !important;
+    background-color: rgba(15, 12, 10, 0.64) !important;
     z-index: 100 !important;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.24s ease;
+    transition: opacity 0.24s ease, background-color 0.24s ease;
   }
 
   .rag-sheet-backdrop.active {
@@ -1759,8 +1771,8 @@
     width: 100% !important;
     max-width: 100% !important;
     height: 80vh !important;
-    max-height: 85dvh !important;
-    border-radius: 20px 20px 0 0 !important;
+    max-height: 88dvh !important;
+    border-radius: 22px 22px 0 0 !important;
     background: #FAF9F6 !important;
     box-shadow: var(--rag-shadow-sheet) !important;
     border: none !important;
@@ -1770,6 +1782,21 @@
     display: flex !important;
     flex-direction: column !important;
     animation: none !important;
+    overflow: visible !important;
+  }
+
+  /* Solid bottom bleed buffer: guarantees zero background leakage when sheet is pulled upward */
+  .rag-side-citation-panel::after {
+    content: '' !important;
+    display: block !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60vh !important;
+    background-color: #FAF9F6 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
   }
 
   .rag-side-citation-panel.rag-sheet-open {
@@ -1814,6 +1841,7 @@
   }
 
   .rag-side-citation-header {
+    border-radius: 22px 22px 0 0 !important;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
