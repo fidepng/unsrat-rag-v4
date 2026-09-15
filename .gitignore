@@ -50,6 +50,7 @@ logs/*
 .kiro/
 .playwright-mcp/
 .understand-anything/
+graphify-out/
 scratch/
 GEMINI.md
 
@@ -70,5 +71,6 @@ node_modules/
 .superpowers/
 docs/superpowers/
 
-# Docs
+# Docs & Reference
 prd_srs.md
+reference/
