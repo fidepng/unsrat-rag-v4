@@ -1134,8 +1134,10 @@ const RagChatWidget = {
 
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
+      sideCitationPanel.style.removeProperty('height');
       sideCitationPanel.style.removeProperty('transform');
       sideCitationPanel.style.removeProperty('transition');
+      sideCitationPanel.classList.remove('rag-sheet-expanded');
       void sideCitationPanel.offsetWidth;
       sideCitationPanel.classList.add('rag-sheet-open');
       if (sheetBackdrop) {
@@ -1274,20 +1276,24 @@ const RagChatWidget = {
     let isDragging = false;
     let startY = 0;
     let currentDeltaY = 0;
+    let startHeight = 0;
+    let isExpanded = false;
     let activePointerId = null;
 
     const onPointerDown = (e) => {
       // Gesture only applies on mobile viewports (<= 768px)
       if (window.innerWidth > 768) return;
-      // Filter non-primary pointer/touch
       if (!e.isPrimary) return;
-      // Do not engage drag if user tapped close button
       if (e.target.closest && e.target.closest('#rag-close-citation-btn')) return;
 
       isDragging = true;
       activePointerId = e.pointerId;
       startY = e.clientY;
       currentDeltaY = 0;
+      isExpanded = sideCitationPanel.classList.contains('rag-sheet-expanded');
+      
+      const panelRect = sideCitationPanel.getBoundingClientRect();
+      startHeight = panelRect.height;
 
       dragHandle.classList.add('rag-dragging');
       try {
@@ -1308,39 +1314,61 @@ const RagChatWidget = {
       if (!isDragging || e.pointerId !== activePointerId) return;
 
       const deltaY = e.clientY - startY;
+      currentDeltaY = deltaY;
+
+      // Available maximum height inside mobile viewport / modal
+      const maxHeight = window.innerHeight - 54;
+      const defaultHeight = window.innerHeight * 0.75;
+
       if (deltaY < 0) {
-        // Upward pull: allow elastic upward stretch with smooth logarithmic resistance
-        // Bottom bleed buffer (::after) guarantees continuous solid #FAF9F6 coverage
-        // so the panel stretches/elongates upward seamlessly without exposing chatbox background underneath!
-        const stretch = -Math.pow(-deltaY, 0.82) * 1.5;
-        currentDeltaY = Math.max(-140, stretch); // Cap max stretch safely
+        // PULLING UP: User expands the drawer to read more passages!
+        // We dynamically grow height from bottom: 0 so the passage container expands
+        // and the header stays fixed at the top of the expanding panel.
+        let targetHeight = startHeight + (-deltaY);
+        if (targetHeight > maxHeight) {
+          const over = targetHeight - maxHeight;
+          targetHeight = maxHeight + (over * 0.18); // soft rubber-band ceiling
+        }
+
+        sideCitationPanel.style.setProperty('height', `${targetHeight}px`, 'important');
+        sideCitationPanel.style.setProperty('transform', 'translateY(0)', 'important');
+
+        if (sheetBackdrop) sheetBackdrop.style.setProperty('opacity', '1', 'important');
+        if (overlay) overlay.style.setProperty('background-color', 'rgba(15, 12, 10, 0.64)', 'important');
+
       } else {
-        // Direct tracking when dragging downwards
-        currentDeltaY = deltaY;
-      }
+        // PULLING DOWN:
+        if (isExpanded) {
+          // If was expanded, pulling down first shrinks height towards default 75vh
+          let targetHeight = startHeight - deltaY;
+          if (targetHeight >= defaultHeight) {
+            sideCitationPanel.style.setProperty('height', `${targetHeight}px`, 'important');
+            sideCitationPanel.style.setProperty('transform', 'translateY(0)', 'important');
+          } else {
+            // Reached default height, now translate down towards close
+            const extraTranslate = defaultHeight - targetHeight;
+            sideCitationPanel.style.setProperty('height', `${defaultHeight}px`, 'important');
+            sideCitationPanel.style.setProperty('transform', `translateY(${extraTranslate}px)`, 'important');
 
-      sideCitationPanel.style.setProperty('transform', `translateY(${currentDeltaY}px)`, 'important');
+            const progress = Math.max(0, Math.min(1, 1 - (extraTranslate / 220)));
+            if (sheetBackdrop) sheetBackdrop.style.setProperty('opacity', progress.toFixed(2), 'important');
+            if (overlay) {
+              const baseAlpha = 0.48;
+              const currentAlpha = baseAlpha + (0.16 * progress);
+              overlay.style.setProperty('background-color', `rgba(15, 12, 10, ${currentAlpha.toFixed(3)})`, 'important');
+            }
+          }
+        } else {
+          // In standard mode, pulling down translates panel down towards dismissal
+          sideCitationPanel.style.setProperty('transform', `translateY(${deltaY}px)`, 'important');
 
-      if (currentDeltaY > 0) {
-        // Linearly fade backdrop opacity as sheet is pulled towards dismissal threshold
-        const progress = Math.max(0, Math.min(1, 1 - (currentDeltaY / 240)));
-        if (sheetBackdrop) {
-          sheetBackdrop.style.setProperty('opacity', progress.toFixed(2), 'important');
-        }
-        if (overlay) {
-          // Fade overlay from 0.64 down to 0.48 (smoothly returning to base peek overlay)
-          const baseAlpha = 0.48;
-          const deltaAlpha = 0.16;
-          const currentAlpha = baseAlpha + (deltaAlpha * progress);
-          overlay.style.setProperty('background-color', `rgba(15, 12, 10, ${currentAlpha.toFixed(3)})`, 'important');
-        }
-      } else if (currentDeltaY < 0) {
-        // When pulling upward, maintain full solid dark backdrop
-        if (sheetBackdrop) {
-          sheetBackdrop.style.setProperty('opacity', '1', 'important');
-        }
-        if (overlay) {
-          overlay.style.setProperty('background-color', 'rgba(15, 12, 10, 0.64)', 'important');
+          const progress = Math.max(0, Math.min(1, 1 - (deltaY / 240)));
+          if (sheetBackdrop) sheetBackdrop.style.setProperty('opacity', progress.toFixed(2), 'important');
+          if (overlay) {
+            const baseAlpha = 0.48;
+            const currentAlpha = baseAlpha + (0.16 * progress);
+            overlay.style.setProperty('background-color', `rgba(15, 12, 10, ${currentAlpha.toFixed(3)})`, 'important');
+          }
         }
       }
     };
@@ -1354,8 +1382,8 @@ const RagChatWidget = {
         e.currentTarget.releasePointerCapture(e.pointerId);
       } catch (_) {}
 
-      // Restore CSS transitions with snappy cubic-bezier spring physics
-      sideCitationPanel.style.setProperty('transition', 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+      // Re-enable smooth spring transitions
+      sideCitationPanel.style.setProperty('transition', 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
       if (sheetBackdrop) {
         sheetBackdrop.style.removeProperty('transition');
         sheetBackdrop.style.removeProperty('opacity');
@@ -1365,30 +1393,45 @@ const RagChatWidget = {
         overlay.style.removeProperty('background-color');
       }
 
-      // If dragged down > 80px, dismiss the bottom sheet
-      if (currentDeltaY > 80) {
-        sideCitationPanel.style.removeProperty('transform');
-        this.toggleCitationPanel(false);
-      } else {
-        // Snap back to resting position translateY(0)
+      if (currentDeltaY < -40) {
+        // Pulled UP significantly -> Snap to Expanded Full Height!
+        sideCitationPanel.classList.add('rag-sheet-expanded');
+        sideCitationPanel.style.removeProperty('height');
         sideCitationPanel.style.setProperty('transform', 'translateY(0)', 'important');
-        setTimeout(() => {
+      } else if (currentDeltaY > 80) {
+        // Pulled DOWN significantly
+        if (isExpanded && currentDeltaY < 180) {
+          // If was expanded and pulled down moderately, collapse back to 75vh default mode
+          sideCitationPanel.classList.remove('rag-sheet-expanded');
+          sideCitationPanel.style.removeProperty('height');
+          sideCitationPanel.style.setProperty('transform', 'translateY(0)', 'important');
+        } else {
+          // Dismiss the sheet
+          sideCitationPanel.style.removeProperty('height');
           sideCitationPanel.style.removeProperty('transform');
-          sideCitationPanel.style.removeProperty('transition');
-        }, 340);
+          this.toggleCitationPanel(false);
+        }
+      } else {
+        // Snap back to current resting mode
+        sideCitationPanel.style.removeProperty('height');
+        sideCitationPanel.style.setProperty('transform', 'translateY(0)', 'important');
       }
+
+      setTimeout(() => {
+        sideCitationPanel.style.removeProperty('transform');
+        sideCitationPanel.style.removeProperty('transition');
+      }, 320);
 
       currentDeltaY = 0;
       activePointerId = null;
     };
 
-    // Attach listeners to drag handle
+    // Attach listeners
     dragHandle.addEventListener('pointerdown', onPointerDown);
     dragHandle.addEventListener('pointermove', onPointerMove);
     dragHandle.addEventListener('pointerup', onPointerEnd);
     dragHandle.addEventListener('pointercancel', onPointerEnd);
 
-    // Also attach to header bar for comfortable swipe target area
     if (header) {
       header.addEventListener('pointerdown', onPointerDown);
       header.addEventListener('pointermove', onPointerMove);
@@ -1408,9 +1451,11 @@ const RagChatWidget = {
 
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
+      sideCitationPanel.style.removeProperty('height');
       sideCitationPanel.style.removeProperty('transform');
       sideCitationPanel.style.removeProperty('transition');
       sideCitationPanel.classList.remove('rag-sheet-open');
+      sideCitationPanel.classList.remove('rag-sheet-expanded');
       if (overlay) {
         overlay.style.removeProperty('background-color');
         overlay.style.removeProperty('transition');
@@ -1432,9 +1477,11 @@ const RagChatWidget = {
         }
       }, 280);
     } else {
+      sideCitationPanel.style.removeProperty('height');
       sideCitationPanel.style.removeProperty('transform');
       sideCitationPanel.style.removeProperty('transition');
       sideCitationPanel.classList.remove('rag-sheet-open');
+      sideCitationPanel.classList.remove('rag-sheet-expanded');
       sideCitationPanel.classList.add('hidden');
       if (overlay) {
         overlay.classList.remove('rag-citations-active');
