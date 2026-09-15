@@ -1062,17 +1062,28 @@ const RagChatWidget = {
 
     this.state.activeCitations = sources;
     sideCitationBody.innerHTML = sources.map((src, index) => {
-      const title = src.title || "Peraturan Rektor UNSRAT";
-      const docId = src.doc_id ? `ID: ${src.doc_id}` : "";
-      const bab = src.bab ? `${src.bab}` : "";
-      const bagian = src.bagian ? `${src.bagian}` : "";
-      const pasal = src.pasal ? (String(src.pasal).toLowerCase().startsWith('pasal') ? `${src.pasal}` : `Pasal ${src.pasal}`) : "";
+      const rawTitle = src.title || "Peraturan Rektor UNSRAT";
+      const title = rawTitle.replace(/\s+/g, ' ').trim();
+      const docId = src.doc_id ? `${src.doc_id}` : "";
       
+      // Clean and normalize metadata strings
+      const rawBab = (src.bab || "").replace(/\s+/g, ' ').trim();
+      const rawBagian = (src.bagian || "").replace(/\s+/g, ' ').trim();
+      let rawPasal = (src.pasal || "").replace(/\s+/g, ' ').trim();
+      if (rawPasal && !rawPasal.toLowerCase().startsWith('pasal')) {
+        rawPasal = `Pasal ${rawPasal}`;
+      }
+
       const idx = src.index || (index + 1);
 
-      const pathParts = [bab, bagian, pasal].filter(Boolean);
-      const pathHTML = pathParts.length > 0 
-        ? `<div class="rag-editorial-path">${pathParts.map(p => `<span>${this.escapeHtml(p)}</span>`).join('<span class="rag-path-sep">•</span>')}</div>`
+      // Build natural fluid inline breadcrumb (fills horizontal width naturally without rigid blocks)
+      const pathChunks = [];
+      if (rawBab) pathChunks.push(`<span class="rag-path-segment rag-path-bab">${this.escapeHtml(rawBab)}</span>`);
+      if (rawBagian) pathChunks.push(`<span class="rag-path-segment rag-path-bagian">${this.escapeHtml(rawBagian)}</span>`);
+      if (rawPasal) pathChunks.push(`<span class="rag-path-segment rag-path-pasal-pill">${this.escapeHtml(rawPasal)}</span>`);
+
+      const pathHTML = pathChunks.length > 0 
+        ? `<div class="rag-editorial-path">${pathChunks.join('<span class="rag-path-sep">/</span>')}</div>`
         : '';
 
       return `
@@ -1121,17 +1132,82 @@ const RagChatWidget = {
       this.openSideCitationPanel(targetSources);
     }
 
-    setTimeout(() => {
+    // Cancel any previous pending highlight/scroll timers to prevent animation clashes
+    if (this._citationHighlightTimer) {
+      clearTimeout(this._citationHighlightTimer);
+      this._citationHighlightTimer = null;
+    }
+    if (this._citationScrollTimer) {
+      clearTimeout(this._citationScrollTimer);
+      this._citationScrollTimer = null;
+    }
+
+    const executeScrollAndNudge = () => {
       const { sideCitationBody } = this.elements;
       if (!sideCitationBody) return;
-      const targetItem = sideCitationBody.querySelector(`[data-idx="${citIdx}"]`);
-      if (targetItem) {
-        targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        targetItem.classList.remove('rag-citation-highlighted');
-        void targetItem.offsetWidth;
-        targetItem.classList.add('rag-citation-highlighted');
+
+      // Defensive matching: exact data-idx, or fallback to first available citation item
+      let targetItem = sideCitationBody.querySelector(`[data-idx="${citIdx}"]`);
+      if (!targetItem) {
+        targetItem = sideCitationBody.querySelector('.rag-citation-editorial-item');
       }
-    }, isAlreadyDisplayingSameSources ? 10 : 100);
+      if (!targetItem) return;
+
+      // Remove existing highlighted items across panel
+      sideCitationBody.querySelectorAll('.rag-citation-highlighted').forEach(el => {
+        el.classList.remove('rag-citation-highlighted');
+      });
+
+      // Check if target item is already in view inside sideCitationBody container
+      const containerRect = sideCitationBody.getBoundingClientRect();
+      const itemRect = targetItem.getBoundingClientRect();
+      const isItemInView = (
+        itemRect.top >= containerRect.top + 8 && 
+        itemRect.bottom <= containerRect.bottom - 8
+      );
+
+      const triggerNudge = () => {
+        targetItem.classList.remove('rag-citation-highlighted');
+        void targetItem.offsetWidth; // Force layout reflow for animation restart
+        targetItem.classList.add('rag-citation-highlighted');
+      };
+
+      if (isItemInView) {
+        // Already visible: trigger tactile nudge immediately
+        triggerNudge();
+      } else {
+        // Need to scroll: initiate smooth scroll to target item
+        targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Best practice motion choreography: Wait for smooth scroll to finish before nudge!
+        let scrollHandled = false;
+        const onScrollEnd = () => {
+          if (scrollHandled) return;
+          scrollHandled = true;
+          sideCitationBody.removeEventListener('scrollend', onScrollEnd);
+          if (this._citationScrollTimer) {
+            clearTimeout(this._citationScrollTimer);
+            this._citationScrollTimer = null;
+          }
+          // Micro-pause (40ms) after scroll settles, then play crisp nudge animation
+          setTimeout(triggerNudge, 40);
+        };
+
+        if ('onscrollend' in window) {
+          sideCitationBody.addEventListener('scrollend', onScrollEnd, { once: true });
+        }
+
+        // Deterministic fallback timer (360ms) if scrollend is unsupported or delta is small
+        this._citationScrollTimer = setTimeout(onScrollEnd, 360);
+      }
+    };
+
+    if (isAlreadyDisplayingSameSources) {
+      executeScrollAndNudge();
+    } else {
+      // Allow browser 60ms to paint newly rendered citation cards before measuring rect
+      this._citationHighlightTimer = setTimeout(executeScrollAndNudge, 60);
+    }
   },
 
   toggleCitationPanel(show) {
