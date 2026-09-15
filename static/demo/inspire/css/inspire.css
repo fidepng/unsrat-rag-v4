@@ -322,11 +322,11 @@
 }
 
 .rag-reset-popover {
-  width: 240px;
+  width: 220px;
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .rag-reset-popover:not(.hidden) {
@@ -338,33 +338,16 @@
   display: none !important;
 }
 
-.rag-popover-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.rag-popover-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  background: rgba(123, 45, 45, 0.08);
-  color: #7B2D2D;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 .rag-popover-title {
   font-size: 12.5px;
   font-weight: 600;
   color: #1C1917;
   line-height: 1.3;
+  margin: 0;
 }
 
 .rag-reset-confirm-desc {
-  font-size: 11.5px;
+  font-size: 11px;
   color: #78716C;
   line-height: 1.45;
   margin: 0;
@@ -375,7 +358,7 @@
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .rag-reset-btn-cancel {
@@ -412,10 +395,11 @@
   border-color: #632222;
 }
 
-/* Settings Dropdown Context Menu */
+/* Settings Dropdown Context Menu (Tight Whitespace) */
 .rag-settings-dropdown {
-  padding: 6px;
-  min-width: 220px;
+  padding: 5px;
+  min-width: 145px;
+  max-width: 200px;
   width: max-content;
   display: flex;
   flex-direction: column;
@@ -1219,37 +1203,17 @@
   transform: translateY(0);
 }
 
-/* Smooth Non-Boxy Halo Pulse Animation for Highlighted Citation Card */
-@keyframes ragCitationCardGlow {
-  0% {
-    box-shadow: 0 0 0 4px rgba(123, 45, 45, 0.32), 0 8px 24px -4px rgba(123, 45, 45, 0.22);
-    border-color: #7B2D2D;
-    transform: translateY(-2px);
-  }
-  50% {
-    box-shadow: 0 0 0 3px rgba(123, 45, 45, 0.18), 0 6px 16px -3px rgba(123, 45, 45, 0.12);
-    border-color: #8C3232;
-    transform: translateY(-2px);
-  }
-  100% {
-    box-shadow: 0 2px 6px -1px rgba(28, 25, 23, 0.05);
-    border-color: #E4DFD9;
-    transform: translateY(0);
-  }
+/* Subtle Tactile Micro-Nudge Highlight for Active Citation (Simple & Non-Distracting) */
+@keyframes ragCitationNudge {
+  0% { transform: translateX(0); }
+  30% { transform: translateX(6px); }
+  70% { transform: translateX(-1px); }
+  100% { transform: translateX(0); }
 }
 
-@keyframes ragBadgeBounce {
-  0%, 100% { transform: scale(1); }
-  35% { transform: scale(1.16); background-color: rgba(123, 45, 45, 0.18); }
-}
-
-.rag-citation-card.rag-citation-card-highlighted,
-.rag-citation-highlight {
-  animation: ragCitationCardGlow 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-}
-
-.rag-citation-card.rag-citation-card-highlighted .rag-citation-idx-badge {
-  animation: ragBadgeBounce 0.8s ease-out;
+.rag-citation-editorial-item.rag-citation-highlighted,
+.rag-citation-highlighted {
+  animation: ragCitationNudge 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Accordion & Panel Rujukan Dokumen (Pill Action Button) */
@@ -1388,44 +1352,42 @@
 .rag-side-citation-body {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 18px;
+  padding: 4px 20px 24px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
   background-color: #FAF9F6;
   contain: content;
 }
 
-
-/* Card-based Citation Architecture with Semantic Metadata */
-.rag-citation-card {
-  background: #FFFFFF;
-  border: 1px solid #E4DFD9;
-  border-radius: 13px;
-  padding: 15px 16px;
+/* Option B: Borderless Editorial Legal Flow (Calm, Zero Visual Noise) */
+.rag-citation-editorial-item {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  box-shadow: 0 2px 6px -1px rgba(28, 25, 23, 0.05);
-  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.24s ease;
+  padding: 16px 0;
+  border-bottom: 1px solid #E4DFD9;
+  background: transparent;
+  transition: transform 0.3s var(--rag-ease-out);
 }
 
-.rag-citation-card:hover {
-  border-color: #D6D0C7;
-  box-shadow: 0 4px 14px -2px rgba(28, 25, 23, 0.08);
+.rag-citation-editorial-item:last-child {
+  border-bottom: none;
+  padding-bottom: 8px;
 }
 
-.rag-citation-card-header {
+.rag-editorial-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
+  margin-bottom: 4px;
 }
 
-.rag-citation-meta-left {
+.rag-editorial-meta-left {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: baseline;
+  gap: 8px;
+  flex: 1;
 }
 
 .rag-citation-idx-badge {
@@ -1433,73 +1395,56 @@
   color: #7B2D2D;
   font-weight: 700;
   font-size: 11px;
-  padding: 2.5px 8px;
-  border-radius: 6px;
+  padding: 2.5px 7.5px;
+  border-radius: 5px;
   letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.rag-citation-badge-pill {
-  background-color: #F5F3F0;
-  color: #57534E;
-  font-size: 10.5px;
-  font-weight: 600;
-  padding: 2.5px 8px;
-  border-radius: 6px;
-  letter-spacing: 0.01em;
-}
-
-.rag-citation-docid {
-  font-size: 10.5px;
-  color: #A8A29E;
-  font-weight: 500;
-}
-
-.rag-citation-card-title {
-  font-weight: 600;
+.rag-editorial-title {
+  font-size: 13px;
+  font-weight: 700;
   color: #1C1917;
-  font-size: 13.5px;
-  line-height: 1.42;
+  line-height: 1.4;
   margin: 0;
 }
 
-/* Breadcrumb Path Tags */
-.rag-citation-path-tags {
+.rag-editorial-docid {
+  font-size: 10.5px;
+  color: #A8A29E;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.rag-editorial-path {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
-}
-
-.rag-path-pill {
-  font-size: 11px;
-  font-weight: 500;
-  color: #57534E;
-  background: #FAF8F5;
-  border: 1px solid #E4DFD9;
-  border-radius: 5px;
-  padding: 2.5px 8px;
-  line-height: 1.35;
-}
-
-.rag-path-pill.rag-path-pasal {
-  color: #7B2D2D;
+  font-size: 11.5px;
   font-weight: 600;
-  background: rgba(123, 45, 45, 0.07);
-  border-color: rgba(123, 45, 45, 0.22);
+  color: #7B2D2D;
+  margin-top: 2px;
+  margin-bottom: 8px;
 }
 
-/* Snippet Quotation Block */
-.rag-citation-snippet-box {
-  background: #FAF9F6;
-  border-left: 3px solid #7B2D2D;
-  border-radius: 0 8px 8px 0;
-  padding: 11px 13px;
+.rag-path-sep {
+  color: #A8A29E;
+  font-size: 9px;
+}
+
+.rag-editorial-passage {
   font-size: 12.5px;
   line-height: 1.68;
   color: #292524;
+  border-left: 2.5px solid #7B2D2D;
+  padding-left: 12px;
+  margin-left: 1px;
+  background: transparent;
   white-space: pre-wrap;
   word-break: break-word;
   text-wrap: pretty;
@@ -1737,18 +1682,18 @@
   /* Mobile Citation Bottom Sheet Drawer */
   .rag-sheet-backdrop {
     display: block;
-    position: fixed;
-    inset: 0;
-    background-color: rgba(15, 12, 10, 0.45);
-    z-index: 100001;
+    position: fixed !important;
+    inset: 0 !important;
+    background-color: rgba(15, 12, 10, 0.48) !important;
+    z-index: 1000001 !important;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.24s ease;
   }
 
   .rag-sheet-backdrop.active {
-    opacity: 1;
-    pointer-events: auto;
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
 
   .rag-side-citation-panel {

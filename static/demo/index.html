@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS Scoped khusus Demo Chatbot UNSRAT (Portal INSPIRE) -->
-  <link rel="stylesheet" href="/static/demo/inspire/css/inspire.css?v=14">
+  <link rel="stylesheet" href="/static/demo/inspire/css/inspire.css?v=15">
 
   <!-- Marked.js for Markdown Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -52,6 +52,9 @@
     <!-- Modal Overlay Backdrop (Transparent/Non-blocking) -->
     <div id="rag-modal-overlay" class="rag-overlay hidden"></div>
 
+    <!-- Mobile Bottom Sheet Backdrop (Direct Root Child - Fullscreen Reach) -->
+    <div id="rag-sheet-backdrop" class="rag-sheet-backdrop hidden"></div>
+
     <!-- Chat Modal Window -->
     <div id="rag-modal" class="rag-modal-window rag-modal-compact hidden" role="dialog" aria-modal="true" aria-labelledby="rag-header-title">
       <!-- Modal Header -->
@@ -75,7 +78,7 @@
             <!-- Floating Dropdown Settings Panel (Nested in Settings Wrapper) -->
             <div id="rag-settings-panel" class="rag-settings-dropdown hidden" role="menu">
               <div class="rag-settings-header">
-                <span class="rag-settings-title">MODE RETRIEVAL (RAG)</span>
+                <span class="rag-settings-title">MODE RETRIEVAL</span>
               </div>
               <div id="rag-config-menu-item" class="rag-menu-item rag-has-submenu">
                 <div class="rag-menu-label">
@@ -84,11 +87,11 @@
                 </div>
                 <div class="rag-submenu">
                   <button type="button" class="rag-submenu-option active" data-type="config" data-value="b">
-                    <span class="rag-opt-text">Config B (Dense / Vektor)</span>
+                    <span class="rag-opt-text">Config B (Dense)</span>
                     <svg class="rag-opt-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </button>
                   <button type="button" class="rag-submenu-option" data-type="config" data-value="c">
-                    <span class="rag-opt-text">Config C (Sparse / BM25)</span>
+                    <span class="rag-opt-text">Config C (Sparse)</span>
                     <svg class="rag-opt-check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </button>
                 </div>
@@ -114,12 +117,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
             </button>
             <div id="rag-reset-confirm" class="rag-reset-popover hidden" role="dialog" aria-modal="true" aria-label="Konfirmasi Reset">
-              <div class="rag-popover-header">
-                <div class="rag-popover-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                </div>
-                <span class="rag-popover-title">Mulai Ulang Percakapan?</span>
-              </div>
+              <span class="rag-popover-title">Mulai Ulang Percakapan?</span>
               <p class="rag-reset-confirm-desc">Riwayat tanya jawab saat ini akan dibersihkan dan kembali ke menu awal.</p>
               <div class="rag-reset-confirm-actions">
                 <button type="button" id="rag-reset-cancel-btn" class="rag-reset-btn-cancel">Batal</button>
@@ -185,9 +183,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Mobile Bottom Sheet Backdrop -->
-        <div id="rag-sheet-backdrop" class="rag-sheet-backdrop hidden"></div>
 
         <!-- Side-by-Side / Mobile Overlay Citation Panel -->
         <div id="rag-side-citation-panel" class="rag-side-citation-panel hidden">
@@ -260,6 +255,6 @@
     </div>
   </div>
 
-  <script src="/static/demo/inspire/js/inspire.js?v=14"></script>
+  <script src="/static/demo/inspire/js/inspire.js?v=15"></script>
 </body>
 </html>
