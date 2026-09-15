@@ -31,10 +31,10 @@ def test_unsratacid_serves_legacy_mock():
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
     assert "Universitas Sam Ratulangi | Official Website" in response.text
-    assert 'src="/unsrat-ac-id.html"' in response.text
+    assert 'src="/static/unsratacid/background.html"' in response.text
     assert 'id="rag-chatbot-widget"' in response.text
-    assert '/static/demo/unsratacid/js/unsratacid.js' in response.text
-    assert '/static/demo/unsratacid/css/unsratacid.css' in response.text
+    assert '/static/unsratacid/js/unsratacid.js' in response.text
+    assert '/static/unsratacid/css/unsratacid.css' in response.text
     # Welcome card legacy
     assert "SELAMAT DATANG" in response.text
     assert "Syarat cuti akademik?" in response.text
@@ -43,7 +43,7 @@ def test_unsratacid_serves_legacy_mock():
 
 @pytest.mark.offline
 def test_raw_html_endpoints():
-    """Verifikasi endpoint raw HTML untuk kedua iframe background."""
+    """Verifikasi endpoint raw HTML untuk kedua iframe background (kompatibilitas)."""
     resp_inspire = client.get("/inspire-unsrat-ac-id.html")
     assert resp_inspire.status_code == 200
     assert "text/html" in resp_inspire.headers["content-type"]

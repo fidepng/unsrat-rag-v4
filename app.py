@@ -611,18 +611,18 @@ async def root():
 @app.get("/unsratacid")
 async def unsrat_acid_page():
     """Serve legacy UNSRAT homepage mock with chatbot widget."""
-    legacy_path = Path("static/demo/unsratacid.html")
+    legacy_path = Path("static/unsratacid/index.html")
     if not legacy_path.exists():
-        return HTMLResponse("<h1>Mock unsratacid belum tersedia di static/demo/unsratacid.html.</h1>")
+        return HTMLResponse("<h1>Mock unsratacid belum tersedia di static/unsratacid/index.html.</h1>")
     return FileResponse(legacy_path, media_type="text/html")
 
 
 @app.get("/unsrat-ac-id.html")
 async def unsrat_homepage_html():
     """Serve raw scraped UNSRAT homepage for iframe background."""
-    bg_path = Path("unsrat-ac-id.html")
+    bg_path = Path("static/unsratacid/background.html")
     if not bg_path.exists():
-        return HTMLResponse("<h1>unsrat-ac-id.html tidak ditemukan.</h1>")
+        return HTMLResponse("<h1>static/unsratacid/background.html tidak ditemukan.</h1>")
     return FileResponse(bg_path, media_type="text/html")
 
 
