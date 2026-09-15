@@ -10,8 +10,8 @@ const FEATURE_FLAGS = {
 const RAG_ICONS = {
   send: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>`,
   stop: `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect width="14" height="14" x="5" y="5" rx="3"/></svg>`,
-  expand: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>`,
-  minimize: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" x2="21" y1="10" y2="3"/><line x1="3" x2="10" y1="21" y2="14"/></svg>`,
+  expand: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 3 3 3 3 9"/><line x1="3" x2="10" y1="3" y2="10"/><polyline points="15 21 21 21 21 15"/><line x1="21" x2="14" y1="21" y2="14"/></svg>`,
+  minimize: `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 10 10 10 10 4"/><line x1="10" x2="3" y1="3" y2="3"/><polyline points="20 14 14 14 14 20"/><line x1="14" x2="21" y1="14" y2="21"/></svg>`,
   bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
   chevronRight: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`,
   alertCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`
@@ -162,6 +162,7 @@ const RagChatWidget = {
     if (resetBtn) {
       resetBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (settingsPanel) settingsPanel.classList.add('hidden');
         const welcomeState = document.getElementById('rag-welcome-state');
         const isWelcomeActive = welcomeState && !welcomeState.classList.contains('hidden');
         
@@ -997,21 +998,29 @@ const RagChatWidget = {
       const bab = src.bab ? `${src.bab}` : "";
       const bagian = src.bagian ? `${src.bagian}` : "";
       const pasal = src.pasal ? (String(src.pasal).toLowerCase().startsWith('pasal') ? `${src.pasal}` : `Pasal ${src.pasal}`) : "";
-      const breadcrumbList = [bab, bagian, pasal].filter(Boolean);
-      const breadcrumbsHTML = breadcrumbList.length > 0 
-        ? `<div class="rag-citation-breadcrumbs">${breadcrumbList.map(b => `<span>${this.escapeHtml(b)}</span>`).join('<span class="rag-dot-sep">•</span>')}</div>`
-        : '';
+      
       const idx = src.index || (index + 1);
 
+      const pathPills = [];
+      if (bab) pathPills.push(`<span class="rag-path-pill">${this.escapeHtml(bab)}</span>`);
+      if (bagian) pathPills.push(`<span class="rag-path-pill">${this.escapeHtml(bagian)}</span>`);
+      if (pasal) pathPills.push(`<span class="rag-path-pill rag-path-pasal">${this.escapeHtml(pasal)}</span>`);
+      const pathHTML = pathPills.length > 0 
+        ? `<div class="rag-citation-path-tags">${pathPills.join('')}</div>`
+        : '';
+
       return `
-        <div class="rag-citation-item" id="rag-cit-item-${idx}" data-idx="${idx}">
-          <div class="rag-citation-topbar">
-            <span class="rag-citation-idx-badge">[${this.escapeHtml(idx)}]</span>
-            ${docId ? `<span class="rag-citation-docid-badge">${this.escapeHtml(docId)}</span>` : ''}
+        <div class="rag-citation-card" id="rag-cit-item-${idx}" data-idx="${idx}">
+          <div class="rag-citation-card-header">
+            <div class="rag-citation-meta-left">
+              <span class="rag-citation-idx-badge">[${this.escapeHtml(idx)}]</span>
+              <span class="rag-citation-badge-pill">Regulasi Resmi</span>
+            </div>
+            ${docId ? `<span class="rag-citation-docid">${this.escapeHtml(docId)}</span>` : ''}
           </div>
-          <h5 class="rag-citation-title-text">${this.escapeHtml(title)}</h5>
-          ${breadcrumbsHTML}
-          <div class="rag-citation-snippet">${this.escapeHtml(src.content)}</div>
+          <h5 class="rag-citation-card-title">${this.escapeHtml(title)}</h5>
+          ${pathHTML}
+          <div class="rag-citation-snippet-box">${this.escapeHtml(src.content)}</div>
         </div>
       `;
     }).join('');
@@ -1045,11 +1054,12 @@ const RagChatWidget = {
       const targetItem = sideCitationBody.querySelector(`[data-idx="${citIdx}"]`);
       if (targetItem) {
         targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        targetItem.classList.remove('rag-citation-card-highlighted');
         targetItem.classList.remove('rag-citation-highlight');
         void targetItem.offsetWidth;
-        targetItem.classList.add('rag-citation-highlight');
+        targetItem.classList.add('rag-citation-card-highlighted');
       }
-    }, 100);
+    }, 120);
   },
 
   toggleCitationPanel(show) {

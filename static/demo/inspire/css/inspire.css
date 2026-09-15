@@ -289,7 +289,8 @@
   flex-shrink: 0;
 }
 
-/* Reset Button Wrapper & Safety Popover */
+/* Header Action Popovers: Reset & Settings Unified Styling */
+.rag-settings-wrapper,
 .rag-reset-wrapper {
   position: relative;
   display: inline-flex;
@@ -307,70 +308,103 @@
   }
 }
 
-.rag-reset-popover {
+.rag-reset-popover,
+.rag-settings-dropdown {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: #ffffff;
+  background-color: #ffffff;
   border: 1px solid #E4DFD9;
   border-radius: 12px;
-  box-shadow: 0 8px 16px -2px rgba(28, 25, 23, 0.10), 0 2px 6px -1px rgba(28, 25, 23, 0.04);
-  padding: 12px 14px;
-  width: 220px;
+  box-shadow: 0 10px 25px -4px rgba(28, 25, 23, 0.12), 0 4px 10px -2px rgba(28, 25, 23, 0.05);
   z-index: 1002;
+  transform-origin: top right;
+}
+
+.rag-reset-popover {
+  width: 240px;
+  padding: 14px 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transform-origin: top right;
+}
+
+.rag-reset-popover:not(.hidden) {
   animation: ragPopoverEnter 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.rag-reset-popover.hidden {
+.rag-reset-popover.hidden,
+.rag-settings-dropdown.hidden {
   display: none !important;
 }
 
-.rag-reset-confirm-text {
-  font-size: 12px;
-  font-weight: 500;
-  color: #292524;
-  line-height: 1.4;
-  text-align: left;
+.rag-popover-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rag-popover-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: rgba(123, 45, 45, 0.08);
+  color: #7B2D2D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rag-popover-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1C1917;
+  line-height: 1.3;
+}
+
+.rag-reset-confirm-desc {
+  font-size: 11.5px;
+  color: #78716C;
+  line-height: 1.45;
+  margin: 0;
 }
 
 .rag-reset-confirm-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 2px;
 }
 
 .rag-reset-btn-cancel {
   background: #FAF8F5;
   border: 1px solid #E4DFD9;
-  border-radius: 6px;
-  padding: 4px 10px;
+  border-radius: 7px;
+  padding: 5px 12px;
   font-size: 11.5px;
   font-weight: 500;
   color: #57534E;
   cursor: pointer;
-  transition: all 0.12s ease;
+  transition: all 0.14s ease;
 }
 
 .rag-reset-btn-cancel:hover {
   background: #F0EDE8;
-  color: #292524;
+  color: #1C1917;
 }
 
 .rag-reset-btn-proceed {
   background: #7B2D2D;
   border: 1px solid #7B2D2D;
-  border-radius: 6px;
-  padding: 4px 10px;
+  border-radius: 7px;
+  padding: 5px 12px;
   font-size: 11.5px;
   font-weight: 600;
   color: #FFFFFF;
   cursor: pointer;
-  transition: all 0.12s ease;
+  transition: all 0.14s ease;
 }
 
 .rag-reset-btn-proceed:hover {
@@ -378,38 +412,33 @@
   border-color: #632222;
 }
 
-@keyframes ragDropdownEnter {
-  from {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Settings Dropdown Minimalist Context Menu (Relative Width to Text) */
+/* Settings Dropdown Context Menu */
 .rag-settings-dropdown {
-  position: absolute;
-  top: 48px;
-  right: 86px;
-  background-color: #ffffff;
-  border: 1px solid #E4DFD9;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px -2px rgba(28, 25, 23, 0.10), 0 2px 6px -1px rgba(28, 25, 23, 0.04);
-  padding: 4px;
-  z-index: 1000;
+  padding: 6px;
+  min-width: 220px;
   width: max-content;
   display: flex;
   flex-direction: column;
   gap: 2px;
   font-size: 12px;
-  transform-origin: top right;
 }
 
 .rag-settings-dropdown:not(.hidden) {
-  animation: ragDropdownEnter 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: ragPopoverEnter 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.rag-settings-header {
+  padding: 6px 10px 5px 10px;
+  border-bottom: 1px solid #F0EDE8;
+  margin-bottom: 3px;
+}
+
+.rag-settings-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #A8A29E;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .rag-menu-item {
@@ -420,7 +449,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 10px;
+  padding: 7px 10px;
   border-radius: 8px;
   cursor: pointer;
   color: #292524;
@@ -463,17 +492,17 @@
   background-color: #ffffff;
   border: 1px solid #E4DFD9;
   border-radius: 12px;
-  box-shadow: 0 8px 16px -2px rgba(28, 25, 23, 0.10), 0 2px 6px -1px rgba(28, 25, 23, 0.04);
+  box-shadow: 0 10px 25px -4px rgba(28, 25, 23, 0.12), 0 4px 10px -2px rgba(28, 25, 23, 0.05);
   padding: 4px;
   width: max-content;
   white-space: nowrap;
   display: none !important;
   flex-direction: column;
   gap: 2px;
-  z-index: 1001;
+  z-index: 1003;
 }
 
-/* Invisible Hover Bridge - Menghubungkan gap agar kursor tidak kehilangan fokus hover */
+/* Invisible Hover Bridge */
 .rag-submenu::before {
   content: '';
   position: absolute;
@@ -493,27 +522,44 @@
   background: transparent;
   border: none;
   text-align: left;
-  padding: 6px 10px;
+  padding: 7px 10px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 500;
   color: #292524;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   white-space: nowrap;
   width: 100%;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.14s ease, color 0.14s ease;
 }
 
 .rag-submenu-option:hover {
-  background-color: rgba(123, 45, 45, 0.08);
+  background-color: rgba(123, 45, 45, 0.06);
   color: #7B2D2D;
 }
 
 .rag-submenu-option.active {
-  background-color: rgba(123, 45, 45, 0.12);
+  background-color: rgba(123, 45, 45, 0.09);
   color: #7B2D2D;
   font-weight: 600;
+}
+
+.rag-opt-text {
+  flex: 1;
+}
+
+.rag-opt-check {
+  display: none;
+  color: #7B2D2D;
+  flex-shrink: 0;
+}
+
+.rag-submenu-option.active .rag-opt-check {
+  display: inline-block;
 }
 
 /* Flat Dropdown Mode (Single Config Tier - No Submenu Arrow / Flyout) */
@@ -1173,16 +1219,37 @@
   transform: translateY(0);
 }
 
-/* Citation Item Flash Highlight when jumping from inline badge */
-@keyframes ragCitationFlash {
-  0% { background-color: rgba(123, 45, 45, 0.14); border-color: #7B2D2D; }
-  50% { background-color: rgba(123, 45, 45, 0.07); }
-  100% { background-color: transparent; border-color: #E4DFD9; }
+/* Smooth Non-Boxy Halo Pulse Animation for Highlighted Citation Card */
+@keyframes ragCitationCardGlow {
+  0% {
+    box-shadow: 0 0 0 4px rgba(123, 45, 45, 0.32), 0 8px 24px -4px rgba(123, 45, 45, 0.22);
+    border-color: #7B2D2D;
+    transform: translateY(-2px);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(123, 45, 45, 0.18), 0 6px 16px -3px rgba(123, 45, 45, 0.12);
+    border-color: #8C3232;
+    transform: translateY(-2px);
+  }
+  100% {
+    box-shadow: 0 2px 6px -1px rgba(28, 25, 23, 0.05);
+    border-color: #E4DFD9;
+    transform: translateY(0);
+  }
 }
 
+@keyframes ragBadgeBounce {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.16); background-color: rgba(123, 45, 45, 0.18); }
+}
+
+.rag-citation-card.rag-citation-card-highlighted,
 .rag-citation-highlight {
-  animation: ragCitationFlash 1.4s ease-out forwards;
-  border-radius: 8px;
+  animation: ragCitationCardGlow 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.rag-citation-card.rag-citation-card-highlighted .rag-citation-idx-badge {
+  animation: ragBadgeBounce 0.8s ease-out;
 }
 
 /* Accordion & Panel Rujukan Dokumen (Pill Action Button) */
@@ -1330,83 +1397,109 @@
 }
 
 
-/* Minimalist Academic Editorial Citation Item (Borderless Flow) */
-.rag-citation-item {
+/* Card-based Citation Architecture with Semantic Metadata */
+.rag-citation-card {
+  background: #FFFFFF;
+  border: 1px solid #E4DFD9;
+  border-radius: 13px;
+  padding: 15px 16px;
   display: flex;
   flex-direction: column;
-  padding: 0 0 20px 0;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #E4DFD9;
-  border-radius: 0;
-  box-shadow: none;
+  gap: 9px;
+  box-shadow: 0 2px 6px -1px rgba(28, 25, 23, 0.05);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.24s ease;
 }
 
-.rag-citation-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.rag-citation-card:hover {
+  border-color: #D6D0C7;
+  box-shadow: 0 4px 14px -2px rgba(28, 25, 23, 0.08);
 }
 
-.rag-citation-topbar {
+.rag-citation-card-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  margin-bottom: 4px;
+}
+
+.rag-citation-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .rag-citation-idx-badge {
-  background-color: rgba(123, 45, 45, 0.08);
+  background-color: rgba(123, 45, 45, 0.09);
   color: #7B2D2D;
   font-weight: 700;
-  font-size: 11.5px;
-  padding: 2px 8px;
+  font-size: 11px;
+  padding: 2.5px 8px;
   border-radius: 6px;
   letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.rag-citation-docid-badge {
+.rag-citation-badge-pill {
   background-color: #F5F3F0;
-  color: #78716c;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 2px 7px;
+  color: #57534E;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2.5px 8px;
   border-radius: 6px;
+  letter-spacing: 0.01em;
 }
 
-.rag-citation-title-text {
-  font-weight: 700;
-  color: #7B2D2D;
-  font-size: 14px;
-  line-height: 1.4;
-  margin: 4px 0 6px 0;
+.rag-citation-docid {
+  font-size: 10.5px;
+  color: #A8A29E;
+  font-weight: 500;
 }
 
-.rag-citation-breadcrumbs {
+.rag-citation-card-title {
+  font-weight: 600;
+  color: #1C1917;
+  font-size: 13.5px;
+  line-height: 1.42;
+  margin: 0;
+}
+
+/* Breadcrumb Path Tags */
+.rag-citation-path-tags {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
-  font-size: 12px;
-  font-weight: 600;
-  color: #57534e;
-  margin-bottom: 12px;
 }
 
-.rag-dot-sep {
-  color: #a8a29e;
-  font-size: 10px;
-}
-
-/* Academic Editorial Raw Snippet (Line-Break Fidelity with Clean Outline Box) */
-.rag-citation-snippet {
-  font-size: 12.5px;
-  color: #1C1917;
-  line-height: 1.68;
-  background: #FFFFFF;
-  padding: 12px 14px;
-  border-radius: 12px;
+.rag-path-pill {
+  font-size: 11px;
+  font-weight: 500;
+  color: #57534E;
+  background: #FAF8F5;
   border: 1px solid #E4DFD9;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  border-radius: 5px;
+  padding: 2.5px 8px;
+  line-height: 1.35;
+}
+
+.rag-path-pill.rag-path-pasal {
+  color: #7B2D2D;
+  font-weight: 600;
+  background: rgba(123, 45, 45, 0.07);
+  border-color: rgba(123, 45, 45, 0.22);
+}
+
+/* Snippet Quotation Block */
+.rag-citation-snippet-box {
+  background: #FAF9F6;
+  border-left: 3px solid #7B2D2D;
+  border-radius: 0 8px 8px 0;
+  padding: 11px 13px;
+  font-size: 12.5px;
+  line-height: 1.68;
+  color: #292524;
   white-space: pre-wrap;
   word-break: break-word;
   text-wrap: pretty;
