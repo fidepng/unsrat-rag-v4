@@ -26,6 +26,7 @@ const RagChatWidget = {
     currentConfig: 'b',
     currentModel: 'gemini-3.5-flash',
     activeCitations: [],
+    displayedMsgId: null,
     messageSourcesMap: new Map(),
     lastQuery: '',
     isTimedOut: false
@@ -450,7 +451,15 @@ const RagChatWidget = {
         const inlineCitationBtn = e.target.closest('.rag-inline-citation');
         if (inlineCitationBtn) {
           const citIdx = inlineCitationBtn.getAttribute('data-cit-idx');
-          const msgId = inlineCitationBtn.getAttribute('data-msg-id');
+          let msgId = inlineCitationBtn.getAttribute('data-msg-id');
+
+          const botMsg = inlineCitationBtn.closest('.rag-bot-msg');
+          const msgWrapper = inlineCitationBtn.closest('.rag-msg-wrapper');
+          if (!msgId) {
+            msgId = (botMsg && botMsg.dataset.msgId) || 
+                    (msgWrapper && msgWrapper.dataset.msgId) || 
+                    null;
+          }
 
           let targetSources = null;
           // Priority 1: Direct lookup by data-msg-id in messageSourcesMap
@@ -460,13 +469,12 @@ const RagChatWidget = {
 
           // Priority 2: DOM traversal to parent message bubble or wrapper
           if (!targetSources || targetSources.length === 0) {
-            const botMsg = inlineCitationBtn.closest('.rag-bot-msg');
-            const msgWrapper = inlineCitationBtn.closest('.rag-msg-wrapper');
             targetSources = (botMsg && botMsg._ragSources) || 
                             (msgWrapper && msgWrapper._ragSources);
 
             if ((!targetSources || targetSources.length === 0) && msgWrapper && msgWrapper.dataset.msgId) {
               targetSources = this.state.messageSourcesMap && this.state.messageSourcesMap.get(msgWrapper.dataset.msgId);
+              if (!msgId) msgId = msgWrapper.dataset.msgId;
             }
           }
 
@@ -476,7 +484,7 @@ const RagChatWidget = {
           }
 
           if (citIdx) {
-            this.handleInlineCitationClick(citIdx, targetSources);
+            this.handleInlineCitationClick(citIdx, targetSources, msgId);
           }
           return;
         }
@@ -591,6 +599,10 @@ const RagChatWidget = {
     }
     this.state.chatHistory = [];
     this.state.activeCitations = [];
+    this.state.displayedMsgId = null;
+    if (this.elements.sideCitationPanel) {
+      delete this.elements.sideCitationPanel.dataset.activeMsgId;
+    }
     if (this.state.messageSourcesMap) {
       this.state.messageSourcesMap.clear();
     }
@@ -1002,7 +1014,10 @@ const RagChatWidget = {
 
   renderCitations(containerElem, sources, msgId = null) {
     if (!containerElem || !sources || sources.length === 0) return;
-    this.state.activeCitations = sources;
+    // CRITICAL FIX: DO NOT mutate this.state.activeCitations here!
+    // renderCitations() is called when a chat response finishes streaming.
+    // Overwriting activeCitations here causes a desync bug if a citation panel
+    // from a previous message is still open in the DOM.
     if (msgId) {
       this.state.messageSourcesMap.set(msgId, sources);
     }
@@ -1042,7 +1057,12 @@ const RagChatWidget = {
           !sideCitationPanel.classList.contains('hidden') && 
           (sideCitationPanel.classList.contains('rag-sheet-open') || window.innerWidth > 768);
         
-        if (isPanelOpen && this.state.activeCitations === sources) {
+        const isCurrentlyDisplayed = isPanelOpen && (
+          (msgId && this.state.displayedMsgId === msgId) ||
+          (!msgId && this.state.activeCitations === sources)
+        );
+
+        if (isCurrentlyDisplayed) {
           this.toggleCitationPanel(false);
           return;
         }
@@ -1051,16 +1071,23 @@ const RagChatWidget = {
         if (!isMobile && this.state.mode === 'compact') {
           this.toggleExpand(true);
         }
-        this.openSideCitationPanel(sources);
+        this.openSideCitationPanel(sources, msgId);
       });
     }
   },
 
-  openSideCitationPanel(sources) {
+  openSideCitationPanel(sources, msgId = null) {
     const { sideCitationPanel, sideCitationBody, sheetBackdrop } = this.elements;
-    if (!sideCitationPanel || !sideCitationBody) return;
+    if (!sideCitationPanel || !sideCitationBody || !sources) return;
 
     this.state.activeCitations = sources;
+    this.state.displayedMsgId = msgId || (sources && sources[0] && sources[0]._msgId) || null;
+    if (this.state.displayedMsgId) {
+      sideCitationPanel.dataset.activeMsgId = this.state.displayedMsgId;
+    } else {
+      delete sideCitationPanel.dataset.activeMsgId;
+    }
+
     sideCitationBody.innerHTML = sources.map((src, index) => {
       const rawTitle = src.title || "Peraturan Rektor UNSRAT";
       const title = rawTitle.replace(/\s+/g, ' ').trim();
@@ -1115,21 +1142,29 @@ const RagChatWidget = {
     }
   },
 
-  handleInlineCitationClick(citIdx, sources = null) {
-    const targetSources = sources || this.state.activeCitations;
+  handleInlineCitationClick(citIdx, sources = null, msgId = null) {
+    const targetSources = sources || (msgId && this.state.messageSourcesMap.get(msgId)) || this.state.activeCitations;
     if (!targetSources || targetSources.length === 0) return;
 
     const isMobile = window.innerWidth <= 768;
-    if (!isMobile && this.state.mode === 'compact') {
+    const wasCompact = !isMobile && (this.state.mode === 'compact');
+    if (wasCompact) {
       this.toggleExpand(true);
     }
 
-    const isAlreadyDisplayingSameSources = (this.state.activeCitations === targetSources) && 
-      this.elements.sideCitationPanel && 
-      !this.elements.sideCitationPanel.classList.contains('hidden');
+    const { sideCitationPanel, sideCitationBody } = this.elements;
+    const isPanelCurrentlyOpen = sideCitationPanel && 
+      !sideCitationPanel.classList.contains('hidden') &&
+      (isMobile ? sideCitationPanel.classList.contains('rag-sheet-open') : true);
+
+    // Strict state comparison: must match both active open panel AND message ID
+    const isAlreadyDisplayingSameSources = isPanelCurrentlyOpen && (
+      (msgId && this.state.displayedMsgId === msgId) ||
+      (!msgId && this.state.activeCitations === targetSources)
+    );
 
     if (!isAlreadyDisplayingSameSources) {
-      this.openSideCitationPanel(targetSources);
+      this.openSideCitationPanel(targetSources, msgId);
     }
 
     // Cancel any previous pending highlight/scroll timers to prevent animation clashes
@@ -1158,28 +1193,32 @@ const RagChatWidget = {
         el.classList.remove('rag-citation-highlighted');
       });
 
-      // Check if target item is already in view inside sideCitationBody container
-      const containerRect = sideCitationBody.getBoundingClientRect();
-      const itemRect = targetItem.getBoundingClientRect();
-      const isItemInView = (
-        itemRect.top >= containerRect.top + 8 && 
-        itemRect.bottom <= containerRect.bottom - 8
-      );
-
       const triggerNudge = () => {
         targetItem.classList.remove('rag-citation-highlighted');
         void targetItem.offsetWidth; // Force layout reflow for animation restart
         targetItem.classList.add('rag-citation-highlighted');
       };
 
-      if (isItemInView) {
-        // Already visible: trigger tactile nudge immediately
+      // For citation [1], ALWAYS scroll smoothly to the very top (scrollTop: 0)
+      // For citation [N], compute exact offset position relative to scroll container
+      const isFirstCitation = (String(citIdx).trim() === '1');
+      let targetScrollTop = 0;
+      if (!isFirstCitation) {
+        const containerRect = sideCitationBody.getBoundingClientRect();
+        const itemRect = targetItem.getBoundingClientRect();
+        targetScrollTop = Math.max(0, (itemRect.top - containerRect.top) + sideCitationBody.scrollTop - 12);
+      }
+
+      const currentScroll = sideCitationBody.scrollTop;
+      const isAlreadyAtTarget = Math.abs(currentScroll - targetScrollTop) <= 4;
+
+      if (isAlreadyAtTarget) {
+        // Already at target position: trigger tactile nudge immediately
         triggerNudge();
       } else {
-        // Need to scroll: initiate smooth scroll to target item
-        targetItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // Need to scroll: initiate smooth scroll to exact target position
+        sideCitationBody.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
 
-        // Best practice motion choreography: Wait for smooth scroll to finish before nudge!
         let scrollHandled = false;
         const onScrollEnd = () => {
           if (scrollHandled) return;
@@ -1189,7 +1228,7 @@ const RagChatWidget = {
             clearTimeout(this._citationScrollTimer);
             this._citationScrollTimer = null;
           }
-          // Micro-pause (40ms) after scroll settles, then play crisp nudge animation
+          // Micro-pause (40ms) after scroll settles, then play tactile nudge animation
           setTimeout(triggerNudge, 40);
         };
 
@@ -1197,16 +1236,19 @@ const RagChatWidget = {
           sideCitationBody.addEventListener('scrollend', onScrollEnd, { once: true });
         }
 
-        // Deterministic fallback timer (360ms) if scrollend is unsupported or delta is small
-        this._citationScrollTimer = setTimeout(onScrollEnd, 360);
+        // Adaptive fallback timer in case scrollend is delayed or unsupported
+        const scrollDist = Math.abs(currentScroll - targetScrollTop);
+        const fallbackMs = Math.min(800, Math.max(350, Math.round(scrollDist * 0.8)));
+        this._citationScrollTimer = setTimeout(onScrollEnd, fallbackMs);
       }
     };
 
-    if (isAlreadyDisplayingSameSources) {
+    if (isAlreadyDisplayingSameSources && !wasCompact) {
       executeScrollAndNudge();
     } else {
-      // Allow browser 60ms to paint newly rendered citation cards before measuring rect
-      this._citationHighlightTimer = setTimeout(executeScrollAndNudge, 60);
+      // Allow browser to complete paint and layout reflow (especially on split expand)
+      const renderDelay = wasCompact ? 140 : 60;
+      this._citationHighlightTimer = setTimeout(executeScrollAndNudge, renderDelay);
     }
   },
 
@@ -1215,7 +1257,7 @@ const RagChatWidget = {
     if (!sideCitationPanel) return;
 
     if (show) {
-      this.openSideCitationPanel(this.state.activeCitations);
+      this.openSideCitationPanel(this.state.activeCitations, this.state.displayedMsgId);
       return;
     }
 
