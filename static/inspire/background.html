@@ -1,0 +1,3147 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>INSPIRE Portal</title>
+	<link rel="icon" href="https://inspire.unsrat.ac.id/resources/img/logo-unsrat.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Portal INSPIRE Universitas Sam Ratulangi">
+	<meta name="keywords" content="INSPIRE, UNSRAT, inspire, Universitas, Sam, Ratulangi, Universitas Sam Ratulangi, portal inspire, Portal Inspire UNSRAT">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/adminlte3/dist/css/adminlte.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+	<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/fonts/philosopher/philosopher.css">
+	<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/css/tik_unsrat.css" />
+	<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/css/datatables.min.css">
+	<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/additional/layout.css" />
+	<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/css/personal_page.css" />
+
+	<script src="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/jquery/jquery.min.js"></script>
+	<script>
+		// Offline / Mock Demo Performance Interceptor:
+		// Mencegah request polling eksternal yang gagal/CORS timeout agar tidak membebani browser thread
+		if (window.$) {
+			const _origAjax = $.ajax;
+			$.ajax = function(opts) {
+				if (opts && typeof opts === 'object') {
+					const url = opts.url || '';
+					if (url.includes('inspire.unsrat.ac.id') || url.startsWith('http')) {
+						const d = $.Deferred();
+						d.resolve([]);
+						return d.promise();
+					}
+				}
+				return _origAjax.apply(this, arguments);
+			};
+		}
+	</script>
+	<script src="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/popper/popper.min.js"></script>
+	<script src="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script src="https://inspire.unsrat.ac.id/resources/js/usr_template.js"></script>
+	<script src="https://inspire.unsrat.ac.id/resources/js/tik_function.js"></script>
+	<script src="https://inspire.unsrat.ac.id/resources/js/dataTables.js"></script>
+
+
+</head>
+
+<body class="hold-transition layout-navbar-fixed layout-fixed">
+
+	<canvas id="container_fireworks" style="display: none;">
+	</canvas>
+
+	<span id="main_content">
+		<div id="loading-container">
+			<div id="loading">
+				<img alt="unsrat" id="loading-logo" src="https://inspire.unsrat.ac.id/resources/img/unsrat_mosaic.png" />
+				memuat ..
+			</div>
+		</div>
+		<div id="alert_js"></div>
+		<div class="wrapper">
+			<nav class="main-header navbar navbar-expand navbar-dark navbar-danger">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+					</li>
+				</ul>
+
+				<!-- Right navbar links -->
+				<ul class="navbar-nav ml-auto">
+											<a href="https://inspire.unsrat.ac.id/kalender">
+							<li class="nav-item" rel="tooltip" title="INSPIRE Kalender">
+								<span class="nav-link">
+									<i class="fas fa-calendar-alt"></i>
+								</span>
+							</li>
+						</a>
+						<li class="nav-item dropdown">
+							<a class="nav-link" data-toggle="dropdown" href="#" id="notifikasi-inspire">
+								<i class="fa fa-flag"></i>
+								<span class="badge badge-warning navbar-badge"></span>
+							</a>
+							<!-- <div class="nav-link" data-toggle="dropdown" id="notifikasi-inspire">
+								<i class="fa fa-flag"></i>
+								<span class="badge badge-warning navbar-badge"></span>
+							</div> -->
+							<div class="dropdown-menu scrollable-menu dropdown-menu-lg dropdown-menu-right">
+								<div id="notifikasi-dropdown-header">
+								</div>
+								<div id="notifikasi-dropdown">
+								</div>
+							</div>
+						</li>
+										<li class="nav-item dropdown">
+						<a class="nav-link pr-0 d-none d-sm-block" data-toggle="dropdown" href="#profile_dropdown">
+							<div class="image">
+								<object data="https://storage.googleapis.com/unsrat-inspire/uploads/biodata/foto_profil/122101160081.jpg" type="image/jpg" width="22px">
+									<img src="https://inspire.unsrat.ac.id/resources/img/user.png" class="img-circle" alt="User Image" width="22px">
+								</object>
+							</div>
+						</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link pl-2 pr-3 d-none d-sm-block" data-toggle="dropdown" href="#" style="line-height: 1em;">
+							<small><span class="text-uppercase">TEOFIDE W. K. PANGEMANAN</span></small><br />
+							<small>220211060317</small>
+						</a>
+						<a class="nav-link button pl-2 pr-3 d-block d-sm-none" data-toggle="dropdown" href="#">
+							<i class="fas fa-user"></i>
+						</a>
+						<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="profile_dropdown">
+							<span class="dropdown-item dropdown-header">
+								<object data="https://storage.googleapis.com/unsrat-inspire/uploads/biodata/foto_profil/122101160081.jpg" type="image/jpg" style="width: 4cm; height: auto;">
+									<img alt="foto profil" src="https://inspire.unsrat.ac.id/resources/img/user.png" />
+								</object>
+							</span>
+														<a href="https://inspire.unsrat.ac.id/riwayat/riwayat" class="dropdown-item dropdown-footer text-bold text-uppercase">
+								Riwayat Login<i class="nav-icon fas fa-history ml-2"></i>
+							</a>
+							<a href="https://inspire.unsrat.ac.id/ubah_password/ubah_password" class="dropdown-item dropdown-footer text-bold text-uppercase">
+								Ubah Password<i class="nav-icon fas fa-unlock-alt ml-2"></i>
+							</a>
+							<a href="#" data-toggle="modal" data-target="#mdl-logout" class="dropdown-item dropdown-footer text-bold text-uppercase">
+								KELUAR<i class="nav-icon fas fa-sign-out-alt ml-2"></i>
+							</a>
+						</div>
+					</li>
+					<!-- <li class="nav-item">
+						<a class="nav-link button" data-toggle="modal" data-target="#modal-app-list">
+							<i class="fas fa-th-large"></i>
+						</a>
+					</li> -->
+				</ul>
+			</nav>
+
+			<aside class="main-sidebar sidebar-light-danger elevation-4">
+				<a href="" class="brand-link bg-danger">
+					<img src="https://inspire.unsrat.ac.id/resources/img/logo-unsrat-mosaic.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-1" style="opacity: .8">
+					<span class="brand-text font-weight-light" style="font-size: 15pt" id="navbar-title">INSPIRE</span>
+				</a>
+
+				<!-- sidebar -->
+				<div class="sidebar">
+					<nav class="mt-4">
+						<ul class="nav nav-pills nav-sidebar nav-child-indent flex-column text-sm" data-widget="treeview" role="menu" data-accordion="true">
+							<!-- <li class="nav-item">
+    <a href="https://inspire.unsrat.ac.id/mobile" class="nav-link">
+        <i class="nav-icon fas fa-mobile"></i>
+        <p>INSPIRE Mobile App</p>
+    </a>
+</li> -->
+<li class="nav-item">
+    <a href="https://inspire.unsrat.ac.id/beranda" class="nav-link">
+        <i class="nav-icon fas fa-home"></i>
+        <p>Beranda</p>
+    </a>
+</li>
+<!-- <li class="nav-item">
+    <a href="" class="nav-link">
+        <i class="nav-icon fas fa-mobile"></i>
+        <p>Bantuan Pulsa</p>
+    </a>
+</li> -->
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-user"></i>
+        <p>
+            Biodata
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/biodata/biodata_saya" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Biodata Saya</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/personal_page/personal_page_mhs" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Personal Page</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/biodata/datapribadi" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Ubah Data Pribadi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/biodata/dataortu" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Ubah Data Orang Tua</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/biodata/keluarga" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Ubah Data Keluarga</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/biodata/unggahberkas" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Berkas Pendukung</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/rekening" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Rekening Bank</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-book-reader"></i>
+        <p>
+            Perkuliahan
+            <i class="fas fa-angle-left right"></i>
+            <span id="menu_perkuliahan" class="menu_perkuliahan badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/capaian_pembelajaran" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Capaian Pembelajaran</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Kampus Merdeka
+                    <i class="right fas fa-angle-left"></i>
+                    <span id="menu_kampus_merdeka" class="menu_kampus_merdeka badge badge-info right"></span>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/kampus_merdeka/pendaftaran" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Pendaftaran</p>
+                    </a>
+                </li>
+                <li class="nav-item" data-notifid="menu_kampus_merdeka">
+                    <a href="https://inspire.unsrat.ac.id/kampus_merdeka/komunikasi_mahasiswa" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Komunikasi
+                            <span class="badge_notif menu_perkuliahan menu_kampus_merdeka badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/akademik/matakuliah" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Jadwal</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/krs" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>KRS</p>
+            </a>
+        </li>
+        <!-- <li class="nav-item">
+            <a href="" class="nav-link" target="_blank">
+                <i class="far fa-circle nav-icon"></i>
+                <p>KRS</p>
+            </a>
+        </li> -->
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/absensi" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Presensi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/materi" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Materi Kuliah</p>
+            </a>
+        </li>
+        <!-- <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/tugas_kuliah/Tugasmahasiswa" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tugas Kuliah</p>
+            </a>
+        </li> -->
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tugas Kuliah
+                    <i class="right fas fa-angle-left"></i>
+                    <span id="menu_tugas_kuliah" class="menu_tugas_kuliah badge badge-info right"></span>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item" data-notifid="menu_tugas_individu">
+                    <a href="https://inspire.unsrat.ac.id/tugas_kuliah/tugasmahasiswa" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Tugas Individu
+                            <span class="badge_notif menu_perkuliahan menu_tugas_kuliah badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" data-notifid="menu_tugas_studikasus">
+                    <a href="https://inspire.unsrat.ac.id/tugas_kuliah/studikasusmahasiswa" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Tugas Studi Kasus
+                            <span class="badge_notif menu_perkuliahan menu_tugas_kuliah badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item" data-notifid="menu_tugas_proyek">
+                    <a href="https://inspire.unsrat.ac.id/tugas_kuliah/proyekmahasiswa" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Tugas Proyek
+                            <span class="badge_notif menu_perkuliahan menu_tugas_kuliah badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item" data-notifid="menu_forum_diskusi">
+            <a href="https://inspire.unsrat.ac.id/forum_diskusi/forum_utama" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Forum Diskusi
+                    <span class="badge_notif menu_perkuliahan badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/ujian_akhir_kelas/presensi" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Ujian Akhir <br />Semester</p>
+            </a>
+        </li>
+        <!-- <li class="nav-item">
+            <a href="" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Elearning Unsrat</p>
+            </a>
+        </li> -->
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/epom" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>EPOM</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/akademik/khs" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>KHS</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/akademik/transkrip" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Transkrip</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/bimbingan_khusus" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Bimbingan Khusus</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/e_portfolio/eportfolio_mahasiswa" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>E-portfolio</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-book-open"></i>
+        <p>
+            E-Learning Unsrat
+            <i class="fas fa-angle-left right"></i>
+            <!-- sebelumnya span id="menu_perkuliahan" -->
+            <span id="menu_elearning" class="menu_elearning badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/elearning/beranda" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Unsrat@Learn</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Microsoft Education <i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+            <!-- <li class="nav-item">
+                    <a href="" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Microsoft Teams</p>
+                    </a>
+                </li> -->
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/panduan/portal/panduan-pembuatan-akun-office-365-education/" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Microsoft Teams</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/microsoft_teams/online_meetings" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Teams Meeting</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/gclass/gclass" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Google Classroom</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-user-friends"></i>
+        <p>
+            Kemahasiswaan
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <!-- <li class="nav-item">
+            <a href="https://portal.unsrat.ac.id/" class="nav-link" target="_blank">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Beasiswa</p>
+            </a>
+        </li> -->
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/beasiswa" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Beasiswa</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/prestasi/user/daftar_prestasi" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Prestasi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/kompetisi" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Kompetisi</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Organisasi Mahasiswa <i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/ormawa/ormawa/hima" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Himpunan <br />Mahasiswa</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/ormawa/ormawa/upk" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Unit Pelayanan <br />Kerohanian</p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>UKM <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="https://inspire.unsrat.ac.id/ormawa/ormawa/ukm_fakultas" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>UKM Fakultas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://inspire.unsrat.ac.id/ormawa/ormawa/ukm_unsrat" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>UKM UNSRAT</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <!-- <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/penyesuaian_ukt" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Penyesuaian UKT</p>
+            </a>
+        </li> -->
+                    <li class="nav-item">
+                <a href="https://inspire.unsrat.ac.id/pengurangan_ukt" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Pengurangan UKT</p>
+                </a>
+            </li>
+                <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/angsuran_ukt" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Angsuran UKT</p>
+            </a>
+        </li>
+        <!-- <li class="nav-item"> -->
+            <!-- <a href="" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>KIP UKT</p>
+            </a> -->
+            <!-- <a href="https://inspire.unsrat.ac.id/bantuan_ukt" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Bantuan UKT</p>
+            </a>
+        </li> -->
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-street-view"></i>
+        <p>KKT <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/kkt/informasi" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Informasi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/kkt/pendaftaran" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Pendaftaran</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pelaksanaan <i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pelaporan KKT<i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="https://inspire.unsrat.ac.id/kkt/laporanharian" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Laporan Harian KKT</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://inspire.unsrat.ac.id/kkt/laporanakhir" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Laporan Akhir KKT</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/kkt/pembimbingan" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Pembimbingan KKT</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/kkt/presensi" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Presensi KKT</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-microscope"></i>
+        <p>
+            <i class="fas fa-angle-left right"></i>
+            PKM Penelitian <br />Mahasiswa
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/informasi_pkm_mahasiswa" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Informasi Proposal <br>Penelitian</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/pengajuan_pkm_mahasiswa" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pengajuan Proposal <br>Penelitian</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/konfirmasi_anggota" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Konfirmasi Proposal <br>Penelitian</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Capaian Luaran
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/pkm_laporan_kemajuan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Laporan Kemajuan</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/pkm_laporan_akhir" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Laporan Akhir</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/pkm_artikel_ilmiah" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Artikel Ilmiah</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/pkm_produk_program" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Produk Program</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/penelitian_mahasiswa/surat_tugas" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Surat Tugas <br>Penelitian</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-comments"></i>
+        <p>Bimbingan Akademik <i class="right fas fa-angle-left"></i>
+            <span id="menu_bimbingan_akademik" class="menu_bimbingan_akademik badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item" data-notifid="menu_komunikasi_mahasiswa">
+            <a href="https://inspire.unsrat.ac.id/komunikasi_pa/komunikasi_mahasiswa" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Komunikasi Pembimbing
+                    <span class="badge_notif menu_bimbingan_akademik badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                </p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+    <i class="nav-icon fas fa-landmark"></i>
+        <p>
+            Praktik Lapangan/Magang
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Pembimbing
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/magang/usulan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan Magang</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/magang/pembimbingan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pelaksanaan Magang</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Seminar
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/magang/seminarmhs" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan Seminar</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/magang/seminarmhs/pelaksanaan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pelaksanaan Seminar</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-book"></i>
+        <p>
+            Skripsi / Tesis
+            <i class="fas fa-angle-left right"></i>
+            <span id="menu_skripsi" class="menu_skripsi badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/skripsi/pengajuan_seminarproposal" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Seminar Proposal</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Pembimbingan
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/skripsi/proposal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan</p>
+                    </a>
+                </li>
+            </ul>
+            
+            <ul class="nav nav-treeview">
+                <li class="nav-item" data-notifid="menu_komunikasi_skripsi_mahasiswa">
+                    <a href="https://inspire.unsrat.ac.id/skripsi/komunikasi" class="nav-link">
+                        <i class="nav-icon far fa-circle"></i>
+                        <p>Pelaksanaan
+                            <span class="badge_notif menu_skripsi badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                        </p>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/skripsi/perubahan" class="nav-link"">
+                        <i class=" far fa-circle nav-icon"></i>
+                        <p>Perubahan</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/skripsi/seminar" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Seminar Hasil</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/skripsi/ujianakhir" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Ujian Akhir</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+
+<!-- <li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-book-open"></i>
+        <p>
+            Disertasi
+            <i class="fas fa-angle-left right"></i>
+            <span id="menu_skripsi" class="menu_skripsi badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Seminar Proposal
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_seminarproposal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pelaksanaan_seminarproposal" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pelaksanaan</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Pembimbingan
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_pembimbingan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan</p>
+                    </a>
+                </li>
+            </ul>
+            
+            <ul class="nav nav-treeview">
+                <li class="nav-item" data-notifid="menu_komunikasi_disertasi_mahasiswa">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/komunikasidisertasi" class="nav-link">
+                        <i class="nav-icon far fa-circle"></i>
+                        <p>Pelaksanaan
+                            <span class="badge_notif menu_skripsi badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                        </p>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/skripsi/perubahan" class="nav-link"">
+                        <i class=" far fa-circle nav-icon"></i>
+                        <p>Perubahan</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Seminar Hasil
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_seminarhasil" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_seminarhasil/pelaksanaan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pelaksanaan</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Pra-Promosi Doktor
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_prapromosidoktor" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_prapromosidoktor/pelaksanaan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pelaksanaan</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Promosi Doktor
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_promosidoktor" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pengajuan</p>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/disertasi/pengajuan_promosidoktor/pelaksanaan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pelaksanaan</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li> -->
+
+<!-- <li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-book"></i>
+        <p>
+            Skripsi/ Thesis
+            <i class="fas fa-angle-left right"></i>
+            <span id="menu_skripsi" class="menu_skripsi badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/skripsi/proposal" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Proposal</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/skripsi/perubahan" class="nav-link"">
+                <i class=" far fa-circle nav-icon"></i>
+                <p>Perubahan</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/skripsi/seminar" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Seminar Hasil</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/skripsi/ujianakhir" class="nav-link"">
+                <i class=" far fa-circle nav-icon"></i>
+                <p>Ujian Akhir</p>
+            </a>
+        </li>
+        <li class="nav-item" data-notifid="menu_komunikasi_skripsi_mahasiswa">
+            <a href="https://inspire.unsrat.ac.id/skripsi/komunikasi" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Pembimbingan
+                    <span class="badge_notif menu_skripsi badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                </p>
+            </a>
+        </li>
+    </ul>
+</li> -->
+
+<li class="nav-item has-treeview">
+    <a href="https://inspire.unsrat.ac.id/kewirausahaan" class="nav-link">
+    <i class="nav-icon fas fa-coffee"></i>
+        <p>Mahasiswa Kewirausahaan</p>
+    </a>
+</li>
+
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-calendar-times"></i>
+        <p>Cuti & Pindah <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Cuti Akademik <i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/cuti_akademik/cmahasiswa" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Data Cuti Saya</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/cuti_akademik/cmahasiswa/form_ambil_cuti" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Ambil Cuti</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/registrasi/pindah_prodi/biodata" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pindah Prodi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/registrasi/pindah_keluar" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pindah Keluar</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item has-treeview">
+    <a href="https://inspire.unsrat.ac.id/pengaktifan_kembali" class="nav-link">
+    <i class="nav-icon fas fa-user-check"></i>
+        <p>Pengaktifan Kembali</p>
+    </a>
+</li>
+
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-user-graduate"></i>
+        <p>
+            Wisuda
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/wisuda/info" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Info</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/wisuda/kuesioner" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Kuesioner</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/wisuda/berkas" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Berkas Umum</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/wisuda/tugas_akhir/berkas" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Berkas Tugas Akhir</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/wisuda/tugas_akhir/data" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Data Tugas Akhir</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/wisuda/daftar" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Daftar</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/wisuda/validasi" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Validasi</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-bookmark"></i>
+        <p>Perpustakaan <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/unsrat_perpustakaan" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Perpustakaan Unsrat</p>
+            </a>
+            <!-- <a href="https://digilib.unsrat.ac.id" class="nav-link" target="_blank">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Perpustakaan Unsrat</p>
+            </a> -->
+        </li>
+        <li class="nav-item">
+            <a href="http://elibrary.unsrat.ac.id" class="nav-link" target="_blank">
+                <i class="nav-icon far fa-circle"></i>
+                <p>e-Library Unsrat</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/elibrary/koleksi" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Koleksi Daring</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/pengajuan_repository" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Pengajuan Repository</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-envelope-open-text"></i>
+        <p>
+            Naskah Dinas
+            <i class="fas fa-angle-left right"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/surat/surat_edaran" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                <p>Surat Edaran</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-syringe"></i>
+        <p>Layanan Kesehatan <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/pemeriksaan_kesehatan/daftar_vaksinasi" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Daftar Vaksinasi</p>
+            </a>
+        </li>
+        <!-- <li class="nav-item">
+            <a href="" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Lapor Vaksinasi</p>
+            </a>
+        </li> -->
+        <!-- <li class="nav-item">
+            <a href="" class="nav-link">
+                <i class="nav-icon far fa-circle"></i>
+                <p>Lapor Vaksinasi</p>
+            </a>
+        </li> -->
+    </ul>
+</li>
+<li class="nav-item has-treeview" data-notifid="menu_konseling">
+    <a href="https://inspire.unsrat.ac.id/data_konseling/konseling_mahasiswa" class="nav-link">
+        <i class="nav-icon fas fa-heart"></i>
+        <p>Konseling
+            <span class="badge_notif menu_konseling badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+        </p>
+    </a>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-th-large"></i>
+        <p>Layanan Lain <i class="right fas fa-angle-left"></i>
+            <span id="menu_layanan_lain" class="menu_layanan_lain badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item" data-notifid="menu_event_rapat">
+            <a href="https://inspire.unsrat.ac.id/event" class="nav-link">
+                <i class="nav-icon fas fa-calendar-day"></i>
+                <p>Event/Rapat</p>
+                <span class="badge_notif menu_layanan_lain badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/registrasi" class="nav-link"><i class="fas fa-user-plus nav-icon"></i>
+                <p>Riwayat Registrasi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/billing" class="nav-link">
+                <i class="nav-icon fas fa-money-bill-alt"></i>
+                <p>Billing</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/kalender" class="nav-link">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>Kalender</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/regmail" class="nav-link">
+                <i class="nav-icon fas fa-envelope"></i>
+                <p>Email Unsrat</p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="fas fa-wifi nav-icon"></i>
+                <p>UNSRAT WiFi <i class="right fas fa-angle-left"></i></p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/reghotspot/CAkun" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Status</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/reghotspot/CPassword/ganti_password" class="nav-link"><i class="far fa-circle nav-icon"></i>
+                        <p>Ganti Password</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/notifikasi" class="nav-link">
+                <i class="nav-icon fas fa-bell"></i>
+                <p>Notifikasi</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/tes_online" class="nav-link">
+                <i class="nav-icon fas fa-desktop"></i>
+                <p>Daftar Tes Online</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/daring/cpelatihanMahasiswa" class="nav-link">
+                <i class="nav-icon fas fa-th-large"></i>
+                <p>Pelatihan / Workshop</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/peminjaman" class="nav-link">
+                <i class="nav-icon fas fa-cart-arrow-down"></i>
+                <p>Peminjaman Fasilitas</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/haki" class="nav-link">
+                <i class="far fa-registered nav-icon"></i>
+                <p>Pengajuan HAKI</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/short_url" class="nav-link">
+                <i class="nav-icon fas fa-crop-alt"></i>
+                <p>Short Link</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/cek_plagiarisme" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>Cek Plagiarisme</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/survey_layanan" class="nav-link">
+                <i class="nav-icon fas fa-sticky-note"></i>
+                <p>Survey Layanan</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/kartu_mahasiswa" class="nav-link">
+                <i class="nav-icon fas fa-id-card"></i>
+                <p>Kartu Mahasiswa</p>
+            </a>
+        </li>
+        <!-- <li class="nav-item">
+            <a href="https://inspire.unsrat.ac.id/survey_pilkada" class="nav-link">
+                <i class="nav-icon fas fa-user-edit"></i>
+                <p>Survey Pilkada</p>
+            </a>
+        </li> -->
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-info"></i>
+        <p>Bantuan Pengguna <i class="right fas fa-angle-left"></i>
+            <span id="menu_bantuan_pengguna" class="menu_bantuan_pengguna badge badge-info right"></span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item" data-notifid="menu_panduan_inspire">
+            <a href="https://inspire.unsrat.ac.id/panduan" target="_blank" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>Panduan Inspire
+                    <span class="badge_notif menu_bantuan_pengguna badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview" data-notifid="menu_tiket_saya">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-question-circle"></i>
+                <p>Helpdesk <i class="right fas fa-angle-left"></i>
+                    <span id="menu_helpdesk" class="menu_helpdesk badge badge-info right"></span>          
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="https://inspire.unsrat.ac.id/helpdesk/pertanyaan" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Pertanyaan</p>
+                    </a>
+                </li>
+                <li class="nav-item" data-notifid="menu_tiket_saya">
+                    <a href="https://inspire.unsrat.ac.id/helpdesk/tiket_saya" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Tiket Saya
+                            <span class="badge_notif menu_bantuan_pengguna menu_helpdesk badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item" data-notifid="menu_panduan_inspire">
+            <a href="https://inspire.unsrat.ac.id/lapor_masalah_akademik/lapor" class="nav-link">
+                <i class="nav-icon fas fa-bullhorn"></i>
+                <p>eLapor
+                    <span class="badge_notif menu_bantuan_pengguna badge badge-danger right" rel="tooltip" title="Klik untuk detail notifikasi"></span>
+                </p>
+            </a>
+        </li>
+    </ul>
+</li>						</ul>
+					</nav>
+				</div>
+			</aside>
+
+			<!-- MAIN CONTENT -->
+			<link rel="stylesheet" type="text/css" src="https://inspire.unsrat.ac.id/resources/additional/beranda.css" />
+<link rel="stylesheet" href='https://inspire.unsrat.ac.id/resources/adminlte3/plugins/fullcalendar-latest/lib/main.css' />
+<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Beranda</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input class="" type="hidden" id="user_session" value="220211060317" />
+    <div class="content">
+                        
+        <div class="container-fluid">
+                            <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                            <div class="jumbotron bg-white mb-3">
+                                <h2 class="display-6">Halo,
+                                                                    TEOFIDE !</h2>
+                                                        </h2>
+                            <p class="lead">Selamat datang di <span style="font-weight: bold; font-size: 16pt;">PORTAL INSPIRE</span> Universitas Sam Ratulangi.</p>
+                            <a href="https://www.unsrat.ac.id" target="_blank">
+                                <button class="btn btn-flat btn-primary">
+                                    <i class="fas fa-globe"></i> Website Unsrat
+                                </button>
+                            </a>
+                            <a href="https://dashboard.unsrat.ac.id" target="_blank">
+                                <button class="btn btn-flat btn-primary">
+                                    <i class="fas fa-chart-area"></i> Dashboard Unsrat
+                                </button>
+                            </a>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                                                            <!-- <div class="row text-center">
+                                    <div class="col-12">
+                                        <h5><i class="icon fas fa-info-circle"></i> <strong>INFO AKADEMIK</strong></h5>
+                                    </div>
+                                </div> -->
+                                                                                                                                                <div class="alert alert-danger alert-dismissible text-center">
+                                            <h5><i class="icon fas fa-exclamation-triangle"></i> Perhatian !</h5>
+                                            <!-- tampil warning message -->
+                                                                                                                                                 
+                        <p>Anda sudah melebihi batas minimal semester yang ditempuh, tersisa maksimal 5 semester yang harus diselesaikan sebelum DROP OUT <p>
+                        <p><i>Diharapkan untuk menyelesaikan studi sesegera mungkin</i></p>
+                                                                                                                                                        </div>
+                                                                                                                                                                                                                                    <!-- No Info -->
+                                                                                                                <div class="callout callout-info">
+                                        <!-- tampil keterangan semester sekarang -->
+                                        Saat ini Anda sedang menempuh semester 9 T.A 2026/2027 Gasal <br /> <br />
+
+                                        <!-- tampil keterangan masa studi dan sisa masa studi maksimal -->
+                                        <label>MASA STUDI :</label>
+                                        9 Semester <br />
+                                        <label>SISA MASA STUDI MAKS. :</label>
+                                        5 Semester <br />
+                                        <label>STATUS PDDIKTI :</label>
+                                         <br />
+                                    </div>
+                                
+                                <!-- tampil keterangan IPK dan Jumlah SKS Lulus -->
+                                <div class="callout callout-info">
+                                    
+                                    <label>IPK</label> : 3.74 <br />
+                                    <label>SKS Lulus</label> : 138                                </div>
+                                                    </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-red">
+                                    <h3 class="card-title text-uppercase w-100 text-center"><strong>Pengumuman</strong></h3>
+                                </div>
+                                <div class="card-body p-0">
+                                                                            <div class="direct-chat-messages" style="height: 12em;">
+                                            <ul class="products-list product-list-in-card pl-2 pr-2">
+                                                                                                    <li class="item">
+                                                        <div class="">
+                                                            <a href="https://inspire.unsrat.ac.id/pengumuman/pengumuman/detail?id=20692&jenis=manajerial" target="blank_" class="product-title text-red text-capitalize">Selamat datang Mahasiswa Ba...</a>
+                                                            <span class="float-right"><small class="text-muted"><i class="fas fa-clock mr-1"></i>06 Agustus 2025 08:40:59</small></span><br />
+                                                            Oleh:
+                                                            <label class="badge badge-success">KORPRODI</label>  VIRGINIA TULENAN S.Kom, MTI                                                            <span class="product-description">
+                                                                <small>Selamat bergabung di keluarga besar Program Studi S1 Teknik Informatika, UNSRAT. Semoga perjalana...</small>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                                                                    <li class="item">
+                                                        <div class="">
+                                                            <a href="https://inspire.unsrat.ac.id/pengumuman/pengumuman/detail?id=17272&jenis=manajerial" target="blank_" class="product-title text-red text-capitalize">Kompetisi Bergengsi GEMASTI...</a>
+                                                            <span class="float-right"><small class="text-muted"><i class="fas fa-clock mr-1"></i>18 April 2024 17:04:09</small></span><br />
+                                                            Oleh:
+                                                            <label class="badge badge-success">KORPRODI</label>  VIRGINIA TULENAN S.Kom, MTI                                                            <span class="product-description">
+                                                                <small>CALLING ALL WARRIORS!!! Ajang PALING bergengsi sebagai Mahasiswa Teknik Informatika. GEMASTIK 202...</small>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                                                                    <li class="item">
+                                                        <div class="">
+                                                            <a href="https://inspire.unsrat.ac.id/pengumuman/pengumuman/detail?id=16985&jenis=manajerial" target="blank_" class="product-title text-red text-capitalize">Kuliah Umum </a>
+                                                            <span class="float-right"><small class="text-muted"><i class="fas fa-clock mr-1"></i>12 Maret 2024 13:39:07</small></span><br />
+                                                            Oleh:
+                                                            <label class="badge badge-success">KORPRODI</label>  VIRGINIA TULENAN S.Kom, MTI                                                            <span class="product-description">
+                                                                <small>Undangan kuliah umum&nbsp;Kamis, 14 Maret 2024jam : 09.00 - 11.00bertempat di lt. 6 Gedung Teknik...</small>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                                                                    <li class="item">
+                                                        <div class="">
+                                                            <a href="https://inspire.unsrat.ac.id/pengumuman/pengumuman/detail?id=12571&jenis=manajerial" target="blank_" class="product-title text-red text-capitalize">Join WAG dengan Korprodi</a>
+                                                            <span class="float-right"><small class="text-muted"><i class="fas fa-clock mr-1"></i>25 Januari 2023 13:08:34</small></span><br />
+                                                            Oleh:
+                                                            <label class="badge badge-success">KORPRODI</label>  VIRGINIA TULENAN S.Kom, MTI                                                            <span class="product-description">
+                                                                <small>Untuk seluruh mahasiswa angkatan 2018, silahkan untuk JOIN WAG berikut inihttps://chat.whatsapp.c...</small>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                                                                    <li class="item">
+                                                        <div class="">
+                                                            <a href="https://inspire.unsrat.ac.id/pengumuman/pengumuman/detail?id=12135&jenis=manajerial" target="blank_" class="product-title text-red text-capitalize">Kuliah Daring mulai Senin 7...</a>
+                                                            <span class="float-right"><small class="text-muted"><i class="fas fa-clock mr-1"></i>04 November 2022 19:42:02</small></span><br />
+                                                            Oleh:
+                                                            <label class="badge badge-success">KORPRODI</label>  VIRGINIA TULENAN S.Kom, MTI                                                            <span class="product-description">
+                                                                <small>Berdasarkan pengumuman dari Dekan Fakultas Teknik, maka seluruh kegiatan perkuliahan, seminar, uj...</small>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                                                            </ul>
+                                        </div>
+                                                                    </div>
+                                                                    <div class="card-footer text-center">
+                                        <a href="https://inspire.unsrat.ac.id/pengumuman/pengumuman/list" class="uppercase" target="_blank">LIHAT SEMUA</a>
+                                    </div>
+                                                            </div>
+                        </div>
+                                    </div>           
+            
+                                    <div class="row">
+                                                    <div class="col-sm-12 col-md-5 mt-3">
+                                <div class="card">
+                                    <div class="card-header bg-red">
+                                        <h3 class="card-title text-uppercase w-100 text-center"><strong>Kegiatan hari ini</strong></h3>
+                                    </div>
+                                                                            <div class="card-body p-2">
+                                            <div class="alert alert-warning text-center">
+                                                <small>Tidak ada kegiatan hari ini yang terjadwal</small>
+                                            </div>
+                                        </div>
+                                                                    </div>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <!-- <div class="card card-primary"> -->
+                                <!-- <div class="card-body p-0"> -->
+                                    <div class="mb-3" id="calendar"></div>
+                                <!-- </div> -->
+                                <!-- </div> -->
+                            </div>
+                                            </div>
+                        </div>
+    
+    <div class="box-body">
+        <!-- Deskripsi Aplikasi -->
+        <div class="row">
+            <div class="col-12">
+                <p class="text-right">
+                    <button class="btn btn-primary btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <i class="fas fa-book mr-1"></i> Informasi Menu
+                    </button>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        <div class="row d-flex align-items-stretch">
+                            <!-- info menu -->
+                            <div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>BIODATA</b></h2>
+                <p class="text-muted text-sm">
+                    Untuk melakukan pergantian biodata. Contoh: (Foto untuk wisuda, Data pribadi, dan data lainnya)
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>PERKULIAHAN</b></h2>
+                <p class="text-muted text-sm">
+                    Untuk melihat Jadwal, KRS, KHS dan Transkrip Mahasiswa
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>KEMAHASISWAAN</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk pendaftaran beasiswa, isi prestasi dan organisasi mahasiswa (Unit Pelayana Kerohanian, HIMA, dan UKM)
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>PENDAFTARAN KKT (Kuliah Kerja Terpadu)</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk pendaftaran KKT
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>CUTI AKADEMIK & PINDAH</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk pengajuan permohonan Cuti Akademik dan Pindah
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>BIMBINGAN AKADEMIK</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk melakukan komunikasi dalam bentuk chatting dengan dosen pembimbing akademik
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>SKRIPSI</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk pengurusan skripsi secara online
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>PENDAFTARAN WISUDA</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk pendaftaran wisuda.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>PERPUSTAKAAN</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk mengakses aplikasi perpustakaan Unsrat dan e-Library
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>RIWAYAT REGISTRAI</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk melihat riwayat registrasi mahasiswa tiap semester
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>BILLING</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk generate billing. Contoh: Billing Perpustakaan, Wisuda.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>EMAIL UNSRAT</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk membuat email unsrat.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>HOTSPOT WIFI</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk membuat/memperpanjang akun hotspot UNSRAT.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>DAFTAR TES ONLINE</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk pendaftaran tes (TPA dan UEPT) secara online
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>PELATIHAN / WORKSHOP</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk pendaftaran pelatihan / workshop yang diadakan oleh LP3
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>PEMINJAMAN FASILITAS</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk melakukan pengajuan peminjaman fasilitas Unsrat
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>EPOM (Evaluasi Pembelajaran Oleh Mahasiswa)</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi untuk evaluasi pembelajaran oleh mahasiswa.
+                </p>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<!-- <div class="col-12 col-sm-6 col-md-3 d-flex align-items-stretch">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <h2 class="lead"><b>ANGKET MAHASISWA</b></h2>
+                <p class="text-muted text-sm">
+                    Aplikasi angket mahasiswa.
+                </p>
+            </div>
+        </div>
+    </div>
+</div> -->                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="modal-survey">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Mohon kesediaan Anda untuk mengisi Survey Universitas Sam Ratulangi </br>
+                <ol class="mb-0">
+                                                                <li>Tidak ada survey aktif saat ini.</li>
+                                    </ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        onclick="window.location.href='https://inspire.unsrat.ac.id/survey_layanan'"
+                        class="btn btn-success">
+                Survey Layanan
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-survey-mahasiswa">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                        Mohon kesediaan Anda untuk mengisi Survey Universitas Sam Ratulangi
+                        </br>
+                        1) 2025-SURVEI BLU-MAHASISWA </br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/survey_layanan/mahasiswa'" id="btn-konfirmasi" class="btn btn-success">Survey Layanan</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-survey-pegawai">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                        Mohon kesediaan Anda untuk mengisi Survey Universitas Sam Ratulangi
+                        </br>
+                        1) 2025-SURVEI BLU-TENAGA KEPENDIDIKAN </br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/survey_layanan/pegawai'" id="btn-konfirmasi" class="btn btn-success">Survey Layanan</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-survey-dosen">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                        Mohon kesediaan Anda untuk mengisi Survey Universitas Sam Ratulangi
+                        </br>
+                        1) 2025-SURVEI BLU-DOSEN </br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/survey_layanan/dosen'" id="btn-konfirmasi" class="btn btn-success">Survey Layanan</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-survey-dosen-pegawai">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                        <!-- Mohon kesediaan Anda untuk mengisi Survey Layanan Mahasiswa Universitas Sam Ratulangi -->
+                        Mohon kesediaan Anda untuk mengisi Survey Universitas Sam Ratulangi
+                        </br>
+                        1) Survey Monitoring dan Evaluasi Pemanfaatan Teknologi Informasi UNSRAT
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/survey_layanan/dosen_pegawai'" id="btn-konfirmasi" class="btn btn-success">Survey Layanan</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="modal fade" id="modal-survey-pilkada">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+            Tim Litbang UNSRAT akan melaksanakan survey kepada Mahasiswa UNSRAT tentang Pemilu Kepala Daerah di Sulawesi Utara. Mohon kepada Mahasiswa UNSRAT untuk dapat mengisi survey tersebut. 
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/survey_pilkada'" id="btn-konfirmasi" class="btn btn-success">Survey</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="modal fade" id="modal-kelas-batal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Anda mengontrak kelas yang dibatalkan di semester ini. Mohon cek kembali KRS anda.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/krs'" id="btn-konfirmasi" class="btn btn-success">LIHAT KRS</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-daftar-pulsa">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Anda sudah mengisi KRS tapi belum melakukan pendaftaran bantuan pulsa.
+                Pendaftaran bantuan pulsa dibuka sampai akhir periode pengisian KRS.
+                Apakah anda ingin mendaftar sekarang ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/krs'" id="btn-konfirmasi" class="btn btn-success">YA</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-bantuan-pulsa">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan Bantuan Pulsa</h4>
+            </div>
+            <div class="modal-body">
+                            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-isi-rekening">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Mohon segera memasukkan Nomor Rekening untuk mahasiswa yang menerima Bantuan UKT/SPP KIP Kuliah Semester Ganjil 2020/2021 sesuai SK Rektor 
+                nomor 922/UN12/KM/2020 melalui Portal INSPIRE paling lambat 
+                <span style="font-weight: bold; color: red;">Senin, 9 November 2020 jam 23.59 </span>. 
+                Harap memperhatikan hal-hal-berikut: <br />
+                <ol style="font-weight: bold; color: red;">
+                    <li>Pastikan nama dan nomor rekening yang dimasukkan benar dan sesuai dengan yang terdaftar di bank.</li>
+                    <li>Pastikan bahwa yang dimasukkan adalah nama dan nomor rekening pribadi anda, bukan nama dan nomor rekening orang lain.</li>
+                    <li>
+                        Mahasiswa yang UKT-nya lebih dari Rp. 2.400.000 akan diberi pengembalian Rp. 2.400.000. Mahasiswa yang UKT-nya kurang dari Rp. 2.400.000 
+                        akan diberi pengembalian sesuai dengan jumlah yang telah dibayarkan.
+                    </li>
+                </ol>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/rekening'" id="btn-konfirmasi" class="btn btn-success">Isi Data</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-ubah-password">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Password Portal INSPIRE yang anda gunakan sekarang terdeteksi lemah,
+                harap segera mengganti password Portal INSPIRE demi keamanan akun anda.
+                Password baru minimal 8 karakter, minimal 1 karakter huruf kapital, 1 karakter huruf kecil,
+				1 karakter simbol (@, #, %, dsb) dan 1 karakter numerik.
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                <button type="button" onclick="window.location.href='https://inspire.unsrat.ac.id/ubah_password'" class="btn btn-success">Ubah Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-kip">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body text-center">
+                <div style="overflow-x: auto; overflow-y: auto;">
+                    <img style="max-width: auto; max-height: 500px;" src="https://inspire.unsrat.ac.id/resources/img/pemberitahuan-kip.png" alt="pemberitahuan-kip">
+                </div>
+            </div>
+            <div class="modal-footer text-right">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-vaksinasi">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan Vaksinasi</h4>
+            </div>
+            <div class="modal-body" style="text-justfy: justify-center; font-size: 1.2em;">
+            Vaksinasi ke-3 COVID-19 untuk Dosen UNSRAT akan dilaksanakan di Auditorium UNSRAT pada hari Jumat, <strong>21 Januari 2022</strong> mulai jam <strong>08:00</strong> WITA. </br>Silahkan mendaftar melalui Portal INSPIRE, menu Layanan Kesehatan.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-validasi-vaksinasi">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan Validasi Vaksinasi</h4>
+            </div>
+            <div class="modal-body" style="text-justfy: justify-center; font-size: 1.2em;">
+                Anda telah mendaftar vaksinasi dan telah divalidasi, 
+                <br/>silahkan cetak kartu skrining/kartu kendali vaksinasi 
+                <br/>dengan menekan tombol <strong>cetak kartu skrining</strong> 
+                <br/>di menu <strong>LAYANAN KESEHATAN > DAFTAR VAKSINASI</strong>
+                <br/><br /><strong>Kartu wajib dibawa pada saat vaksinasi</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-survey-dosen-tendik">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Survey Kepuasan Tenaga Kependidikan Universitas Sam Ratulangi</h4>
+            </div>
+            <div class="modal-body" style="text-justfy: justify-center; font-size: 1.2em;">
+                Mohon kesediaan untuk mengisi survey kepuasan tenaga kependidikan tahun 2019/2020 dan 2020/2021 Universitas Sam Ratulangi. <br /><br /><br />
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-user-telkomsel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Perhatian</h4>
+            </div>
+            <div class="modal-body" style="text-justfy: justify-center; font-size: 1.2em;">
+                Nomor telepon anda terdaftar untuk menerima kuota pendidikan dari Kemendikbud bulan September 2021 
+                tapi pengiriman kuota gagal karena nomor tidak aktif lagi atau ada masalah teknis lain. 
+                Mohon dicek kembali, jika ada masalah silahkan menghubungi Telkomsel di nomor: <b>082111227727</b>.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-user-kuota-belum-terpakai">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Perhatian</h4>
+            </div>
+            <div class="modal-body" style="text-justfy: justify-center; font-size: 1.2em;">
+                Anda tercatat telah menerima kuota pendidikan dari Kemendikbud bulan September 2021 
+                tapi sampai saat ini kuotanya belum digunakan. 
+                Mohon dicek kembali, jika ada masalah silahkan menghubungi Telkomsel di nomor: <b>082111227727</b>.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-user-wisuda-vaksinasi">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Perhatian</h4>
+            </div>
+            <div class="modal-body" style="text-justfy: justify-center; font-size: 1.2em;">
+                Anda sudah melakukan pendaftaran wisuda, tetapi belum melakukan pelaporan vaksinasi.<br/>
+                Silahkan menginput data pelaporan vaksinasi dengan memilih menu <b>LAYANAN KESEHATAN > LAPOR VAKSINASI</b>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">TUTUP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="modal fade" id="modal-wisuda">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Perhatian bagi yang sudah atau yang akan mendaftar Wisuda Periode I TA 2020/2021 
+                agar memperhatikan foto profil Portal Inspire karena akan digunakan
+                sebagai foto untuk Wisuda Daring. Foto harus menggunakan jas, latar belakang biru dan proporsi wajah dan badan 
+                mengikuti contoh dibawah. Jika belum sesuai, mohon ubah foto profil Portal Inspire lewat menu Biodata > Ubah Data Pribadi
+                sebelum tanggal 7 Agustus 2020.
+                <div style="text-align: center;" class="mt-4">
+                    <img src="" height="250" width="200">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="modal fade" id="modal-kelengkapan-vaksinasi">
+    <div class="modal-dialog">
+        <form action="https://inspire.unsrat.ac.id/pemeriksaan_kesehatan/daftar_vaksinasi/kelengkapan_data" method="post" accept-charset="utf-8">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Kelengkapan Data Vaksinasi</h4>
+            </div>
+            <div class="modal-body" style="text-justfy: justify-center; font-size: 1.2em;">
+                Mohon untuk melengkapi data untuk keperluan vaksinasi yang sudah didaftarkan.<br/>
+                <br/>
+                <span class="text-red"><i>*semua data wajib diisi</i></span><br/>
+                <span class="text-red"><i>*untuk diisi dengan data yang lengkap dan sebenar-benarnya</i></span><br/><br/>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input class="form-control" type="text" name="vks_nama" value="TEOFIDE W. K. PANGEMANAN" required/>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Induk Kependudukan (NIK)</label>
+                    <input class="form-control tik_num" type="text" name="vks_nik" value="" required/>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Handphone</label>
+                    <input class="form-control tik_num" type="text" name="vks_nohp" required/>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Lahir</label>
+                    <input class="form-control datepicker" type="text" name="vks_tanggal_lahir" required/>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Kelamin</label>
+                    <select class="form-control" name="vks_jenis_kelamin" required>
+                        <option value="L">Laki-Laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Alamat domisili <i>(min. 10 karakter berisi alamat)</i></label>
+                    <textarea class="form-control" name="vks_alamat" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">BATAL</button> -->
+                <button type="submit pull-right" class="btn btn-success">SIMPAN</button>
+            </div>
+        </div>
+        </form>    </div>
+</div>
+
+<div class="modal fade" id="modal-twibbon">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">DIES NATALIS UNSRAT KE-60</h4>
+            </div>
+            <div class="modal-body text-center">
+                Gaungkan rasa banggamu dengan membuat twibbon <br/>Dies Natalis UNSRAT KE-60 !
+                <br/><br/>
+                <a href="https://www.twibbonize.com/dies60unsrat" target="_blank">
+                    <img width="160" src="https://inspire.unsrat.ac.id/resources/img/twibbon.png"/><br/>
+                    KLIK DISNI UNTUK MEMBUAT
+                </a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-mobile">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Yth Dosen dan Mahasiswa UNSRAT. Inspire Mobile untuk dosen dan mahasiswa sudah tersedia di layanan Google Play Store.
+                <br/><br/>
+                <div class="text-center">
+                    <div>
+                        <img rel="tooltip" title="Google play store" width="150em" alt="google play" src="https://inspire.unsrat.ac.id/resources/img/inspire-mobile/google-play.png"/>
+                    </div>
+                    <div>
+                        <a href="https://play.google.com/store/apps/details?id=id.ac.dosen.inspire" target="_blank">
+                            INSPIRE Dosen
+                        </a>
+                        <br>
+                        <a href="https://play.google.com/store/apps/details?id=id.ac.mahasiswa.inspire" target="_blank">
+                            INSPIRE Mahasiswa
+                        </a>
+                        </div>
+                    </div>
+                 </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-lapor-vaksinasi" data-backdrop="static">
+    <div class="modal-dialog">
+    <form action="https://inspire.unsrat.ac.id/vaksinasi_covid19/lapor_vaksinasi/lapor_vaksinasi" method="post" accept-charset="utf-8">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Lapor Status Vaksinasi COVID-19</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Provinsi Domisili Saat ini</label>
+                    <select name="provinsi" id="provinsi" class="form-control select2" style="width: 100%;" required>
+                        <option value="">-- Pilih Provinsi --</option>
+                                                                                    <option value="010000" selected>DKI JAKARTA</option>
+                                                            <option value="020000" selected>JAWA BARAT</option>
+                                                            <option value="030000" selected>JAWA TENGAH</option>
+                                                            <option value="040000" selected>DI YOGYAKARTA</option>
+                                                            <option value="050000" selected>JAWA TIMUR</option>
+                                                            <option value="060000" selected>ACEH</option>
+                                                            <option value="070000" selected>SUMATERA UTARA</option>
+                                                            <option value="080000" selected>SUMATERA BARAT</option>
+                                                            <option value="090000" selected>RIAU</option>
+                                                            <option value="100000" selected>JAMBI</option>
+                                                            <option value="110000" selected>SUMATERA SELATAN</option>
+                                                            <option value="120000" selected>LAMPUNG</option>
+                                                            <option value="130000" selected>KALIMANTAN BARAT</option>
+                                                            <option value="140000" selected>KALIMANTAN TENGAH</option>
+                                                            <option value="150000" selected>KALIMANTAN SELATAN</option>
+                                                            <option value="160000" selected>KALIMANTAN TIMUR</option>
+                                                            <option value="170000" selected>SULAWESI UTARA</option>
+                                                            <option value="180000" selected>SULAWESI TENGAH</option>
+                                                            <option value="190000" selected>SULAWESI SELATAN</option>
+                                                            <option value="200000" selected>SULAWESI TENGGARA</option>
+                                                            <option value="210000" selected>MALUKU</option>
+                                                            <option value="220000" selected>BALI</option>
+                                                            <option value="230000" selected>NUSA TENGGARA BARAT</option>
+                                                            <option value="240000" selected>NUSA TENGGARA TIMUR</option>
+                                                            <option value="250000" selected>PAPUA</option>
+                                                            <option value="260000" selected>BENGKULU</option>
+                                                            <option value="270000" selected>MALUKU UTARA</option>
+                                                            <option value="280000" selected>BANTEN</option>
+                                                            <option value="290000" selected>KEPULAUAN BANGKA BELITUNG</option>
+                                                            <option value="300000" selected>GORONTALO</option>
+                                                            <option value="310000" selected>KEPULAUAN RIAU</option>
+                                                            <option value="320000" selected>PAPUA BARAT</option>
+                                                            <option value="330000" selected>SULAWESI BARAT</option>
+                                                            <option value="340000" selected>KALIMANTAN UTARA</option>
+                                                            <option value="350000" selected>LUAR NEGERI</option>
+                                                            <option value="990000" selected>LAIN-LAIN</option>
+                                                                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="">Kota/Kabupaten Domisili Saat ini</label>
+                    <select name="kota" id="kota" class="form-control select2" style="width: 100%;" required>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Detail Alamat Domisili Saat Ini</label>
+                    <input name="domisili" id="domisili" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Status Vaksinasi </label>
+                    <select class="form-control select2" style="width:100%" name="vaksinasi" id="vaksinasi" required>
+                        <option value="">-- Pilih Status Vaksinasi  --</option>
+                        <option value="Belum Vaksinasi">Belum Vaksinasi</option>
+                        <option value="Vaksinasi ke-1">Vaksinasi ke-1</option>
+                        <option value="Vaksinasi ke-2">Vaksinasi ke-2</option>
+                        <option value="Vaksinasi ke-3">Vaksinasi ke-3</option>    
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jika belum vaksinasi, berikan alasannya</label>
+                    <textarea name="alasan" id="alasan" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit pull-right" class="btn btn-success">Simpan</button>
+            </div>
+        </div>
+        </form>    </div>
+</div>
+
+<div class="modal fade" id="modal-evaluasi-mhs">
+<div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Untuk peningkatan kualitas layanan, dimohon partisipasi anda untuk mengisi kuisioner Evaluasi Layanan Portal INSPIRE Unsrat. Terimakasih. 
+                <br/><br/>
+                <div class="text-center">
+                    <div>
+                        <a href="https://forms.gle/HvLJ4nxiKDo7LpiP7" target="_blank">
+                            Kuisioner Evaluasi Layanan
+                        </a>
+                        </div>
+                    </div>
+                 </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-evaluasi-dosen">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pemberitahuan</h4>
+            </div>
+            <div class="modal-body">
+                Untuk peningkatan kualitas layanan, dimohon partisipasi anda untuk mengisi kuisioner Evaluasi Layanan Portal INSPIRE Unsrat. Terimakasih. 
+                <br/><br/>
+                <div class="text-center">
+                    <div>
+                        <a href="https://forms.gle/49sFgvRJNp1UePJ86" target="_blank">
+                            Kuisioner Evaluasi Layanan
+                        </a>
+                        </div>
+                    </div>
+                 </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/select2/js/select2.min.js"></script>
+<script src="https://inspire.unsrat.ac.id/resources/adminlte3/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+<script>
+
+    navbar_dynamic('Beranda');
+    
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+    });
+
+    var base_url = "https://inspire.unsrat.ac.id/";
+
+    $(document).ready(function() {
+
+
+        let tampil_survey_layanan = "0";
+        if (tampil_survey_layanan == '1') {
+            $("#modal-survey").modal("show");
+        }
+
+        let tampil_survey_mahasiswa = "0";
+        if (tampil_survey_mahasiswa == '1') {
+            $("#modal-survey-mahasiswa").modal("show");
+        }
+
+        let tampil_survey_pegawai = "0";
+        if (tampil_survey_pegawai == '1') {
+            $("#modal-survey-pegawai").modal("show");
+        }
+
+        let tampil_survey_dosen = "0";
+        if (tampil_survey_dosen == '1') {
+            $("#modal-survey-dosen").modal("show");
+        }
+
+        let tampil_survey_monitoring_evaluasi_tik = "0";
+        console.log('tampil_survey_monitoring_evaluasi_tik');
+        if (tampil_survey_monitoring_evaluasi_tik == '1') {
+            
+            $("#modal-survey-dosen-pegawai").modal("show");
+        }
+
+        // let tampil_survey_pilkada = "0";
+        // if (tampil_survey_pilkada == '1') {
+        //     $("#modal-survey-pilkada").modal("show");
+        // }
+
+        let tampil_ubah_password = "";
+        if (tampil_ubah_password == '1') {
+            $("#modal-ubah-password").modal("show");
+        }
+
+
+        // let tampil_daftar_pulsa = "0";
+        // if (tampil_daftar_pulsa == '1') {
+        //     $("#modal-daftar-pulsa").modal("show");
+        // }
+
+        let tampil_kelas_batal = "";
+        if (tampil_kelas_batal == '1') {
+            $("#modal-kelas-batal").modal("show");
+        }
+
+        let tampil_isi_rekening = "";
+        if (tampil_isi_rekening == '1') {
+            $("#modal-isi-rekening").modal("show");
+        }
+
+        let tampil_kip = "";
+        if (tampil_kip == '1') {
+            $("#modal-kip").modal("show");
+        }
+        
+        // let tampil_bantuan_pulsa = "";
+        // if (tampil_bantuan_pulsa == '1') {
+        //     $("#modal-bantuan-pulsa").modal("show");
+        // }
+        
+        let tampil_notif_vaksinasi = "0";
+        if (tampil_notif_vaksinasi == '1') {
+            $("#modal-vaksinasi").modal("show");
+        }
+        
+        let tampil_notif_twibbon = "0";
+        if (tampil_notif_twibbon == '1') {
+            $('#modal-twibbon').modal('show');
+        }
+
+        let tampil_notif_mobile = "0";
+        if (tampil_notif_mobile == '1') {
+            $("#modal-mobile").modal("show");
+        }
+
+        let tampil_notif_validasi_vaksinasi = "";
+        if (tampil_notif_validasi_vaksinasi == '0') {
+            $("#modal-validasi-vaksinasi").modal("show");
+        }
+
+        let tampil_notif_survey_kepuasan_dosen_tendik = "0";
+        if (tampil_notif_survey_kepuasan_dosen_tendik == '1') {
+            $("#modal-survey-dosen-tendik").modal("show");
+        }
+
+        // let tampil_notif_user_telkomsel = "";
+        // if (tampil_notif_user_telkomsel == '1') {
+        //     $("#modal-user-telkomsel").modal("show");
+        // }
+
+        // let tampil_notif_kuota_belum_terpakai = "";
+        // if (tampil_notif_kuota_belum_terpakai == '1') {
+        //     $("#modal-user-kuota-belum-terpakai").modal("show");
+        // }
+
+        let tampil_notif_wisuda_vaksinasi = "0";
+        if (tampil_notif_wisuda_vaksinasi == '1') {
+            $("#modal-user-wisuda-vaksinasi").modal("show");
+        }
+
+        // $('#modal-mobile').modal('show');
+
+        let tampil_notif_lapor_vaksinasi = "0";
+        if (tampil_notif_lapor_vaksinasi == '1') {
+            $("#modal-lapor-vaksinasi").modal("show");
+        }
+
+        let tampil_notif_evaluasi_mhs = "0";
+        if (tampil_notif_evaluasi_mhs == '1') {
+            $("#modal-evaluasi-mhs").modal("show");
+        }
+
+        let tampil_notif_evaluasi_dosen = "0";
+        if (tampil_notif_evaluasi_dosen == '1') {
+            $("#modal-evaluasi-dosen").modal("show");
+        }
+    });
+
+    $('#provinsi').on('change', function () {
+    var id = $(this).val();
+
+        $('#kota').html('');
+        $.getJSON(`${base_url}vaksinasi_covid19/lapor_vaksinasi/get_kota_by_provinsi_tinggal`, {
+            id: id
+        })
+        .done(function (data) {
+            
+            $.each(data, function(i, value) {
+                $('#kota').append('<option value="'+ value.kotaKode +'">'+ value.kotaNama + '</option>');
+            });
+            
+        })
+        .fail(function (j, t, e) {
+            alert_js('gagal', 'Terjadi kesalahan: ' + e);
+        });
+    });
+
+    // $(document).ready(function() {
+    //     var test = TEOFIDE W. K. PANGEMANAN
+    //     console.log(username);
+    // });
+</script>
+
+<!-- Script Set up Firebase -->
+<!-- <script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-messaging.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-firestore.js"></script> -->
+
+<!-- Script Get Token & Receive Messaging Firebase -->
+<!--<script>
+    // var username = this.test;
+    // var username = '197709292005011005';
+    // $(document).ready(function() {
+    //     //Get username user
+    //     var test = TEOFIDE W. K. PANGEMANAN
+    //     console.log(username);
+    // });
+    const username_session = document.getElementById("user_session").value
+    // Configuration Firebase get from project setting 
+    var firebaseConfig = {
+        apiKey: "AIzaSyB2ApPqbCijuSWe3swsgRlDuYN5Kj_fOB8",
+        authDomain: "usr-portal-inspire.firebaseapp.com",
+        projectId: "usr-portal-inspire",
+        storageBucket: "usr-portal-inspire.appspot.com",
+        messagingSenderId: "385564250087",
+        appId: "1:385564250087:web:fc96c6f484ffe1d4df3742",
+        measurementId: "G-Q1BWBQXFGV"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Initialize Firebase messaging & Firestore function
+    const fcm = firebase.messaging();
+    const db = firebase.firestore();
+    // const doc = firebase.doc();
+    // const setDoc = firebase.setDoc();
+
+    // Get  Request Permession & Get Token by Firebase
+    fcm.requestPermission()
+        .then(function() {
+            console.log('Notification permission granted.');
+            return fcm.getToken();
+        })
+        .then(function(token) {
+            console.log(token); // Display user token
+            console.log(username_session);
+            return this.saveTokenUsername(token, username_session);
+        })
+        .catch(function(err) { // Happen if user deney permission
+            console.log('Unable to get permission to notify.', err);
+    });
+
+    // fcm.onMessage((data) => {
+    //     data.msg;
+    //     console.log('onMessage: ', data);
+    // })
+
+    // Save Token Firebase & Username user in Firebase Cloud Firestore
+    function saveTokenUsername(token, username_session)
+    {
+        // if(!token) return;
+        const devicesRef = db.collection('devices');
+
+        const docData = {
+            token,
+            username: username_session
+        }
+
+        devicesRef.doc(token).set(docData)
+        .then(() => { 
+            console.log('done');
+        })
+        .catch(function(error) {
+            console.error('Error writing document: ', error)
+        })
+    }
+
+    // Set Notification Foreground with handler
+    fcm.onMessage(function(payload) {
+        console.log('setForegroundMessageHandler: ', payload);
+
+        // Get value notification form payload
+        const notification = payload.notification;
+
+        // Get value data form payload
+        const data = payload.data;
+
+            //Customize notification here
+        const notificationTitle = notification.title;
+        const notificationOptions = {
+            body: notification.body,
+            // icon: '/favicon.png'
+        };
+
+        if (!("Notification" in window)) {
+            console.log("This browser does not support system notifications.");
+        } else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var notifications = new Notification(notificationTitle,notificationOptions);
+            // var notification = new Notification(notificationTitle,notificationOptions);
+            // notification.onclick = function(event) {
+            //     event.preventDefault();
+            //     window.open(payload.notification.click_action , '_blank');
+            //     notification.close();
+            // }
+        }
+    });
+    
+    // fcm.getToken({
+    //     vapidKey: 'BP3t6v5z9P1c6WYwaO7_9AV23kIJp7EKrRxlh6Up7CVD5BFPs3qbvPs_utT3kSOipe3xu-guAKlf6eITIjbVTNk'
+    // }).then((token) => {
+    //     console.log('getToken: ', token)
+    // });
+    // // Receive message / notifications
+    // fcm.onMessage(function(payload){
+    // 	console.log('onMessage',payload);
+    // })
+
+    
+</script>-->
+			<footer class="main-footer text-sm">
+				<strong>Copyright &copy; 2026 UPT-TIK UNSRAT</strong> * All rights reserved.				<div class="float-right d-none d-sm-inline-block">
+					<b>Version</b> 1.70.7				</div>
+			</footer>
+		</div>
+
+		<!-- button scroll to top -->
+		<a id="back-to-top" href="#" class="btn btn-danger back-to-top" role="button">
+			<i class="fas fa-chevron-up"></i>
+		</a>
+
+		<!-- modal logout -->
+		<div class="modal fade" id="mdl-logout">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-body">
+						<h5>Yakin untuk keluar?</h5>
+					</div>
+					<div class="modal-footer justify-content-between">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+						<a href="https://inspire.unsrat.ac.id/beranda/logout">
+							<button type="button" class="btn bg-black"><i class="fas fa-sign-out-alt mr-2"></i>KELUAR</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+		<!-- modal quick menu -->
+		<div class="modal fade" id="modal-app-list">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header text-center">
+						<h5 class="modal-title w-100">Menu Cepat</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="text-center">
+									<!-- quick menu -->
+									<a class="btn btn-app" href="https://inspire.unsrat.ac.id/beranda">
+    <i class="fa fa-home"></i> Beranda
+</a>
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/biodata/datapribadi">
+    <i class="fas fa-user"></i> Biodata
+</a>
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/akademik/matakuliah">
+    <i class="fas fa-clock"></i> Jadwal Kuliah
+</a>
+<a class="btn btn-app" href="https://portal.unsrat.ac.id">
+    <i class="fas fa-list"></i> KRS
+</a>
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/akademik/khs">
+    <i class="fas fa-list"></i> KHS
+</a>
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/akademik/transkrip">
+    <i class="fas fa-list-alt"></i> Transkrip
+</a>
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/skripsi/proposal">
+    <i class="fas fa-book"></i> Skripsi
+</a>
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/regmail">
+    <i class="fas fa-envelope"></i> Email Unsrat
+</a>
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/reghotspot/CAkun">
+    <i class="fas fa-wifi"></i> Hotspot WiFi
+</a>
+<!-- <a class="btn btn-app">
+    <i class="fas fa-graduation-cap"></i> Tes Online
+</a> -->
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/billing">
+    <i class="fas fa-money-bill-alt"></i> Billing
+</a>
+<a class="btn btn-app" href="https://portal.unsrat.ac.id">
+    <i class="fas fa-book-reader"></i> Beasiswa
+</a>
+<!-- <a class="btn btn-app">
+    <i class="fas fa-clipboard-list"></i> EPOM
+</a>
+<a class="btn btn-app">
+    <i class="fas fa-clipboard-list"></i> Angket
+</a>
+<a class="btn btn-app">
+    <i class="fas fa-street-view"></i> KKT
+</a>
+<a class="btn btn-app">
+    <i class="fas fa-star"></i> Prestasi
+</a>
+<a class="btn btn-app">
+    <i class="fas fa-calendar-times"></i> Cuti
+</a>
+<a class="btn btn-app">
+    <i class="fas fa-file"></i> Daring LP3
+</a> -->
+<a class="btn btn-app" href="https://inspire.unsrat.ac.id/wisuda/info">
+    <i class="fas fa-user-graduate"></i> Wisuda
+</a>
+<a class="btn btn-app" id="btn-app-logout"
+    data-toggle="modal" 
+    data-target="#mdl-logout" >
+    <i class="fas fa-power-off"></i> Keluar
+</a>								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</span>
+</body>
+
+<!-- notification modal -->
+<div class="modal fade" id="mdl-notif">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Notifikasi</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-12" id="mdl-notif--content">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer justify-content-between">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+				<button type="button" class="btn_mark_all_read btn btn-success">Tandai Semua Sudah Dibaca</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+</html>
+
+<script src="https://inspire.unsrat.ac.id/resources/adminlte3/dist/js/adminlte.min.js"></script>
+<script src="https://inspire.unsrat.ac.id/resources/adminlte3/dist/js/demo.js"></script>
+<script src="https://inspire.unsrat.ac.id/resources/js/tik_class.js"></script>
+
+<script>
+	(function(i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r;
+		i[r] = i[r] || function() {
+			(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date();
+		a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m)
+	})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+	ga('create', 'UA-39277790-28', 'auto');
+	ga('require', 'displayfeatures');
+	ga('require', 'linkid', 'linkid.js');
+	ga('send', 'pageview');
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-39277790-28"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-39277790-28');
+	gtag('config', 'G-WV2F029BHZ');
+</script>
+
+
+<script>
+	// button tooltip
+	$("[rel='tooltip']").tooltip();
+
+	$.ajaxSetup({
+		beforeSend: function() {
+			$('#loading-container').show();
+		},
+		complete: function() {
+			$('#loading-container').hide();
+		}
+	});
+
+	$("#btn-app-logout").on("click", function() {
+		$("#modal-app-list").modal("hide");
+	});
+
+	$("#notifikasi-inspire").on("click", function(){
+		$("#notifikasi-dropdown").html(
+			"<span class='dropdown-item dropdown-header'>15 Notifications</span>" +
+			"<div class='dropdown-divide'></div>" +
+			"<a href='#' class='dropdown-item'>" +
+				"<i class='fas fa-envelope mr-2'></i> 4 new messages" +
+				"<span class='float-right text-muted text-sm'>3 mins</span>" +
+			"</a>" +				
+			"<div class='dropdown-divider'></div>" +
+			"<a href='#' class='dropdown-item'>" +
+				"<i class='fas fa-users mr-2'></i> 8 friend requests" +
+				"<span class='float-right text-muted text-sm'>12 hours</span>" +
+			"</a>" +
+			"<div class='dropdown-divider'></div>" +
+			"<a href='#' class='dropdown-item'>" +
+				"<i class='fas fa-file mr-2'></i> 3 new reports" +
+				"<span class='float-right text-muted text-sm'>2 days</span>" +
+			"</a>" +
+			"<div class='dropdown-divider'></div>" +
+			"<a href='#' class='dropdown-item dropdown-footer'>See All Notifications</a>"
+		);
+	});
+</script>
+
+<script>
+	/* notification Menu handler **/
+	const notif = () => {
+		return $.ajax({
+				url: `https://inspire.unsrat.ac.id/notification/get_notification`,
+				method: 'GET',
+				dataType: 'JSON',
+				beforeSend: () => {
+					// override global setup
+					return true;
+				}
+			})
+			.fail((j, t, e) => {
+				// alert_js('gagal', 'Terjadi kesalahan notifikasi: ' + e);
+				console.log('Kesalahan ambil notifikasi: ' + e);
+			});
+	}
+
+	async function get_notification() {
+		return notif().done((d) => {
+			var total = 0;
+			$.each(d, (k, v) => {
+				$(`li[data-notifid='${v.notif_id}'] a p span`).html(v.count);
+				$(`li a[id='notifikasi-inspire'] span`).html(v.count_badge);
+			});
+		});
+	}
+
+	// rekap total notifikasi di parent tree
+	async function recap_notification() {
+		await get_notification();
+
+		var span_notif = document.querySelectorAll('span[class^="menu_"]');
+		$.each(span_notif, function(k, v) {
+			var total = 0;
+			$(`span#${v.id}`).text('');
+			$(`.${v.id}`).each(function(k2, v2) {
+				if (v2.innerHTML != '') {
+					total += parseInt(v2.innerHTML);
+				}
+			});
+
+			if (total != 0) {
+				$(`span#${v.id}`).text(total);
+			}
+		});
+	}
+
+	/* notification badge header handler **/
+	const notif_badge = () => {
+		return $.ajax({
+				url: `https://inspire.unsrat.ac.id/notification/get_notification_badge`,
+				method: 'GET',
+				dataType: 'JSON',
+				beforeSend: () => {
+					// override global setup
+					return true;
+				}
+			})
+			.fail((j, t, e) => {
+				// alert_js('gagal', 'Terjadi kesalahan notifikasi: ' + e);
+				console.log('Kesalahan ambil notifikasi: ' + e);
+			});
+	}
+
+	async function get_notification_badge() {
+		return notif_badge().done((d) => {
+			var total = 0;
+			$.each(d, (k, v) => {
+				// $(`li[data-notifid='${v.notif_id}'] a p span`).html(v.count);
+				$(`li a[id='notifikasi-inspire'] span`).html(v.count);
+			});
+		});
+	}
+
+	// initiate
+	recap_notification();
+	get_notification();
+	get_notification_badge();
+
+	// recurring - 1min
+	recurring_get = setInterval(() => {
+		recap_notification();
+		get_notification();
+		get_notification_badge();
+	}, 60000);
+
+	// // recurring - 1min
+	// recurring_get = setInterval(() => {
+	// 	get_notification_badge();
+	// }, 60000);
+
+	// on badge click
+	$('.badge_notif').on('click', function() {
+		$('#mdl-notif').modal('show');
+
+		let notifid = $(this).closest('li').data('notifid');
+
+		$.getJSON(`https://inspire.unsrat.ac.id/notification/get_detail`, {
+				id: notifid
+			})
+			.done((d) => {
+				let elem = $();
+				$.each(d, (k, v) => {
+					elem = elem.add(`
+						<div class="post">
+							<div class="user-block">
+								<span class="username" style="margin-left: 0;">
+									${v.judul}
+								</span>
+								<span class="description" style="margin-left: 0;">${v.waktu}</span>
+							</div>
+							<p>
+								${v.isi}
+							</p>
+							<span class="not_id" hidden>${v.id} </span>
+						</div>
+					`);
+				});
+				$('#mdl-notif--content').html(elem);
+			})
+			.fail((j, t, e) => {
+				// alert_js('gagal', 'Terjadi keslahan ambil detail notifikasi: ' + e);
+				console.log('Terjadi kesalahan ambil detail notifikasi: ' + e);
+			});
+
+		return false;
+	});
+
+	// mark all as read
+	$('.btn_mark_all_read').on('click', function() {
+		$('#mdl-notif').modal('toggle');
+
+		let id = $('.not_id').text();
+
+		$.post(`https://inspire.unsrat.ac.id/notification/mark_read`, {
+				id: id
+			})
+			.done((d) => {
+				window.location.reload();
+			})
+			.fail((j, t, e) => {
+				// alert_js('gagal', 'Terjadi kesalahan mark read: ' + e);
+				console.log('Terjadi kesaahan mark all as read : ' + e);
+			});
+		console.log(id);
+	});
+
+	// notification inspire on icon click
+	$('#notifikasi-inspire').on('click', function() {
+		$.ajax({
+			method: 'POST',
+			url: "https://inspire.unsrat.ac.id/notification/get_value_notification",
+			async: false,
+			dataType: 'json',
+			success: function(data) {
+				$('#notifikasi-dropdown-header').html(data.notification_header);
+				$('#notifikasi-dropdown').html(data.notification_isi);
+				// $('#notifikasi-dropdown').html(data.notifikasi_url);
+			}
+		})
+	});
+
+	// notification dropdown inspire on click delete notification 
+	$('#notifikasi-dropdown').on('click', function() {
+
+		let menu_notifikasi = $('input[name="not_menu"]').val();
+		let referensi_notifikasi = $('input[name="not_ref"]').val();
+
+		console.log(menu_notifikasi);
+		console.log(referensi_notifikasi);
+
+		$.post(`https://inspire.unsrat.ac.id/notification/read_delete_notification`, {
+				notifikasi_menu: menu_notifikasi,
+				notifikasi_referensi: referensi_notifikasi
+			})
+			.done((d) => {
+				console.log("Berhasil");
+				// window.location.reload();
+			})
+			.fail((j, t, e) => {
+				// alert_js('gagal', 'Terjadi kesalahan mark read: ' + e);
+				console.log('Terjadi kesaahan mark all as read : ' + e);
+			});
+	});
+</script><script src='https://inspire.unsrat.ac.id/resources/adminlte3/plugins/fullcalendar-latest/lib/main.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth'
+            });
+
+            //Date for the calendar events (dummy data)
+            var date = new Date()
+            var d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear()
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                timeZone: 'local',
+                headerToolbar: {
+                    start: 'prev,next today', // will normally be on the left. if RTL, will be on the right
+                    center: 'title',
+                    end: 'dayGridMonth,timeGridWeek,timeGridDay' // will normally be on the right. if RTL, will be on the left
+                },
+                // themeSystem: 'bootstrap',
+                events: `https://inspire.unsrat.ac.id/kalender/get_user_event`,
+                eventMouseEnter: function(info) {
+                    // change the border color just for fun
+                    info.el.style.borderColor = 'red';
+
+                    $(info.el).tooltip({
+                        html: true,
+                        title: `
+                            <h6 class="mb-1">${info.event.title}</h6>
+                            <small>
+                                mulai: ${info.event.start.getDate()}/${info.event.start.getMonth()+1}/${info.event.start.getFullYear()}
+                                ${info.event.start.getHours()}:${info.event.start.getMinutes()}:${info.event.start.getSeconds()}
+                            </small><br/>
+                            <small>
+                                selesai: ${info.event.end.getDate()}/${info.event.end.getMonth()+1}/${info.event.end.getFullYear()}
+                                ${info.event.end.getHours()}:${info.event.end.getMinutes()}:${info.event.end.getSeconds()}
+                            </small>
+                        `
+                    });
+                },
+                eventClick: function(info) {
+                    // change the border color just for fun
+                    info.el.style.borderColor = 'red';
+
+                    $(info.el).tooltip({
+                        html: true,
+                        title: `
+                            <h6 class="mb-1">${info.event.title}</h6>
+                            <small>
+                                mulai: ${info.event.start.getDate()}/${info.event.start.getMonth()+1}/${info.event.start.getFullYear()}
+                                ${info.event.start.getHours()}:${info.event.start.getMinutes()}:${info.event.start.getSeconds()}
+                            </small><br/>
+                            <small>
+                                selesai: ${info.event.end.getDate()}/${info.event.end.getMonth()+1}/${info.event.end.getFullYear()}
+                                ${info.event.end.getHours()}:${info.event.end.getMinutes()}:${info.event.end.getSeconds()}
+                            </small>
+                        `
+                    });
+                }
+            });
+
+            calendar.render();
+        });
+    </script>

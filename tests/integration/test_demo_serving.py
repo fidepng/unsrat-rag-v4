@@ -7,21 +7,22 @@ client = TestClient(app)
 
 @pytest.mark.offline
 def test_root_serves_inspire_mock():
-    """Verifikasi endpoint root (/) menyajikan mock INSPIRE UNSRAT dengan asset terisolasi."""
-    response = client.get("/")
-    assert response.status_code == 200
-    assert "text/html" in response.headers["content-type"]
-    assert "Portal INSPIRE - Universitas Sam Ratulangi" in response.text
-    assert 'src="/inspire-unsrat-ac-id.html"' in response.text
-    assert 'id="rag-chatbot-widget"' in response.text
-    assert '/static/demo/inspire/js/inspire.js' in response.text
-    assert '/static/demo/inspire/css/inspire.css' in response.text
-    # Welcome card INSPIRE
-    assert "SELAMAT DATANG" in response.text
-    assert "Panduan Cara Bertanya" in response.text
-    assert 'id="rag-guide-toggle-btn"' in response.text
-    assert 'id="rag-guide-modal"' in response.text
-    assert "rag-chip-btn" in response.text
+    """Verifikasi endpoint root (/) dan (/inspire) menyajikan mock INSPIRE UNSRAT dengan asset terisolasi."""
+    for path in ["/", "/inspire"]:
+        response = client.get(path)
+        assert response.status_code == 200
+        assert "text/html" in response.headers["content-type"]
+        assert "Portal INSPIRE - Universitas Sam Ratulangi" in response.text
+        assert 'src="/static/inspire/background.html"' in response.text
+        assert 'id="rag-chatbot-widget"' in response.text
+        assert '/static/inspire/js/inspire.js' in response.text
+        assert '/static/inspire/css/inspire.css' in response.text
+        # Welcome card INSPIRE
+        assert "SELAMAT DATANG" in response.text
+        assert "Panduan Cara Bertanya" in response.text
+        assert 'id="rag-guide-toggle-btn"' in response.text
+        assert 'id="rag-guide-modal"' in response.text
+        assert "rag-chip-btn" in response.text
 
 @pytest.mark.offline
 def test_unsratacid_serves_legacy_mock():

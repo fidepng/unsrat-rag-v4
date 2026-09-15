@@ -599,11 +599,12 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/")
+@app.get("/inspire")
 async def root():
     """Serve demo INSPIRE UNSRAT replica homepage."""
-    index_path = Path("static/demo/index.html")
+    index_path = Path("static/inspire/index.html")
     if not index_path.exists():
-        return HTMLResponse("<h1>Frontend demo belum tersedia. Buat static/demo/index.html.</h1>")
+        return HTMLResponse("<h1>Frontend demo belum tersedia. Buat static/inspire/index.html.</h1>")
     return FileResponse(index_path, media_type="text/html")
 
 
@@ -628,9 +629,9 @@ async def unsrat_homepage_html():
 @app.get("/inspire-unsrat-ac-id.html")
 async def inspire_homepage_html():
     """Serve raw scraped INSPIRE UNSRAT portal for iframe background."""
-    bg_path = Path("inspire-unsrat-ac-id.html")
+    bg_path = Path("static/inspire/background.html")
     if not bg_path.exists():
-        return HTMLResponse("<h1>inspire-unsrat-ac-id.html tidak ditemukan.</h1>")
+        return HTMLResponse("<h1>static/inspire/background.html tidak ditemukan.</h1>")
     return FileResponse(bg_path, media_type="text/html")
 
 
