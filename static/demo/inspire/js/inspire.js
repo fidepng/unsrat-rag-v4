@@ -26,6 +26,7 @@ const RagChatWidget = {
     currentConfig: 'b',
     currentModel: 'gemini-3.5-flash',
     activeCitations: [],
+    messageSourcesMap: new Map(),
     lastQuery: '',
     isTimedOut: false
   },
@@ -445,12 +446,37 @@ const RagChatWidget = {
           return;
         }
 
-        // 3. Inline Citation Click ([1], [2], etc.)
+        // 3. Inline Citation Click ([1], [2], etc.) - Scoped to containing message
         const inlineCitationBtn = e.target.closest('.rag-inline-citation');
         if (inlineCitationBtn) {
           const citIdx = inlineCitationBtn.getAttribute('data-cit-idx');
+          const msgId = inlineCitationBtn.getAttribute('data-msg-id');
+
+          let targetSources = null;
+          // Priority 1: Direct lookup by data-msg-id in messageSourcesMap
+          if (msgId && this.state.messageSourcesMap && this.state.messageSourcesMap.has(msgId)) {
+            targetSources = this.state.messageSourcesMap.get(msgId);
+          }
+
+          // Priority 2: DOM traversal to parent message bubble or wrapper
+          if (!targetSources || targetSources.length === 0) {
+            const botMsg = inlineCitationBtn.closest('.rag-bot-msg');
+            const msgWrapper = inlineCitationBtn.closest('.rag-msg-wrapper');
+            targetSources = (botMsg && botMsg._ragSources) || 
+                            (msgWrapper && msgWrapper._ragSources);
+
+            if ((!targetSources || targetSources.length === 0) && msgWrapper && msgWrapper.dataset.msgId) {
+              targetSources = this.state.messageSourcesMap && this.state.messageSourcesMap.get(msgWrapper.dataset.msgId);
+            }
+          }
+
+          // Fallback: activeCitations (for single query context)
+          if (!targetSources || targetSources.length === 0) {
+            targetSources = this.state.activeCitations;
+          }
+
           if (citIdx) {
-            this.handleInlineCitationClick(citIdx);
+            this.handleInlineCitationClick(citIdx, targetSources);
           }
           return;
         }
@@ -564,6 +590,10 @@ const RagChatWidget = {
       this.state.abortController.abort();
     }
     this.state.chatHistory = [];
+    this.state.activeCitations = [];
+    if (this.state.messageSourcesMap) {
+      this.state.messageSourcesMap.clear();
+    }
     this.state.status = 'idle';
     this.toggleCitationPanel(false);
 
@@ -696,7 +726,8 @@ const RagChatWidget = {
         let html = window.marked 
           ? window.marked.parse(fullAnswer) 
           : this.escapeHtml(fullAnswer);
-        html = html.replace(/\[(\d+)\]/g, '<button type="button" class="rag-inline-citation" data-cit-idx="$1" title="Lihat Sumber Rujukan [$1]">[$1]</button>');
+        const msgIdAttr = (botBubbleObj && botBubbleObj.msgId) ? ` data-msg-id="${botBubbleObj.msgId}"` : '';
+        html = html.replace(/\[(\d+)\]/g, `<button type="button" class="rag-inline-citation" data-cit-idx="$1"${msgIdAttr} title="Lihat Sumber Rujukan [$1]">[$1]</button>`);
         botBubbleObj.contentElem.innerHTML = html;
       }
       
@@ -760,6 +791,11 @@ const RagChatWidget = {
               scheduleRender();
             } else if (parsed.type === 'citations') {
               citations = parsed.sources || [];
+              if (citations.length > 0 && botBubbleObj && botBubbleObj.msgId) {
+                this.state.messageSourcesMap.set(botBubbleObj.msgId, citations);
+                if (botBubbleObj.wrapperElem) botBubbleObj.wrapperElem._ragSources = citations;
+                if (botBubbleObj.bubbleElem) botBubbleObj.bubbleElem._ragSources = citations;
+              }
             }
           } catch (e) {
             console.warn('Gagal parse JSON SSE line:', dataStr, e);
@@ -775,6 +811,11 @@ const RagChatWidget = {
             fullAnswer += parsed.content;
           } else if (parsed.type === 'citations') {
             citations = parsed.sources || [];
+            if (citations.length > 0 && botBubbleObj && botBubbleObj.msgId) {
+              this.state.messageSourcesMap.set(botBubbleObj.msgId, citations);
+              if (botBubbleObj.wrapperElem) botBubbleObj.wrapperElem._ragSources = citations;
+              if (botBubbleObj.bubbleElem) botBubbleObj.bubbleElem._ragSources = citations;
+            }
           }
         } catch (e) {
           // ignore
@@ -794,7 +835,12 @@ const RagChatWidget = {
       flushRender();
 
       if (citations.length > 0) {
-        this.renderCitations(botBubbleObj.bubbleElem, citations);
+        if (botBubbleObj && botBubbleObj.msgId) {
+          this.state.messageSourcesMap.set(botBubbleObj.msgId, citations);
+          if (botBubbleObj.wrapperElem) botBubbleObj.wrapperElem._ragSources = citations;
+          if (botBubbleObj.bubbleElem) botBubbleObj.bubbleElem._ragSources = citations;
+        }
+        this.renderCitations(botBubbleObj.bubbleElem, citations, botBubbleObj.msgId);
       }
 
       this.state.chatHistory.push({ role: 'user', content: query });
@@ -921,15 +967,17 @@ const RagChatWidget = {
 
   renderBotBubblePlaceholder() {
     const { chatMessages } = this.elements;
+    const msgId = `rag-msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     const wrapper = document.createElement('div');
     wrapper.className = 'rag-msg-wrapper rag-msg-bot-wrapper';
+    wrapper.dataset.msgId = msgId;
     wrapper.innerHTML = `
       <div class="rag-msg-meta-header">
         <span class="rag-meta-sender">Asisten Akademik</span>
         <span class="rag-meta-dot">•</span>
         <span class="rag-meta-time">${this.getTimestamp()}</span>
       </div>
-      <div class="rag-bot-msg">
+      <div class="rag-bot-msg" data-msg-id="${msgId}">
         <div class="rag-msg-content">
           <div class="rag-typing-dots">
             <div class="rag-dot-group">
@@ -944,21 +992,37 @@ const RagChatWidget = {
     `;
     chatMessages.appendChild(wrapper);
     return {
+      msgId: msgId,
+      wrapperElem: wrapper,
       bubbleElem: wrapper.querySelector('.rag-bot-msg'),
       contentElem: wrapper.querySelector('.rag-msg-content'),
       statusElem: wrapper.querySelector('.rag-typing-text')
     };
   },
 
-  renderCitations(containerElem, sources) {
+  renderCitations(containerElem, sources, msgId = null) {
     if (!containerElem || !sources || sources.length === 0) return;
     this.state.activeCitations = sources;
+    if (msgId) {
+      this.state.messageSourcesMap.set(msgId, sources);
+    }
+    containerElem._ragSources = sources;
+    const msgWrapper = containerElem.closest('.rag-msg-wrapper');
+    if (msgWrapper) {
+      msgWrapper._ragSources = sources;
+      if (msgId && !msgWrapper.dataset.msgId) {
+        msgWrapper.dataset.msgId = msgId;
+      }
+    }
 
     const citDiv = document.createElement('div');
     citDiv.className = 'rag-citations-container';
+    if (msgId) {
+      citDiv.dataset.msgId = msgId;
+    }
     citDiv.innerHTML = `
       <div class="rag-citation-box">
-        <button type="button" class="rag-citation-header">
+        <button type="button" class="rag-citation-header" ${msgId ? `data-msg-id="${msgId}"` : ''}>
           <div class="rag-citation-title">
             ${RAG_ICONS.bookOpen}
             <span>${sources.length} Sumber Rujukan</span>
@@ -1040,14 +1104,22 @@ const RagChatWidget = {
     }
   },
 
-  handleInlineCitationClick(citIdx) {
-    if (!this.state.activeCitations || this.state.activeCitations.length === 0) return;
+  handleInlineCitationClick(citIdx, sources = null) {
+    const targetSources = sources || this.state.activeCitations;
+    if (!targetSources || targetSources.length === 0) return;
 
     const isMobile = window.innerWidth <= 768;
     if (!isMobile && this.state.mode === 'compact') {
       this.toggleExpand(true);
     }
-    this.openSideCitationPanel(this.state.activeCitations);
+
+    const isAlreadyDisplayingSameSources = (this.state.activeCitations === targetSources) && 
+      this.elements.sideCitationPanel && 
+      !this.elements.sideCitationPanel.classList.contains('hidden');
+
+    if (!isAlreadyDisplayingSameSources) {
+      this.openSideCitationPanel(targetSources);
+    }
 
     setTimeout(() => {
       const { sideCitationBody } = this.elements;
@@ -1059,7 +1131,7 @@ const RagChatWidget = {
         void targetItem.offsetWidth;
         targetItem.classList.add('rag-citation-highlighted');
       }
-    }, 100);
+    }, isAlreadyDisplayingSameSources ? 10 : 100);
   },
 
   toggleCitationPanel(show) {
