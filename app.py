@@ -648,9 +648,9 @@ async def testing():
 @app.get("/evaluation")
 async def evaluation():
     """Serve standalone RAGAS evaluation page."""
-    eval_path = Path("static/demo/evaluation.html")
+    eval_path = Path("static/evaluation/index.html")
     if not eval_path.exists():
-        return HTMLResponse("<h1>Halaman evaluasi belum tersedia. Buat static/demo/evaluation.html.</h1>")
+        return HTMLResponse("<h1>Halaman evaluasi belum tersedia. Buat static/evaluation/index.html.</h1>")
     return FileResponse(eval_path, media_type="text/html")
 
 

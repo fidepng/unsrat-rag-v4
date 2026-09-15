@@ -52,4 +52,13 @@ def test_raw_html_endpoints():
     assert resp_unsrat.status_code == 200
     assert "text/html" in resp_unsrat.headers["content-type"]
 
+@pytest.mark.offline
+def test_evaluation_page_served():
+    """Verifikasi endpoint /evaluation menyajikan dashboard evaluasi dengan benar."""
+    resp_eval = client.get("/evaluation")
+    assert resp_eval.status_code == 200
+    assert "text/html" in resp_eval.headers["content-type"]
+    assert "Evaluasi RAGAS | Chatbot UNSRAT" in resp_eval.text
+    assert "/static/evaluation/js/evaluation.js" in resp_eval.text
+
 
