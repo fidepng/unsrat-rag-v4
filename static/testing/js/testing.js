@@ -1,4 +1,4 @@
-// static/js/app.js — Client-Side SPA Controller
+// static/testing/js/testing.js — Client-Side SPA Controller
 
 document.addEventListener("DOMContentLoaded", () => {
     // Pembungkus aman untuk inisialisasi ikon Lucide

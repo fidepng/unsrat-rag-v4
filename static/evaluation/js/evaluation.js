@@ -1,6 +1,5 @@
 /**
- * Standalone RAGAS Evaluation Module
- * Mirrors the exact logic of tab-eval from static/js/app.js
+ * static/evaluation/js/evaluation.js — Standalone RAGAS Evaluation Module
  */
 let metricsChartInstance = null;
 

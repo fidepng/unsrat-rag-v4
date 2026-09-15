@@ -15,12 +15,12 @@ def test_testing_endpoint_serves_index_html():
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
     assert "Asisten Informasi Akademik UNSRAT" in response.text
-    assert '/static/testing/js/app.js' in response.text
+    assert '/static/testing/js/testing.js' in response.text
 
 @pytest.mark.offline
 def test_static_files_js_app_served():
-    """Verifikasi /static/testing/js/app.js disajikan dengan status 200 dan tipe konten yang tepat."""
-    response = client.get("/static/testing/js/app.js")
+    """Verifikasi /static/testing/js/testing.js disajikan dengan status 200 dan tipe konten yang tepat."""
+    response = client.get("/static/testing/js/testing.js")
     assert response.status_code == 200
     assert "application/javascript" in response.headers["content-type"] or "text/plain" in response.headers["content-type"] or "javascript" in response.headers["content-type"]
     assert "isStreaming" in response.text

@@ -334,15 +334,6 @@ async def get_evaluation():
     return JSONResponse(result)
 
 
-@app.get("/dev", response_class=HTMLResponse)
-async def dev_page():
-    dev_html = ROOT_DIR / "static" / "dev" / "index.html"
-    if not dev_html.exists():
-        raise HTTPException(status_code=404, detail="Dev page not found")
-    return HTMLResponse(content=dev_html.read_text(encoding="utf-8"))
-
-
-
 # ── Developer Endpoints ────────────────────────────────────────────────────────
 
 @app.get("/api/dev/status")
@@ -593,7 +584,7 @@ async def dev_retrieval_test(query: str, config: str = "b"):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ── Static Files & Root ────────────────────────────────────────────────────────
+# ── Static Files & Frontend Page Routes ────────────────────────────────────────
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -635,6 +626,23 @@ async def inspire_homepage_html():
     return FileResponse(bg_path, media_type="text/html")
 
 
+@app.get("/evaluation")
+async def evaluation():
+    """Serve standalone RAGAS evaluation dashboard."""
+    eval_path = Path("static/evaluation/index.html")
+    if not eval_path.exists():
+        return HTMLResponse("<h1>Halaman evaluasi belum tersedia. Buat static/evaluation/index.html.</h1>")
+    return FileResponse(eval_path, media_type="text/html")
+
+
+@app.get("/dev")
+async def dev_page():
+    """Serve developer control panel."""
+    dev_path = Path("static/dev/index.html")
+    if not dev_path.exists():
+        return HTMLResponse("<h1>Halaman dev belum tersedia di static/dev/index.html.</h1>")
+    return FileResponse(dev_path, media_type="text/html")
+
 
 @app.get("/testing")
 async def testing():
@@ -643,15 +651,6 @@ async def testing():
     if not testing_path.exists():
         return HTMLResponse("<h1>Frontend testing tidak ditemukan di static/testing/index.html.</h1>")
     return FileResponse(testing_path, media_type="text/html")
-
-
-@app.get("/evaluation")
-async def evaluation():
-    """Serve standalone RAGAS evaluation page."""
-    eval_path = Path("static/evaluation/index.html")
-    if not eval_path.exists():
-        return HTMLResponse("<h1>Halaman evaluasi belum tersedia. Buat static/evaluation/index.html.</h1>")
-    return FileResponse(eval_path, media_type="text/html")
 
 
 # ── Entry Point ───────────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-// static/js/dev.js — Developer Panel Frontend Logic
+// static/dev/js/dev.js — Developer Panel Frontend Logic
 
 document.addEventListener("DOMContentLoaded", () => {
     function safeCreateIcons() {

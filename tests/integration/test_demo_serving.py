@@ -70,4 +70,31 @@ def test_dev_page_served():
     assert "Dev Control Panel" in resp_dev.text or "Developer" in resp_dev.text
     assert "/static/dev/js/dev.js" in resp_dev.text
 
+@pytest.mark.offline
+def test_testing_page_served():
+    """Verifikasi endpoint /testing menyajikan SPA testing interface dengan benar."""
+    resp_testing = client.get("/testing")
+    assert resp_testing.status_code == 200
+    assert "text/html" in resp_testing.headers["content-type"]
+    assert "Asisten Informasi Akademik UNSRAT" in resp_testing.text
+    assert "/static/testing/js/testing.js" in resp_testing.text
+
+@pytest.mark.offline
+def test_all_static_assets_served():
+    """Verifikasi seluruh file CSS & JS utama dari ke-5 modul disajikan dengan 200 OK."""
+    assets = [
+        "/static/inspire/css/inspire.css",
+        "/static/inspire/js/inspire.js",
+        "/static/unsratacid/css/unsratacid.css",
+        "/static/unsratacid/js/unsratacid.js",
+        "/static/evaluation/js/evaluation.js",
+        "/static/dev/js/dev.js",
+        "/static/testing/js/testing.js",
+        "/static/assets/logo-unsrat.png"
+    ]
+    for asset in assets:
+        resp = client.get(asset)
+        assert resp.status_code == 200, f"Asset gagal dimuat: {asset}"
+
+
 
