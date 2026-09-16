@@ -23,6 +23,7 @@ bm25_index/
 # Logs (Ignore log outputs but preserve directory structure via .gitkeep)
 logs/*
 !logs/.gitkeep
+backup_logs*/
 
 # Testing & Performance Benchmarks
 .pytest_cache/
@@ -66,6 +67,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+e2e/screenshots/
 
 # Superpowers
 .superpowers/

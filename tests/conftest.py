@@ -55,3 +55,13 @@ def mock_nim_llm():
         mock_response.content = "Berdasarkan pedoman akademik [1], mahasiswa dapat mengambil maksimal 24 SKS."
         mock_instance.invoke.return_value = mock_response
         yield mock_instance
+
+@pytest.fixture(autouse=True)
+def reset_rate_limiter():
+    try:
+        from app import app
+        if hasattr(app.state, "limiter"):
+            app.state.limiter.reset()
+    except Exception:
+        pass
+    yield

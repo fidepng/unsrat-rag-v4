@@ -195,3 +195,11 @@ if not GOOGLE_API_KEY and not GOOGLE_APPLICATION_CREDENTIALS:
 
 # NVIDIA NIM API Key (opsional — hanya dibutuhkan jika menggunakan provider NIM)
 NVIDIA_NIM_API_KEY = os.getenv("NVIDIA_NIM_API_KEY")  # None jika tidak di-set, tidak crash
+
+# ── SECURITY & RATE LIMITING ─────────────────────────────────
+DEV_ADMIN_KEY          = os.getenv("DEV_ADMIN_KEY", "1030")
+RATE_LIMIT_CHAT        = os.getenv("RATE_LIMIT_CHAT", "5/minute")
+RATE_LIMIT_CHAT_HOURLY = os.getenv("RATE_LIMIT_CHAT_HOURLY", "30/hour")
+RATE_LIMIT_DEFAULT     = os.getenv("RATE_LIMIT_DEFAULT", "60/minute")
+MAX_QUERY_LENGTH       = int(os.getenv("MAX_QUERY_LENGTH", "1000"))
+MAX_CHAT_HISTORY       = int(os.getenv("MAX_CHAT_HISTORY", "10"))

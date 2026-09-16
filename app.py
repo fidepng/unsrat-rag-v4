@@ -8,16 +8,24 @@ import shutil
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request, Header, Depends
 from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIASGIMiddleware
+from slowapi.util import get_remote_address
 
 from src.config import (
     API_HOST, API_PORT, AVAILABLE_MODELS, LLM_MODEL_NAME,
     EVALUATOR_MODEL_NAME, EMBEDDING_MODEL_NAME, GOOGLE_API_KEY,
     NVIDIA_NIM_API_KEY, ROOT_DIR, CHROMA_DIR_B, CHROMA_COLLECTION_B,
     BM25_INDEX_PATH, EVAL_RESULTS_DIR, SYSTEM_LOG_PATH,
+    DEV_ADMIN_KEY, RATE_LIMIT_CHAT, RATE_LIMIT_CHAT_HOURLY,
+    RATE_LIMIT_DEFAULT, MAX_QUERY_LENGTH, MAX_CHAT_HISTORY,
+    IS_CLOUD_RUN,
 )
 from src.chain import get_response
 from src.logger_manager import get_logger
@@ -25,7 +33,58 @@ from src.preflight import preflight_check
 
 logger = get_logger("app")
 
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=[RATE_LIMIT_DEFAULT],
+    headers_enabled=True,
+)
+
+class SecurityHeadersMiddleware:
+    """Pure ASGI middleware to inject security headers on all HTTP responses."""
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        headers_sent = False
+
+        async def send_with_security_headers(message):
+            nonlocal headers_sent
+            if message["type"] == "http.response.start" and not headers_sent:
+                headers_sent = True
+                headers = list(message.get("headers", []))
+                headers.append((b"x-content-type-options", b"nosniff"))
+                headers.append((b"x-frame-options", b"SAMEORIGIN"))
+                headers.append((b"x-xss-protection", b"1; mode=block"))
+                message = {**message, "headers": headers}
+            await send(message)
+
+        await self.app(scope, receive, send_with_security_headers)
+
+
 app = FastAPI(title="UNSRAT RAG Chatbot API", version="1.0.0")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SecurityHeadersMiddleware)
+
+
+async def verify_admin_key(x_admin_key: str | None = Header(default=None, alias="X-Admin-Key")):
+    """
+    Proteksi endpoint developer dengan verifikasi header X-Admin-Key pada Cloud Run.
+    Di lingkungan lokal (bukan Cloud Run), akses diizinkan langsung tanpa token.
+    """
+    if not IS_CLOUD_RUN:
+        return "local-dev"
+
+    if not x_admin_key or x_admin_key != DEV_ADMIN_KEY:
+        raise HTTPException(
+            status_code=403,
+            detail="Akses ditolak: X-Admin-Key tidak valid atau tidak disertakan."
+        )
+    return x_admin_key
 
 
 @app.exception_handler(Exception)
@@ -118,10 +177,10 @@ def tail_log_file(filepath: Path, n_lines: int = 50) -> list[str]:
 
 class ChatRequest(BaseModel):
     """Request body untuk endpoint /api/chat."""
-    query:        str
-    config:       str = "b"    # default Config B
-    chat_history: list[dict] = []
-    model:        str = LLM_MODEL_NAME
+    query:        str = Field(..., min_length=1, max_length=MAX_QUERY_LENGTH, description="Teks pertanyaan pengguna")
+    config:       str = Field(default="b", description="Konfigurasi RAG (default: b)")
+    chat_history: list[dict] = Field(default=[], max_length=MAX_CHAT_HISTORY, description="Riwayat obrolan")
+    model:        str = Field(default=LLM_MODEL_NAME, description="Nama model LLM")
 
 
 class ActivateRunRequest(BaseModel):
@@ -157,7 +216,9 @@ async def get_config():
 
 
 @app.post("/api/chat")
-async def chat(request: ChatRequest):
+@limiter.limit(RATE_LIMIT_CHAT)
+@limiter.limit(RATE_LIMIT_CHAT_HOURLY)
+async def chat(request: Request, chat_req: ChatRequest):
     """
     Proses query dan kembalikan SSE stream.
 
@@ -165,16 +226,16 @@ async def chat(request: ChatRequest):
     (PRD Section 10.3, FR-27)
     """
     logger.info(
-        f"POST /api/chat | config={request.config} | model={request.model} | "
-        f"query='{request.query[:60]}'"
+        f"POST /api/chat | config={chat_req.config} | model={chat_req.model} | "
+        f"query='{chat_req.query[:60]}'"
     )
 
     def event_generator():
         yield from get_response(
-            query=request.query,
-            config=request.config,
-            chat_history=request.chat_history,
-            model_name=request.model,
+            query=chat_req.query,
+            config=chat_req.config,
+            chat_history=chat_req.chat_history,
+            model_name=chat_req.model,
             streaming=True,
         )
 
@@ -336,7 +397,7 @@ async def get_evaluation():
 
 # ── Developer Endpoints ────────────────────────────────────────────────────────
 
-@app.get("/api/dev/status")
+@app.get("/api/dev/status", dependencies=[Depends(verify_admin_key)])
 async def dev_status():
     """
     Kembalikan status sistem developer (models, API keys, index status).
@@ -377,10 +438,11 @@ async def dev_status():
         "chromadb_config_b_chunks": chromadb_config_b_chunks,
         "chromadb_config_b_meta": chromadb_config_b_meta,
         "bm25_index_present": bm25_present,
+        "is_cloud_run": IS_CLOUD_RUN,
     })
 
 
-@app.get("/api/dev/preflight")
+@app.get("/api/dev/preflight", dependencies=[Depends(verify_admin_key)])
 def dev_preflight():
     """
     Menjalankan preflight check untuk memastikan ketersediaan API Google, Generator, dan Evaluator.
@@ -394,7 +456,7 @@ def dev_preflight():
     return JSONResponse(res)
 
 
-@app.get("/api/dev/runs")
+@app.get("/api/dev/runs", dependencies=[Depends(verify_admin_key)])
 async def dev_runs():
     """
     Membaca dan mengembalikan daftar riwayat pengujian dari run_manifest.json.
@@ -403,7 +465,7 @@ async def dev_runs():
     return JSONResponse(manifest)
 
 
-@app.post("/api/dev/runs/activate")
+@app.post("/api/dev/runs/activate", dependencies=[Depends(verify_admin_key)])
 async def dev_activate_run(request: ActivateRunRequest):
     """
     Mengaktifkan hasil pengujian tertentu dari arsip manifest.
@@ -467,7 +529,7 @@ async def dev_activate_run(request: ActivateRunRequest):
     })
 
 
-@app.get("/api/dev/logs")
+@app.get("/api/dev/logs", dependencies=[Depends(verify_admin_key)])
 async def dev_logs(lines: int = Query(default=50, ge=1)):
     """
     Membaca N baris terakhir dari log sistem (unsrat_rag.log).
@@ -480,7 +542,7 @@ async def dev_logs(lines: int = Query(default=50, ge=1)):
     })
 
 
-@app.post("/api/dev/test_model")
+@app.post("/api/dev/test_model", dependencies=[Depends(verify_admin_key)])
 async def dev_test_model(request: ModelTestRequest):
     """Test model dengan get_response dan ukur latency."""
     import time
@@ -506,7 +568,7 @@ async def dev_test_model(request: ModelTestRequest):
     })
 
 
-@app.post("/api/dev/set_model")
+@app.post("/api/dev/set_model", dependencies=[Depends(verify_admin_key)])
 async def dev_set_model(request: ModelSetRequest):
     """Set active dev model di memory (app.py)."""
     global _ACTIVE_DEV_MODEL
@@ -515,7 +577,7 @@ async def dev_set_model(request: ModelSetRequest):
     return JSONResponse({"status": "success", "active_model": _ACTIVE_DEV_MODEL})
 
 
-@app.get("/api/dev/chunks")
+@app.get("/api/dev/chunks", dependencies=[Depends(verify_admin_key)])
 async def dev_chunks(index: int = 1, config: str = "b"):
     """Lihat raw chunk dari ChromaDB atau BM25."""
     import pickle
@@ -568,7 +630,7 @@ async def dev_chunks(index: int = 1, config: str = "b"):
         raise HTTPException(status_code=400, detail="Invalid config. Use 'b' or 'c'.")
 
 
-@app.get("/api/dev/retrieval_test")
+@app.get("/api/dev/retrieval_test", dependencies=[Depends(verify_admin_key)])
 async def dev_retrieval_test(query: str, config: str = "b"):
     """Coba fungsi retrieval tanpa memanggil LLM."""
     from src.retriever import retrieve_chunks

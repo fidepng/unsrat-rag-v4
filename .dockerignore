@@ -1,33 +1,41 @@
+# Git & Version Control
 .git
 .gitignore
-.github
+
+# Environment Variables & Secrets (CRITICAL)
 .env
-.venv
-venv
+.env.*
+*.pem
+*.key
+*key*.json
+*credential*.json
+*credentials*.json
+
+# Python Bytecode & Cache
 __pycache__
 *.pyc
 *.pyo
 *.pyd
 .pytest_cache
-.vscode
-.agents
-.superpowers
-.understand-anything
-.impeccable
-.playwright-mcp
-.codex
 .benchmarks
-tests/
-e2e/
-playwright.config.ts
-package.json
-package-lock.json
-scripts/
-backup_original/
-docs/
-reference/
-environment.yml
-pytest.ini
-/*.md
-!data/**
-!logs/.gitkeep
+
+# Node.js & E2E Testing
+node_modules
+e2e
+playwright-report
+test-results
+
+# Testing & Dev Directories
+tests
+docs
+reference
+scratch
+graphify-out
+
+# IDEs & Editor configs
+.vscode
+.idea
+.agents
+.gemini
+.cursor
+GEMINI.md
