@@ -3,7 +3,7 @@
  * Encapsulated Namespace - Minimal & Defensif.
  */
 const FEATURE_FLAGS = {
-  showConfigModelSelect: true,
+  showConfigModelSelect: false,
   showModelSelect: false
 };
 

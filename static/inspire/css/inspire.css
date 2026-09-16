@@ -263,8 +263,8 @@
     margin: 0 28px;
   }
   .rag-notice-marquee-content {
-    -webkit-animation-duration: 20s;
-    animation-duration: 20s;
+    -webkit-animation-duration: 60s;
+    animation-duration: 60s;
   }
 }
 
@@ -2181,7 +2181,7 @@
   .rag-sheet-drag-handle {
     display: block;
     width: 40px;
-    height: 4px;
+    height: 5px;
     border-radius: 9999px;
     background: #D1C9BE;
     margin: 8px auto 3px auto;
