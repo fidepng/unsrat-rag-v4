@@ -1278,28 +1278,33 @@ const RagChatWidget = {
       `;
     }).join('');
 
-    sideCitationPanel.classList.remove('hidden');
-
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
       sideCitationPanel.style.removeProperty('height');
       sideCitationPanel.style.removeProperty('transform');
       sideCitationPanel.style.removeProperty('transition');
       sideCitationPanel.classList.remove('rag-sheet-expanded');
-      void sideCitationPanel.offsetWidth;
-      sideCitationPanel.classList.add('rag-sheet-open');
+      sideCitationPanel.classList.remove('hidden');
+      void sideCitationPanel.offsetHeight;
+      requestAnimationFrame(() => {
+        sideCitationPanel.classList.add('rag-sheet-open');
+      });
       if (sheetBackdrop) {
         sheetBackdrop.style.removeProperty('opacity');
         sheetBackdrop.style.removeProperty('transition');
         sheetBackdrop.classList.remove('hidden');
-        void sheetBackdrop.offsetWidth;
-        sheetBackdrop.classList.add('active');
+        void sheetBackdrop.offsetHeight;
+        requestAnimationFrame(() => {
+          sheetBackdrop.classList.add('active');
+        });
       }
       if (this.elements.overlay) {
         this.elements.overlay.style.removeProperty('background-color');
         this.elements.overlay.style.removeProperty('transition');
         this.elements.overlay.classList.add('rag-citations-active');
       }
+    } else {
+      sideCitationPanel.classList.remove('hidden');
     }
   },
 
@@ -1617,13 +1622,13 @@ const RagChatWidget = {
           if (!sheetBackdrop.classList.contains('active')) {
             sheetBackdrop.classList.add('hidden');
           }
-        }, 240);
+        }, 320);
       }
       setTimeout(() => {
         if (!sideCitationPanel.classList.contains('rag-sheet-open')) {
           sideCitationPanel.classList.add('hidden');
         }
-      }, 280);
+      }, 330);
     } else {
       sideCitationPanel.style.removeProperty('height');
       sideCitationPanel.style.removeProperty('transform');
