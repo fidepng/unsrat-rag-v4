@@ -1059,26 +1059,38 @@
   transform: translateX(3px);
 }
 
-/* Horizontal Scroll Indicator Track (Desktop: Hidden, Mobile: Visible) */
+/* Horizontal Scroll Indicator Track (Desktop: Hidden, Mobile: Visible & Interactive) */
 .rag-chips-track-wrapper {
   display: none;
   width: 100%;
   justify-content: center;
   align-items: center;
-  padding: 4px 0 2px 0;
+  padding: 6px 0 4px 0;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .rag-chips-track {
-  width: 46px;
-  height: 3.5px;
+  width: 52px;
+  height: 4.5px;
   border-radius: 9999px;
   background-color: #E4DFD9;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
+  touch-action: none;
+  transition: background-color 0.15s ease;
+}
+
+.rag-chips-track:hover,
+.rag-chips-track.rag-dragging {
+  background-color: #D6D0C7;
 }
 
 .rag-chips-thumb {
-  width: 16px;
+  width: 18px;
   height: 100%;
   border-radius: 9999px;
   background-color: #7B2D2D;
@@ -1088,7 +1100,14 @@
   transform: translate3d(0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);
   will-change: transform;
-  transition: transform 0.08s linear;
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.08s linear, background-color 0.15s ease;
+}
+
+.rag-chips-track.rag-dragging .rag-chips-thumb {
+  cursor: grabbing;
+  background-color: #631B1B;
 }
 
 /* Desktop Compact Mode: Uniform Full-Width Cards (Bukan fit-content bergerigi) */
