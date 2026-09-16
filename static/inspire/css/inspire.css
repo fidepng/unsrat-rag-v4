@@ -406,8 +406,8 @@
   background: var(--rag-primary-gradient);
   z-index: -1;
   pointer-events: none;
-  animation: rag-trigger-ripple-out 2.8s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
-  -webkit-animation: rag-trigger-ripple-out 2.8s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  animation: rag-trigger-ripple-out 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  -webkit-animation: rag-trigger-ripple-out 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
 }
 
 @-webkit-keyframes rag-trigger-ripple-out {
