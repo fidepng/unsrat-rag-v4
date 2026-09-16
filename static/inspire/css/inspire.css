@@ -1900,30 +1900,6 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
-.rag-char-counter {
-  position: absolute;
-  right: 12px;
-  bottom: 10px;
-  font-size: 10px;
-  line-height: 1;
-  white-space: nowrap;
-  color: #9CA3AF;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  pointer-events: none;
-  user-select: none;
-  transition: color 0.15s ease, font-weight 0.15s ease;
-}
-
-.rag-char-counter.rag-char-warning {
-  color: #D97706;
-  font-weight: 600;
-}
-
-.rag-char-counter.rag-char-limit {
-  color: #DC2626;
-  font-weight: 700;
-}
-
 .rag-chat-form textarea:focus {
   border-color: #7B2D2D;
   box-shadow: 0 4px 12px rgba(123, 45, 45, 0.1);

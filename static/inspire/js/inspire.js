@@ -126,7 +126,6 @@ const RagChatWidget = {
       welcomeState: document.getElementById('rag-welcome-state'),
       chatForm: document.getElementById('rag-chat-form'),
       userInput: document.getElementById('rag-user-input'),
-      charCounter: document.getElementById('rag-char-counter'),
       sendBtn: document.getElementById('rag-send-btn'),
       sideCitationPanel: document.getElementById('rag-side-citation-panel'),
       sideCitationBody: document.getElementById('rag-side-citation-body'),
@@ -699,15 +698,8 @@ const RagChatWidget = {
   },
 
   adjustTextareaHeight() {
-    const { userInput, charCounter } = this.elements;
+    const { userInput } = this.elements;
     if (!userInput) return;
-
-    if (charCounter) {
-      const len = userInput.value.length;
-      charCounter.textContent = `${len} / 1000`;
-      charCounter.classList.toggle('rag-char-warning', len >= 800 && len < 1000);
-      charCounter.classList.toggle('rag-char-limit', len >= 1000);
-    }
 
     userInput.style.height = 'auto';
     const scrollH = userInput.scrollHeight;
