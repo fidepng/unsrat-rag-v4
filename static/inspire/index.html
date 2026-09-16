@@ -341,14 +341,14 @@
     </div>
   </div>
 
-  <!-- Onboarding Welcome Dialog (UAT Testing Guidance - Distilled & Clarified) -->
+  <!-- Onboarding Welcome Dialog (UAT Testing Guidance - Distilled & Quieter) -->
   <div id="rag-onboard-modal" class="rag-onboard-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rag-onboard-title">
     <div id="rag-onboard-backdrop" class="rag-onboard-backdrop"></div>
     <div class="rag-onboard-card">
       <div class="rag-onboard-header">
         <div class="rag-onboard-header-main">
-          <span class="rag-onboard-badge">PENGUJIAN SISTEM</span>
           <h3 id="rag-onboard-title" class="rag-onboard-title">Asisten Akademik UNSRAT</h3>
+          <span class="rag-onboard-badge">PENGUJIAN SISTEM</span>
         </div>
         <button type="button" id="rag-onboard-close" class="rag-onboard-close-btn" aria-label="Tutup" title="Tutup">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -363,31 +363,28 @@
         <!-- Dropdown Accordion for Knowledge Base Scope -->
         <div class="rag-onboard-accordion-wrapper">
           <button type="button" id="rag-scope-accordion-toggle" class="rag-scope-toggle-btn" aria-expanded="false" aria-controls="rag-scope-accordion-content">
-            <div class="rag-scope-toggle-left">
-              <svg class="rag-scope-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
-              <span>Cakupan Basis Pengetahuan (9 Korpus Dokumen)</span>
-            </div>
+            <span class="rag-scope-toggle-label">Cakupan Basis Pengetahuan (9 Korpus Dokumen)</span>
             <svg class="rag-scope-chevron" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           
           <div id="rag-scope-accordion-content" class="rag-scope-accordion-body">
             <ul class="rag-scope-list">
               <li>
-                <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="rag-scope-bullet" aria-hidden="true">•</span>
                 <div class="rag-scope-item-content">
                   <strong>Peraturan Rektor UNSRAT No. 1 Tahun 2025</strong>
                   <span>Regulasi akademik perkuliahan, beban SKS, evaluasi studi, cuti, dan kelulusan.</span>
                 </div>
               </li>
               <li>
-                <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="rag-scope-bullet" aria-hidden="true">•</span>
                 <div class="rag-scope-item-content">
                   <strong>Kalender Akademik UNSRAT T.A. 2025/2026</strong>
                   <span>Jadwal pembayaran UKT, pengisian KRS, perkuliahan, ujian, dan wisuda Periode I–VI.</span>
                 </div>
               </li>
               <li>
-                <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="rag-scope-bullet" aria-hidden="true">•</span>
                 <div class="rag-scope-item-content">
                   <strong>7 Dokumen Profil Resmi Institusi</strong>
                   <span>Sejarah, visi-misi, sasaran strategis, arti lambang, bendera, lirik mars/hymne, dan status akreditasi BAN-PT.</span>
@@ -395,7 +392,6 @@
               </li>
             </ul>
             <div class="rag-scope-note">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
               <span>Data dokumen dihimpun s.d. <strong>Mei 2026</strong>.</span>
             </div>
           </div>
@@ -404,8 +400,7 @@
 
       <div class="rag-onboard-footer">
         <button type="button" id="rag-onboard-start-btn" class="rag-onboard-btn-primary">
-          <span>Mulai Pengujian</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Mulai Pengujian
         </button>
         <button type="button" id="rag-onboard-explore-btn" class="rag-onboard-btn-secondary">
           Lihat Portal Simulasi
