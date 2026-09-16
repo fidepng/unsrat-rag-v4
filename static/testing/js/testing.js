@@ -83,7 +83,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Auto-growing textarea logic & Enter-to-submit behavior
     if (chatInput && chatInput.tagName.toLowerCase() === "textarea") {
+        const charCounter = document.getElementById("char-counter");
         const adjustHeight = () => {
+            if (charCounter) {
+                const len = chatInput.value.length;
+                charCounter.textContent = `${len} / 1000`;
+                const baseClass = "absolute right-3 bottom-2.5 text-[10px] font-mono whitespace-nowrap pointer-events-none select-none transition-colors";
+                if (len >= 1000) {
+                    charCounter.className = `${baseClass} text-red-600 font-bold`;
+                } else if (len >= 800) {
+                    charCounter.className = `${baseClass} text-amber-600 font-semibold`;
+                } else {
+                    charCounter.className = `${baseClass} text-gray-400`;
+                }
+            }
             chatInput.style.height = "auto";
             chatInput.style.height = `${chatInput.scrollHeight}px`;
             chatInput.scrollTop = chatInput.scrollHeight;
@@ -256,19 +269,39 @@ document.addEventListener("DOMContentLoaded", () => {
         setStreamingState(false);
     }
 
-    function handleError(message) {
+    function handleError(message, type = "error") {
+        let badgeColor = "bg-red-100 border-red-200 text-red-700";
+        let iconBg = "bg-red-600";
+        let cardBg = "bg-red-50 border-red-100 text-red-800";
+        let badgeText = "Error";
+        let iconName = "alert-circle";
+
+        if (type === "ratelimit") {
+            badgeColor = "bg-amber-100 border-amber-200 text-amber-800";
+            iconBg = "bg-amber-600";
+            cardBg = "bg-amber-50 border-amber-200 text-amber-900";
+            badgeText = "Rate Limit (429)";
+            iconName = "clock";
+        } else if (type === "validation") {
+            badgeColor = "bg-rose-100 border-rose-200 text-rose-800";
+            iconBg = "bg-rose-600";
+            cardBg = "bg-rose-50 border-rose-200 text-rose-900";
+            badgeText = "Validasi (422)";
+            iconName = "alert-triangle";
+        }
+
         const errorBubble = document.createElement("div");
         errorBubble.className = "flex items-start space-x-4 max-w-4xl opacity-0 translate-y-2 transition-all duration-300 w-full";
         errorBubble.innerHTML = `
-            <div class="bg-red-600 text-white p-3 rounded-xl flex-shrink-0 mt-1 shadow-md flex items-center justify-center w-10 h-10">
-                <i data-lucide="alert-circle" class="w-5 h-5"></i>
+            <div class="${iconBg} text-white p-3 rounded-xl flex-shrink-0 mt-1 shadow-md flex items-center justify-center w-10 h-10">
+                <i data-lucide="${iconName}" class="w-5 h-5"></i>
             </div>
             <div class="space-y-2 flex-1 flex flex-col items-start max-w-2xl w-full">
                 <div class="flex items-center space-x-2">
-                    <span class="inline-block bg-red-100 border border-red-200 text-red-700 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">Error</span>
+                    <span class="inline-block ${badgeColor} border px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider">${badgeText}</span>
                     <span class="text-[10px] text-gray-400 font-medium">${getTimestamp()}</span>
                 </div>
-                <div class="bg-red-50 border border-red-100 rounded-2xl rounded-tl-none px-5 py-4 shadow-sm text-red-750 leading-relaxed text-sm w-full font-medium">
+                <div class="${cardBg} border rounded-2xl rounded-tl-none px-5 py-4 shadow-sm leading-relaxed text-sm w-full font-medium">
                     ${escapeHtml(message)}
                 </div>
             </div>
@@ -481,13 +514,24 @@ document.addEventListener("DOMContentLoaded", () => {
                         query: query,
                         config: configSelect.value,
                         model: modelSelect.value,
-                        chat_history: chatHistory
+                        chat_history: (chatHistory || []).slice(-10)
                     }),
                     signal: abortController.signal
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`Server returned HTTP ${response.status}`);
+                    let errMessage = `Server returned HTTP ${response.status}`;
+                    try {
+                        const errJson = await response.json();
+                        if (errJson && errJson.detail) {
+                            errMessage = typeof errJson.detail === 'string' ? errJson.detail : JSON.stringify(errJson.detail);
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+                    const err = new Error(errMessage);
+                    err.status = response.status;
+                    throw err;
                 }
                 
                 const reader = response.body.getReader();
@@ -648,7 +692,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 } else {
                     console.error("[RAG Client] Stream error:", err);
-                    handleError("Terjadi kegagalan komunikasi dengan server RAG.");
+                    const thinkingEl = document.getElementById(`${botMsgId}-thinking`);
+                    if (thinkingEl) thinkingEl.classList.add("hidden");
+                    const botBubbleEl = document.getElementById(botMsgId);
+                    if (botBubbleEl && isFirstToken) botBubbleEl.remove();
+
+                    if (err.status === 429 || (err.message && err.message.includes("429")) || (err.message && err.message.toLowerCase().includes("terlalu banyak"))) {
+                        handleError("Batas permintaan tercapai (maksimal 5 pesan/menit). Mohon tunggu beberapa saat sebelum mengirim pertanyaan berikutnya.", "ratelimit");
+                    } else if (err.status === 422 || (err.message && (err.message.includes("422") || err.message.includes("1000") || err.message.toLowerCase().includes("karakter")))) {
+                        const isChar = err.message && (err.message.includes("1000") || err.message.toLowerCase().includes("karakter") || err.message.toLowerCase().includes("query"));
+                        handleError(isChar ? "Pertanyaan melebihi batas maksimal 1.000 karakter." : "Format parameter pertanyaan tidak sesuai.", "validation");
+                    } else {
+                        handleError(err.message || "Terjadi kegagalan komunikasi dengan server RAG.", "error");
+                    }
                 }
             } finally {
                 clearInterval(thinkingInterval);

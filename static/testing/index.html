@@ -184,9 +184,12 @@
 
               <!-- Area Form Input Bawah (Floating panel) -->
               <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#FAF9F6] via-[#FAF9F6]/95 to-transparent pt-8 pb-3 px-8 flex flex-col items-center z-10">
-                  <form id="chat-form" class="w-full max-w-4xl flex items-end bg-white border border-[#E4DFD9] rounded-2xl shadow-xl p-2 focus-within:border-[#7B2D2D] focus-within:ring-2 focus-within:ring-[#7B2D2D]/20 transition duration-300">
-                      <textarea id="user-input" placeholder="Ketik pertanyaan akademik Anda di sini..." class="flex-1 pl-6 pr-4 py-2.5 text-sm text-gray-800 focus:outline-none placeholder-gray-400 bg-white resize-none max-h-36 custom-scrollbar" rows="1" autocomplete="off"></textarea>
-                      <button type="submit" id="send-btn" class="bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 ml-4">
+                  <form id="chat-form" class="w-full max-w-4xl flex items-center bg-white border border-[#E4DFD9] rounded-2xl shadow-xl p-2 focus-within:border-[#7B2D2D] focus-within:ring-2 focus-within:ring-[#7B2D2D]/20 transition duration-300">
+                      <div class="flex-1 relative flex items-center min-w-0">
+                          <textarea id="user-input" maxlength="1000" placeholder="Ketik pertanyaan akademik Anda di sini..." class="w-full pl-5 pr-20 py-2.5 text-sm text-gray-800 focus:outline-none placeholder-gray-400 bg-white resize-none max-h-36 custom-scrollbar" rows="1" autocomplete="off"></textarea>
+                          <div id="char-counter" class="absolute right-3 bottom-2.5 text-[10px] font-mono text-gray-400 whitespace-nowrap pointer-events-none select-none transition-colors">0 / 1000</div>
+                      </div>
+                      <button type="submit" id="send-btn" class="bg-[#7B2D2D] hover:bg-[#963E3E] active:bg-[#5C1F1F] text-white rounded-full transition duration-200 flex items-center justify-center w-10 h-10 flex-shrink-0 cursor-pointer shadow-md active:scale-95 ml-2">
                           <!-- Send Icon -->
                           <svg id="send-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send w-5 h-5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                           <!-- Stop Icon -->
