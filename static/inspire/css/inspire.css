@@ -2180,11 +2180,11 @@
 
   .rag-sheet-drag-handle {
     display: block;
-    width: 44px;
-    height: 5px;
+    width: 40px;
+    height: 4px;
     border-radius: 9999px;
     background: #D1C9BE;
-    margin: 10px auto 6px auto;
+    margin: 8px auto 3px auto;
     flex-shrink: 0;
     cursor: grab;
     touch-action: none;
@@ -2198,7 +2198,7 @@
     content: '';
     position: absolute;
     top: -10px;
-    bottom: -14px;
+    bottom: -12px;
     left: -24px;
     right: -24px;
   }
@@ -2207,11 +2207,12 @@
   .rag-sheet-drag-handle.rag-dragging {
     cursor: grabbing;
     background: #A8A29E;
-    width: 50px;
+    width: 48px;
   }
 
   .rag-side-citation-header {
     border-radius: 22px 22px 0 0 !important;
+    padding: 6px 16px 10px 16px !important;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
