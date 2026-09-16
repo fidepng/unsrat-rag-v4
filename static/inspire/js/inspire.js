@@ -38,6 +38,10 @@ const RagChatWidget = {
     this.cacheElements();
     if (!this.elements.widget) return;
 
+    if (this.elements.bgIframe && window.location.search) {
+      this.elements.bgIframe.src = '/static/inspire/background.html' + window.location.search;
+    }
+
     if (window.marked && typeof window.marked.use === 'function') {
       window.marked.use({
         gfm: true,
@@ -56,6 +60,24 @@ const RagChatWidget = {
     this.bindNetworkEvents();
     this.applyFeatureFlags();
     this.loadSystemConfig();
+    this.initOnboarding();
+  },
+
+  initOnboarding() {
+    const { onboardModal } = this.elements;
+    if (!onboardModal) return;
+    onboardModal.classList.remove('hidden');
+  },
+
+  dismissOnboarding(openChat = false) {
+    const { onboardModal } = this.elements;
+    if (onboardModal) {
+      onboardModal.classList.add('hidden');
+    }
+
+    if (openChat) {
+      this.toggleModal(true);
+    }
   },
 
   bindNetworkEvents() {
@@ -81,6 +103,14 @@ const RagChatWidget = {
     this.elements = {
       widget: document.getElementById('rag-chatbot-widget'),
       triggerBtn: document.getElementById('rag-trigger-btn'),
+      triggerCallout: document.getElementById('rag-trigger-callout'),
+      calloutDismissBtn: document.getElementById('rag-callout-dismiss'),
+      onboardModal: document.getElementById('rag-onboard-modal'),
+      onboardBackdrop: document.getElementById('rag-onboard-backdrop'),
+      onboardCloseBtn: document.getElementById('rag-onboard-close'),
+      onboardStartBtn: document.getElementById('rag-onboard-start-btn'),
+      onboardExploreBtn: document.getElementById('rag-onboard-explore-btn'),
+      bgIframe: document.getElementById('rag-bg-iframe'),
       modal: document.getElementById('rag-modal'),
       overlay: document.getElementById('rag-modal-overlay'),
       closeBtn: document.getElementById('rag-modal-close'),
@@ -94,6 +124,7 @@ const RagChatWidget = {
       welcomeState: document.getElementById('rag-welcome-state'),
       chatForm: document.getElementById('rag-chat-form'),
       userInput: document.getElementById('rag-user-input'),
+      charCounter: document.getElementById('rag-char-counter'),
       sendBtn: document.getElementById('rag-send-btn'),
       sideCitationPanel: document.getElementById('rag-side-citation-panel'),
       sideCitationBody: document.getElementById('rag-side-citation-body'),
@@ -132,15 +163,56 @@ const RagChatWidget = {
 
   bindEvents() {
     const { 
-      triggerBtn, closeBtn, expandBtn, resetBtn, overlay, 
+      triggerBtn, triggerCallout, calloutDismissBtn,
+      onboardCloseBtn, onboardBackdrop, onboardStartBtn, onboardExploreBtn,
+      closeBtn, expandBtn, resetBtn, overlay, 
       settingsBtn, settingsPanel, chatForm, userInput, sendBtn, 
       closeCitationBtn, chatMessages, sheetBackdrop 
     } = this.elements;
+
+    if (onboardStartBtn) {
+      onboardStartBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.dismissOnboarding(true);
+      });
+    }
+
+    if (onboardExploreBtn) {
+      onboardExploreBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.dismissOnboarding(false);
+      });
+    }
+
+    if (onboardCloseBtn) {
+      onboardCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.dismissOnboarding(false);
+      });
+    }
+
+    if (onboardBackdrop) {
+      onboardBackdrop.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.dismissOnboarding(false);
+      });
+    }
 
     if (triggerBtn) triggerBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       this.toggleModal();
     });
+
+    if (calloutDismissBtn) {
+      calloutDismissBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.calloutDismissed = true;
+        if (triggerCallout) {
+          triggerCallout.classList.add('hidden');
+        }
+      });
+    }
+
     if (closeBtn) closeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       this.toggleModal(false);
@@ -394,8 +466,10 @@ const RagChatWidget = {
       const path = e.composedPath ? e.composedPath() : [];
       if (path.includes(modal) || modal.contains(e.target)) return;
 
-      // 2. If click was on trigger button, ignore here (handled by trigger button's own listener)
+      // 2. If click was on trigger button or callout, ignore here (handled by their own listener)
       if (triggerBtn && (path.includes(triggerBtn) || triggerBtn.contains(e.target))) return;
+      const { triggerCallout } = this.elements;
+      if (triggerCallout && (path.includes(triggerCallout) || triggerCallout.contains(e.target))) return;
 
       // 3. If element was detached from the DOM during event dispatch (e.g. innerHTML swaps or welcome card removal), ignore
       if (e.target && !document.body.contains(e.target)) return;
@@ -411,7 +485,9 @@ const RagChatWidget = {
     // Hierarchical keyboard Escape handler
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (guideModal && guideModal.classList.contains('active')) {
+        if (this.elements.onboardModal && !this.elements.onboardModal.classList.contains('hidden')) {
+          this.dismissOnboarding(false);
+        } else if (guideModal && guideModal.classList.contains('active')) {
           closeGuideModal();
         } else if (resetConfirmPopover && !resetConfirmPopover.classList.contains('hidden')) {
           hideResetConfirm();
@@ -504,7 +580,7 @@ const RagChatWidget = {
   },
 
   toggleModal(forceState) {
-    const { modal, overlay, userInput, triggerBtn } = this.elements;
+    const { modal, overlay, userInput, triggerBtn, triggerCallout } = this.elements;
     if (!modal) return;
 
     const isCurrentlyOpen = !modal.classList.contains('hidden') && modal.classList.contains('rag-modal-open');
@@ -526,9 +602,13 @@ const RagChatWidget = {
         }
       }
       if (triggerBtn) triggerBtn.classList.add('rag-trigger-hidden');
+      if (triggerCallout) triggerCallout.classList.add('hidden');
       void modal.offsetWidth; // Force reflow for smooth transition
       modal.classList.add('rag-modal-open');
-      if (userInput) userInput.focus();
+      const isTouchOrMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+      if (userInput && !isTouchOrMobile) {
+        userInput.focus();
+      }
     } else {
       modal.classList.remove('rag-modal-open');
       if (overlay) {
@@ -536,6 +616,7 @@ const RagChatWidget = {
         overlay.classList.remove('rag-overlay-expanded');
       }
       if (triggerBtn) triggerBtn.classList.remove('rag-trigger-hidden');
+      if (triggerCallout && !this.calloutDismissed) triggerCallout.classList.remove('hidden');
       
       if (this.state.status === 'streaming' && this.state.abortController) {
         this.state.abortController.abort();
@@ -581,8 +662,16 @@ const RagChatWidget = {
   },
 
   adjustTextareaHeight() {
-    const { userInput } = this.elements;
+    const { userInput, charCounter } = this.elements;
     if (!userInput) return;
+
+    if (charCounter) {
+      const len = userInput.value.length;
+      charCounter.textContent = `${len} / 1000`;
+      charCounter.classList.toggle('rag-char-warning', len >= 800 && len < 1000);
+      charCounter.classList.toggle('rag-char-limit', len >= 1000);
+    }
+
     userInput.style.height = 'auto';
     const scrollH = userInput.scrollHeight;
     if (scrollH > 120) {
@@ -769,11 +858,24 @@ const RagChatWidget = {
           query: query,
           config: this.state.currentConfig,
           model: this.state.currentModel,
-          chat_history: this.state.chatHistory
+          chat_history: (this.state.chatHistory || []).slice(-10)
         })
       });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        let errMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errJson = await response.json();
+          if (errJson && errJson.detail) {
+            errMessage = typeof errJson.detail === 'string' ? errJson.detail : JSON.stringify(errJson.detail);
+          }
+        } catch (e) {
+          // ignore
+        }
+        const err = new Error(errMessage);
+        err.status = response.status;
+        throw err;
+      }
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -872,6 +974,8 @@ const RagChatWidget = {
 
       const isAbortByUser = error.name === 'AbortError' && !this.state.isTimedOut;
       const isTimeout = error.name === 'TimeoutError' || this.state.isTimedOut || error.message.includes('504') || error.message.includes('timeout');
+      const isRateLimit = error.status === 429 || error.message.includes('429') || error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('terlalu banyak');
+      const isValidationError = error.status === 422 || error.message.includes('422') || error.message.toLowerCase().includes('1000') || error.message.toLowerCase().includes('karakter');
       const isOffline = (typeof navigator !== 'undefined' && !navigator.onLine) || error.message.includes('Failed to fetch') || error.message.includes('NetworkError');
 
       if (isAbortByUser) {
@@ -883,6 +987,50 @@ const RagChatWidget = {
           warningBadge.className = 'rag-abort-badge';
           warningBadge.innerHTML = `${RAG_ICONS.alertCircle}<span>Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.</span>`;
           botBubbleObj.bubbleElem.appendChild(warningBadge);
+        }
+      } else if (isRateLimit) {
+        if (!isFirstToken) flushRender();
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card rag-error-ratelimit';
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>Batas Permintaan Tercapai</span>
+          </div>
+          <p>Anda telah mencapai batas pengiriman pertanyaan (maksimal 5 pesan/menit). Mohon tunggu beberapa saat sebelum mengirim pertanyaan berikutnya.</p>
+          <button type="button" class="rag-retry-btn" onclick="RagChatWidget.retryLastQuery()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Kirim Ulang</span>
+          </button>
+        `;
+        if (isFirstToken) {
+          botBubbleObj.contentElem.innerHTML = '';
+          botBubbleObj.contentElem.appendChild(errCard);
+        } else {
+          botBubbleObj.bubbleElem.appendChild(errCard);
+        }
+      } else if (isValidationError) {
+        if (!isFirstToken) flushRender();
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card rag-error-validation';
+        const isCharLimit = error.message.toLowerCase().includes('1000') || error.message.toLowerCase().includes('karakter') || error.message.toLowerCase().includes('query');
+        const errorTitle = isCharLimit ? 'Pertanyaan Terlalu Panjang' : 'Format Pertanyaan Tidak Sesuai';
+        const errorDesc = isCharLimit 
+          ? 'Pertanyaan melebihi batas maksimal 1.000 karakter. Mohon perpendek pertanyaan agar asisten akademik dapat menganalisis secara optimal.'
+          : (error.message && !error.message.includes('422') ? error.message : 'Parameter pertanyaan tidak sesuai dengan format yang diizinkan. Silakan muat ulang atau coba lagi.');
+
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>${this.escapeHtml(errorTitle)}</span>
+          </div>
+          <p>${this.escapeHtml(errorDesc)}</p>
+        `;
+        if (isFirstToken) {
+          botBubbleObj.contentElem.innerHTML = '';
+          botBubbleObj.contentElem.appendChild(errCard);
+        } else {
+          botBubbleObj.bubbleElem.appendChild(errCard);
         }
       } else if (isTimeout) {
         if (!isFirstToken) flushRender();

@@ -62,6 +62,7 @@ const RagChatWidget = {
       welcomeState: document.getElementById('rag-welcome-state'),
       chatForm: document.getElementById('rag-chat-form'),
       userInput: document.getElementById('rag-user-input'),
+      charCounter: document.getElementById('rag-char-counter'),
       sendBtn: document.getElementById('rag-send-btn'),
       sideCitationPanel: document.getElementById('rag-side-citation-panel'),
       sideCitationBody: document.getElementById('rag-side-citation-body'),
@@ -200,7 +201,10 @@ const RagChatWidget = {
     if (shouldShow) {
       modal.classList.remove('hidden');
       if (overlay) overlay.classList.remove('hidden');
-      if (userInput) userInput.focus();
+      const isTouchOrMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+      if (userInput && !isTouchOrMobile) {
+        userInput.focus();
+      }
     } else {
       modal.classList.add('hidden');
       if (overlay) overlay.classList.add('hidden');
@@ -235,8 +239,16 @@ const RagChatWidget = {
   },
 
   adjustTextareaHeight() {
-    const { userInput } = this.elements;
+    const { userInput, charCounter } = this.elements;
     if (!userInput) return;
+
+    if (charCounter) {
+      const len = userInput.value.length;
+      charCounter.textContent = `${len} / 1000`;
+      charCounter.classList.toggle('rag-char-warning', len >= 800 && len < 1000);
+      charCounter.classList.toggle('rag-char-limit', len >= 1000);
+    }
+
     userInput.style.height = 'auto';
     userInput.style.height = `${Math.min(userInput.scrollHeight, 120)}px`;
   },
@@ -340,11 +352,24 @@ const RagChatWidget = {
           query: query,
           config: this.state.currentConfig,
           model: this.state.currentModel,
-          chat_history: this.state.chatHistory
+          chat_history: (this.state.chatHistory || []).slice(-10)
         })
       });
 
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        let errMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errJson = await response.json();
+          if (errJson && errJson.detail) {
+            errMessage = typeof errJson.detail === 'string' ? errJson.detail : JSON.stringify(errJson.detail);
+          }
+        } catch (e) {
+          // ignore
+        }
+        const err = new Error(errMessage);
+        err.status = response.status;
+        throw err;
+      }
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -407,7 +432,12 @@ const RagChatWidget = {
       this.state.chatHistory.push({ role: 'assistant', content: fullAnswer });
 
     } catch (error) {
-      if (error.name === 'AbortError') {
+      const isAbortByUser = error.name === 'AbortError';
+      const isRateLimit = error.status === 429 || error.message.includes('429') || error.message.toLowerCase().includes('rate limit') || error.message.toLowerCase().includes('terlalu banyak');
+      const isValidationError = error.status === 422 || error.message.includes('422') || error.message.toLowerCase().includes('1000') || error.message.toLowerCase().includes('karakter');
+      const isOffline = (typeof navigator !== 'undefined' && !navigator.onLine) || error.message.includes('Failed to fetch') || error.message.includes('NetworkError');
+
+      if (isAbortByUser) {
         if (isFirstToken) {
           botBubbleObj.contentElem.innerHTML = '<span style="color: #b58105; font-size: 12px; font-style: italic;">Pencarian dihentikan sebelum ada jawaban.</span>';
         } else {
@@ -416,8 +446,64 @@ const RagChatWidget = {
           warningBadge.innerHTML = `${RAG_ICONS.alertCircle}<span>Pencarian dihentikan oleh pengguna. Informasi di atas mungkin tidak lengkap.</span>`;
           botBubbleObj.bubbleElem.appendChild(warningBadge);
         }
+      } else if (isRateLimit) {
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card rag-error-ratelimit';
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>Batas Permintaan Tercapai</span>
+          </div>
+          <p>Anda telah mencapai batas pengiriman pertanyaan (maksimal 5 pesan/menit). Mohon tunggu beberapa saat sebelum mengirim pertanyaan berikutnya.</p>
+          <button type="button" class="rag-retry-btn" onclick="RagChatWidget.submitQueryDirectly('${this.escapeHtml(query)}')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Kirim Ulang</span>
+          </button>
+        `;
+        botBubbleObj.contentElem.innerHTML = '';
+        botBubbleObj.contentElem.appendChild(errCard);
+      } else if (isValidationError) {
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card rag-error-validation';
+        const isCharLimit = error.message.toLowerCase().includes('1000') || error.message.toLowerCase().includes('karakter') || error.message.toLowerCase().includes('query');
+        const errorTitle = isCharLimit ? 'Pertanyaan Terlalu Panjang' : 'Format Pertanyaan Tidak Sesuai';
+        const errorDesc = isCharLimit 
+          ? 'Pertanyaan melebihi batas maksimal 1.000 karakter. Mohon perpendek pertanyaan agar asisten akademik dapat menganalisis secara optimal.'
+          : (error.message && !error.message.includes('422') ? error.message : 'Parameter pertanyaan tidak sesuai dengan format yang diizinkan. Silakan muat ulang atau coba lagi.');
+
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>${this.escapeHtml(errorTitle)}</span>
+          </div>
+          <p>${this.escapeHtml(errorDesc)}</p>
+        `;
+        botBubbleObj.contentElem.innerHTML = '';
+        botBubbleObj.contentElem.appendChild(errCard);
+      } else if (isOffline) {
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card rag-error-offline';
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>Koneksi Internet Terputus</span>
+          </div>
+          <p>Tidak dapat terhubung ke server. Pastikan koneksi internet Anda aktif, lalu coba lagi.</p>
+        `;
+        botBubbleObj.contentElem.innerHTML = '';
+        botBubbleObj.contentElem.appendChild(errCard);
       } else {
-        botBubbleObj.contentElem.innerHTML = `<span style="color: #dc2626;">Error: ${error.message}</span>`;
+        const errCard = document.createElement('div');
+        errCard.className = 'rag-error-card';
+        errCard.innerHTML = `
+          <div class="rag-error-header">
+            ${RAG_ICONS.alertCircle}
+            <span>Layanan Mengalami Kendala</span>
+          </div>
+          <p>Terjadi kendala teknis saat memproses respons (${this.escapeHtml(error.message)}). Silakan coba sesaat lagi.</p>
+        `;
+        botBubbleObj.contentElem.innerHTML = '';
+        botBubbleObj.contentElem.appendChild(errCard);
       }
     } finally {
       this.state.status = 'idle';
