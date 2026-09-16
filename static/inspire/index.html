@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS Scoped khusus Demo Chatbot UNSRAT (Portal INSPIRE) -->
-  <link rel="stylesheet" href="/static/inspire/css/inspire.css?v=22">
+  <link rel="stylesheet" href="/static/inspire/css/inspire.css?v=26">
 
   <!-- Marked.js for Markdown Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -25,29 +25,88 @@
       width: 100vw !important;
       height: 100vh !important;
       overflow: hidden !important;
+      background-color: #1E232A !important;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     iframe#rag-bg-iframe {
       position: fixed;
-      top: 0;
+      top: 34px;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: calc(100% - 34px);
       border: none;
       z-index: 1;
     }
   </style>
 </head>
 <body>
+  <!-- Top Notice Bar for Mock Simulation Environment (Running Text Marquee) -->
+  <header class="rag-top-notice-bar" role="banner">
+    <div class="rag-notice-badge-wrapper">
+      <span class="rag-notice-badge">PENGUJIAN UAT</span>
+    </div>
+    <div class="rag-notice-marquee-wrapper" aria-label="Informasi Pengujian UAT Tugas Akhir">
+      <div class="rag-notice-marquee-content">
+        <div class="rag-marquee-group">
+          <div class="rag-notice-item">
+            <span class="rag-item-label">Tugas Akhir:</span>
+            <span class="rag-item-val">Asisten Akademik UNSRAT</span>
+          </div>
+          <span class="rag-item-divider" aria-hidden="true">•</span>
+          <div class="rag-notice-item">
+            <span class="rag-item-label">Basis Pengetahuan:</span>
+            <span class="rag-item-val">Peraturan Rektor 2025, Kalender Akademik, &amp; Profil Institusi</span>
+          </div>
+          <span class="rag-item-divider" aria-hidden="true">•</span>
+          <div class="rag-notice-item">
+            <span class="rag-item-label">Batas Data:</span>
+            <span class="rag-item-val">Pembaruan s.d. <span class="rag-item-highlight">Mei 2026</span></span>
+          </div>
+          <span class="rag-group-divider" aria-hidden="true">•</span>
+        </div>
+        <div class="rag-marquee-group" aria-hidden="true">
+          <div class="rag-notice-item">
+            <span class="rag-item-label">Tugas Akhir:</span>
+            <span class="rag-item-val">Asisten Akademik UNSRAT</span>
+          </div>
+          <span class="rag-item-divider" aria-hidden="true">•</span>
+          <div class="rag-notice-item">
+            <span class="rag-item-label">Basis Pengetahuan:</span>
+            <span class="rag-item-val">Peraturan Rektor 2025, Kalender Akademik, &amp; Profil Institusi</span>
+          </div>
+          <span class="rag-item-divider" aria-hidden="true">•</span>
+          <div class="rag-notice-item">
+            <span class="rag-item-label">Batas Data:</span>
+            <span class="rag-item-val">Pembaruan s.d. <span class="rag-item-highlight">Mei 2026</span></span>
+          </div>
+          <span class="rag-group-divider" aria-hidden="true">•</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
   <!-- Live Static Background Portal INSPIRE (UNSRAT) -->
   <iframe id="rag-bg-iframe" src="/static/inspire/background.html" title="Mock Portal INSPIRE UNSRAT"></iframe>
 
   <!-- RAG Chatbot Widget Container (Minimal & Scoped) -->
   <div id="rag-chatbot-widget" class="rag-widget-root">
-    <!-- Floating Trigger Icon (Bottom-Right, 96px above bottom) -->
-    <button id="rag-trigger-btn" class="rag-trigger" aria-label="Buka Chatbot Asisten Akademik UNSRAT">
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>
-    </button>
+    <!-- Floating Trigger Group (Callout Pill + Trigger Button) -->
+    <div class="rag-trigger-group">
+      <!-- Trigger Callout (Dapat di-uncomment jika ingin diaktifkan kembali)
+      <div id="rag-trigger-callout" class="rag-trigger-callout" role="status" aria-label="Informasi Asisten Akademik">
+        <span class="rag-callout-dot"></span>
+        <span class="rag-callout-text">Tanya Regulasi Akademik</span>
+        <button type="button" id="rag-callout-dismiss" class="rag-callout-close" aria-label="Tutup petunjuk" title="Tutup">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      -->
+
+      <!-- Floating Trigger Icon (Bottom-Right, 96px above bottom) -->
+      <button id="rag-trigger-btn" class="rag-trigger" aria-label="Buka Chatbot Asisten Akademik UNSRAT">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>
+      </button>
+    </div>
 
     <!-- Modal Overlay Backdrop (Transparent/Non-blocking) -->
     <div id="rag-modal-overlay" class="rag-overlay hidden"></div>
@@ -201,9 +260,12 @@
         </div>
       </div>
 
-      <!-- Input Form (Textarea Auto-Grow) -->
+      <!-- Input Form (Textarea Auto-Grow with Character Counter) -->
       <form id="rag-chat-form" class="rag-chat-form">
-        <textarea id="rag-user-input" rows="1" placeholder="Ketik pertanyaan disini..." autocomplete="off"></textarea>
+        <div class="rag-input-wrapper">
+          <textarea id="rag-user-input" rows="1" maxlength="1000" placeholder="Ketik pertanyaan disini..." autocomplete="off"></textarea>
+          <div id="rag-char-counter" class="rag-char-counter" aria-live="polite">0 / 1000</div>
+        </div>
         <button id="rag-send-btn" type="button" class="rag-send-btn" aria-label="Kirim Pertanyaan" title="Kirim Pertanyaan">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
         </button>
@@ -255,6 +317,58 @@
     </div>
   </div>
 
-  <script src="/static/inspire/js/inspire.js?v=22"></script>
+  <!-- Onboarding Welcome Dialog (UAT Testing Guidance) -->
+  <div id="rag-onboard-modal" class="rag-onboard-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rag-onboard-title">
+    <div id="rag-onboard-backdrop" class="rag-onboard-backdrop"></div>
+    <div class="rag-onboard-card">
+      <div class="rag-onboard-header">
+        <h3 id="rag-onboard-title" class="rag-onboard-title">Pengujian UAT — Asisten Akademik UNSRAT</h3>
+        <button type="button" id="rag-onboard-close" class="rag-onboard-close-btn" aria-label="Tutup" title="Tutup">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="rag-onboard-body">
+        <p class="rag-onboard-desc">
+          Halaman ini merupakan lingkungan simulasi Portal INSPIRE untuk pelaksanaan kuesioner <strong>User Acceptance Testing (UAT) Tugas Akhir</strong> sistem <strong>Asisten Akademik UNSRAT</strong>.
+        </p>
+
+        <div class="rag-onboard-scope-box">
+          <span class="rag-scope-title">CAKUPAN BASIS PENGETAHUAN:</span>
+          <ul class="rag-scope-list">
+            <li>
+              <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Peraturan Rektor UNSRAT No. 1 Tahun 2025 (Peraturan Akademik)</span>
+            </li>
+            <li>
+              <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Kalender &amp; Jadwal Akademik UNSRAT T.A. 2025/2026</span>
+            </li>
+            <li>
+              <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>7 Dokumen Profil Resmi Institusi UNSRAT</span>
+            </li>
+          </ul>
+          <div class="rag-scope-note">
+            <span>Data dokumen dihimpun dan diperbarui s.d. <strong>Mei 2026</strong>.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rag-onboard-footer">
+        <button type="button" id="rag-onboard-start-btn" class="rag-onboard-btn-primary">
+          Mulai Pengujian
+        </button>
+        <button type="button" id="rag-onboard-explore-btn" class="rag-onboard-btn-secondary">
+          Lihat Portal Simulasi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/inspire/js/inspire.js?v=25"></script>
+<!-- impeccable-live-start -->
+<script src="http://localhost:8400/live.js?token=223add30-8757-4ff7-8295-f77678498577"></script>
+<!-- impeccable-live-end -->
 </body>
 </html>
