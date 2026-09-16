@@ -622,7 +622,9 @@ const RagChatWidget = {
         trackWrapper.addEventListener('pointerdown', (e) => {
           isDraggingTrack = true;
           track.classList.add('rag-dragging');
-          trackWrapper.setPointerCapture(e.pointerId);
+          try {
+            trackWrapper.setPointerCapture(e.pointerId);
+          } catch (err) {}
           handleTrackScroll(e.clientX, false);
         });
 
