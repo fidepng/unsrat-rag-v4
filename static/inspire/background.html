@@ -97,27 +97,23 @@
 										<li class="nav-item dropdown">
 						<a class="nav-link pr-0 d-none d-sm-block" data-toggle="dropdown" href="#profile_dropdown">
 							<div class="image">
-								<object data="https://storage.googleapis.com/unsrat-inspire/uploads/biodata/foto_profil/122101160081.jpg" type="image/jpg" width="22px">
-									<img src="https://inspire.unsrat.ac.id/resources/img/user.png" class="img-circle" alt="User Image" width="22px">
-								</object>
+								<img id="inspire-user-avatar" src="https://inspire.unsrat.ac.id/resources/img/user.png" onerror="this.src='https://inspire.unsrat.ac.id/resources/img/user.png'" class="img-circle" alt="User Image" width="22px">
 							</div>
 						</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link pl-2 pr-3 d-none d-sm-block" data-toggle="dropdown" href="#" style="line-height: 1em;">
-							<small><span class="text-uppercase">TEOFIDE W. K. PANGEMANAN</span></small><br />
-							<small>220211060317</small>
+							<small><span id="inspire-user-name" class="text-uppercase">MAHASISWA SIMULASI UNSRAT</span></small><br />
+							<small id="inspire-user-nim">22021106XXXX</small>
 						</a>
 						<a class="nav-link button pl-2 pr-3 d-block d-sm-none" data-toggle="dropdown" href="#">
 							<i class="fas fa-user"></i>
 						</a>
 						<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" id="profile_dropdown">
 							<span class="dropdown-item dropdown-header">
-								<object data="https://storage.googleapis.com/unsrat-inspire/uploads/biodata/foto_profil/122101160081.jpg" type="image/jpg" style="width: 4cm; height: auto;">
-									<img alt="foto profil" src="https://inspire.unsrat.ac.id/resources/img/user.png" />
-								</object>
+								<img id="inspire-user-avatar-large" alt="foto profil" src="https://inspire.unsrat.ac.id/resources/img/user.png" onerror="this.src='https://inspire.unsrat.ac.id/resources/img/user.png'" style="width: 4cm; height: auto;" />
 							</span>
-														<a href="https://inspire.unsrat.ac.id/riwayat/riwayat" class="dropdown-item dropdown-footer text-bold text-uppercase">
+							<a href="https://inspire.unsrat.ac.id/riwayat/riwayat" class="dropdown-item dropdown-footer text-bold text-uppercase">
 								Riwayat Login<i class="nav-icon fas fa-history ml-2"></i>
 							</a>
 							<a href="https://inspire.unsrat.ac.id/ubah_password/ubah_password" class="dropdown-item dropdown-footer text-bold text-uppercase">
@@ -1398,16 +1394,14 @@
             </div>
         </div>
     </div>
-    <input class="" type="hidden" id="user_session" value="220211060317" />
+    <input class="" type="hidden" id="user_session" value="22021106XXXX" />
     <div class="content">
                         
         <div class="container-fluid">
                             <div class="row">
                                             <div class="col-sm-12 col-md-12">
                             <div class="jumbotron bg-white mb-3">
-                                <h2 class="display-6">Halo,
-                                                                    TEOFIDE !</h2>
-                                                        </h2>
+                                <h2 class="display-6">Halo, <span id="inspire-greeting-name">MAHASISWA UNSRAT</span> !</h2>
                             <p class="lead">Selamat datang di <span style="font-weight: bold; font-size: 16pt;">PORTAL INSPIRE</span> Universitas Sam Ratulangi.</p>
                             <a href="https://www.unsrat.ac.id" target="_blank">
                                 <button class="btn btn-flat btn-primary">
@@ -1428,32 +1422,23 @@
                                         <h5><i class="icon fas fa-info-circle"></i> <strong>INFO AKADEMIK</strong></h5>
                                     </div>
                                 </div> -->
-                                                                                                                                                <div class="alert alert-danger alert-dismissible text-center">
-                                            <h5><i class="icon fas fa-exclamation-triangle"></i> Perhatian !</h5>
-                                            <!-- tampil warning message -->
-                                                                                                                                                 
-                        <p>Anda sudah melebihi batas minimal semester yang ditempuh, tersisa maksimal 5 semester yang harus diselesaikan sebelum DROP OUT <p>
-                        <p><i>Diharapkan untuk menyelesaikan studi sesegera mungkin</i></p>
-                                                                                                                                                        </div>
-                                                                                                                                                                                                                                    <!-- No Info -->
-                                                                                                                <div class="callout callout-info">
-                                        <!-- tampil keterangan semester sekarang -->
-                                        Saat ini Anda sedang menempuh semester 9 T.A 2026/2027 Gasal <br /> <br />
+					<div id="inspire-warning-alert" class="alert alert-danger alert-dismissible text-center" style="display: none;">
+						<h5><i class="icon fas fa-exclamation-triangle"></i> Perhatian !</h5>
+						<p>Anda sudah melebihi batas minimal semester yang ditempuh, tersisa maksimal 5 semester yang harus diselesaikan sebelum DROP OUT </p>
+						<p><i>Diharapkan untuk menyelesaikan studi sesegera mungkin</i></p>
+					</div>
 
-                                        <!-- tampil keterangan masa studi dan sisa masa studi maksimal -->
-                                        <label>MASA STUDI :</label>
-                                        9 Semester <br />
-                                        <label>SISA MASA STUDI MAKS. :</label>
-                                        5 Semester <br />
-                                        <label>STATUS PDDIKTI :</label>
-                                         <br />
-                                    </div>
-                                
-                                <!-- tampil keterangan IPK dan Jumlah SKS Lulus -->
-                                <div class="callout callout-info">
-                                    
-                                    <label>IPK</label> : 3.74 <br />
-                                    <label>SKS Lulus</label> : 138                                </div>
+					<div id="inspire-academic-status" class="callout callout-info">
+						Saat ini Anda sedang menempuh semester 6 T.A 2025/2026 Genap <br /> <br />
+						<label>MASA STUDI :</label> 6 Semester <br />
+						<label>SISA MASA STUDI MAKS. :</label> 8 Semester <br />
+						<label>STATUS PDDIKTI :</label> AKTIF <br />
+					</div>
+
+					<div class="callout callout-info">
+						<label>IPK</label> : <span id="inspire-academic-ipk">3.85</span> <br />
+						<label>SKS Lulus</label> : <span id="inspire-academic-sks">112</span>
+					</div>
                                                     </div>
 
                         <div class="col-sm-12 col-md-6">
@@ -3145,3 +3130,70 @@
             calendar.render();
         });
     </script>
+
+    <!-- Script: Mode Switching & Safe Link Redirection -->
+    <script>
+        (function() {
+            // 1. Check Demo Mode (?demo=1 or ?sidang=1)
+            var urlParams = new URLSearchParams(window.location.search);
+            var isDemo = urlParams.get('demo') === '1' || urlParams.get('sidang') === '1';
+
+            if (isDemo) {
+                var greetingEl = document.getElementById('inspire-greeting-name');
+                if (greetingEl) greetingEl.textContent = 'TEOFIDE';
+
+                var userSessionEl = document.getElementById('user_session');
+                if (userSessionEl) userSessionEl.value = '220211060317';
+
+                var userNameEl = document.getElementById('inspire-user-name');
+                if (userNameEl) userNameEl.textContent = 'TEOFIDE W. K. PANGEMANAN';
+
+                var userNimEl = document.getElementById('inspire-user-nim');
+                if (userNimEl) userNimEl.textContent = '220211060317';
+
+                var avatarEl = document.getElementById('inspire-user-avatar');
+                if (avatarEl) avatarEl.src = 'https://inspire.unsrat.ac.id/resources/img/foto/220211060317.jpg';
+
+                var avatarLgEl = document.getElementById('inspire-user-avatar-large');
+                if (avatarLgEl) avatarLgEl.src = 'https://inspire.unsrat.ac.id/resources/img/foto/220211060317.jpg';
+
+                var warningEl = document.getElementById('inspire-warning-alert');
+                if (warningEl) warningEl.style.display = 'block';
+
+                var academicEl = document.getElementById('inspire-academic-status');
+                if (academicEl) {
+                    academicEl.innerHTML = 'Saat ini Anda sedang menempuh semester 9 T.A 2025/2026 Ganjil <br /> <br />' +
+                        '<label>MASA STUDI :</label> 9 Semester <br />' +
+                        '<label>SISA MASA STUDI MAKS. :</label> 5 Semester <br />' +
+                        '<label>STATUS PDDIKTI :</label> AKTIF <br />';
+                }
+
+                var ipkEl = document.getElementById('inspire-academic-ipk');
+                if (ipkEl) ipkEl.textContent = '3.74';
+
+                var sksEl = document.getElementById('inspire-academic-sks');
+                if (sksEl) sksEl.textContent = '138';
+            }
+
+            // 2. Intercept link clicks to safely redirect to real INSPIRE
+            document.addEventListener('click', function(e) {
+                var anchor = e.target.closest('a');
+                if (!anchor) return;
+
+                var href = anchor.getAttribute('href');
+                if (!href || href === '#' || href.startsWith('javascript:')) {
+                    return;
+                }
+
+                if (href.startsWith('http://') || href.startsWith('https://')) {
+                    anchor.setAttribute('target', '_blank');
+                    anchor.setAttribute('rel', 'noopener noreferrer');
+                } else if (href.startsWith('/')) {
+                    e.preventDefault();
+                    window.open('https://inspire.unsrat.ac.id' + href, '_blank', 'noopener,noreferrer');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
