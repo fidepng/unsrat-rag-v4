@@ -1033,6 +1033,38 @@
   transform: translateX(3px);
 }
 
+/* Horizontal Scroll Indicator Track (Desktop: Hidden, Mobile: Visible) */
+.rag-chips-track-wrapper {
+  display: none;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 0 2px 0;
+}
+
+.rag-chips-track {
+  width: 46px;
+  height: 3.5px;
+  border-radius: 9999px;
+  background-color: #E4DFD9;
+  position: relative;
+  overflow: hidden;
+}
+
+.rag-chips-thumb {
+  width: 16px;
+  height: 100%;
+  border-radius: 9999px;
+  background-color: #7B2D2D;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  will-change: transform;
+  transition: transform 0.08s linear;
+}
+
 /* Desktop Compact Mode: Uniform Full-Width Cards (Bukan fit-content bergerigi) */
 .rag-modal-compact .rag-chips-horizontal {
   display: flex;
@@ -2071,6 +2103,10 @@
     padding: 8px 14px !important;
     font-size: 12px !important;
     min-height: 40px !important;
+  }
+
+  .rag-chips-track-wrapper {
+    display: flex !important;
   }
 
   /* Mobile Citation Bottom Sheet Drawer & Unified Deep Backdrop */

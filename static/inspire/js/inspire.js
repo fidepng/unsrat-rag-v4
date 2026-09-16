@@ -134,7 +134,9 @@ const RagChatWidget = {
       sheetBackdrop: document.getElementById('rag-sheet-backdrop'),
       sheetDragHandle: document.querySelector('.rag-sheet-drag-handle'),
       guideAckBtn: document.getElementById('rag-guide-ack-btn'),
-      offlineBanner: document.getElementById('rag-offline-banner')
+      offlineBanner: document.getElementById('rag-offline-banner'),
+      chipsContainer: document.getElementById('rag-chips-container'),
+      chipsThumb: document.getElementById('rag-chips-thumb')
     };
 
     if (this.elements.welcomeState) {
@@ -588,6 +590,29 @@ const RagChatWidget = {
           }
         }
       });
+
+      // Capturing scroll listener for horizontal chips track indicator
+      chatMessages.addEventListener('scroll', (e) => {
+        if (e.target && (e.target.id === 'rag-chips-container' || e.target.classList.contains('rag-chips-horizontal'))) {
+          this.updateChipsIndicator();
+        }
+      }, { capture: true, passive: true });
+    }
+  },
+
+  updateChipsIndicator() {
+    const container = document.getElementById('rag-chips-container') || document.querySelector('.rag-chips-horizontal');
+    const thumb = document.getElementById('rag-chips-thumb');
+    if (!container || !thumb) return;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    if (maxScroll > 2) {
+      const track = thumb.parentElement;
+      const trackWidth = track ? track.clientWidth : 46;
+      const thumbWidth = thumb.clientWidth || 16;
+      const maxThumbMove = Math.max(0, trackWidth - thumbWidth);
+      const progress = Math.max(0, Math.min(1, container.scrollLeft / maxScroll));
+      thumb.style.transform = `translate3d(${progress * maxThumbMove}px, 0, 0)`;
+      thumb.style.webkitTransform = `translate3d(${progress * maxThumbMove}px, 0, 0)`;
     }
   },
 

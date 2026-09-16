@@ -211,10 +211,10 @@
               </button>
             </div>
 
-            <!-- Level 2: Topic Section (Pure Topic Navigation) -->
+            <!-- Level 2: Topic Section (Pure Topic Navigation with Visual Scroll Cue) -->
             <div class="rag-welcome-bottom">
               <span class="rag-chips-label">PILIHAN TOPIK PERTANYAAN</span>
-              <div class="rag-chips-horizontal" role="region" aria-label="Rekomendasi Topik Akademik">
+              <div id="rag-chips-container" class="rag-chips-horizontal" role="region" aria-label="Rekomendasi Topik Akademik">
                 <button type="button" class="rag-chip-btn rag-topic-chip" data-template="Bagaimana prosedur dan batas waktu pengisian KRS di UNSRAT?" aria-label="Topik: Prosedur Pengisian KRS">
                   <span class="rag-chip-text">Prosedur Pengisian KRS</span>
                   <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
@@ -235,6 +235,11 @@
                   <span class="rag-chip-text">Visi & Misi UNSRAT</span>
                   <svg class="rag-chip-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                 </button>
+              </div>
+              <div id="rag-chips-track-wrapper" class="rag-chips-track-wrapper" aria-hidden="true">
+                <div class="rag-chips-track">
+                  <div id="rag-chips-thumb" class="rag-chips-thumb"></div>
+                </div>
               </div>
             </div>
           </div>
