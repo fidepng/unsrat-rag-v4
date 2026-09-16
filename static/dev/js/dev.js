@@ -1,6 +1,6 @@
 // static/dev/js/dev.js — Developer Panel Frontend Logic
 
-document.addEventListener("DOMContentLoaded", () => {
+function initDevDashboard() {
     function safeCreateIcons() {
         try {
             if (typeof lucide !== "undefined" && lucide.createIcons) {
@@ -119,13 +119,48 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
+    // Helper: Admin Auth Fetch Wrapper
+    function getAdminKey() {
+        return localStorage.getItem("unsrat_dev_admin_key") || "";
+    }
+
+    async function authFetch(url, options = {}) {
+        options.headers = options.headers || {};
+        const key = getAdminKey();
+        if (key && !options.headers["X-Admin-Key"]) {
+            options.headers["X-Admin-Key"] = key;
+        }
+        let res = await fetch(url, options);
+        if (res.status === 403) {
+            const enteredKey = prompt("Akses Ditolak (403). Masukkan X-Admin-Key untuk Dev Dashboard:");
+            if (enteredKey) {
+                localStorage.setItem("unsrat_dev_admin_key", enteredKey.trim());
+                options.headers["X-Admin-Key"] = enteredKey.trim();
+                res = await fetch(url, options);
+            }
+        }
+        return res;
+    }
+
     // ── SECTION 1: SYSTEM STATUS ─────────────────────────────────────────────
     async function fetchSystemStatus() {
         try {
-            const res = await fetch("/api/dev/status");
+            const res = await authFetch("/api/dev/status");
             if (!res.ok) throw new Error("Gagal mengambil status sistem");
             const data = await res.json();
             systemStatus = data;
+
+            // Environment Badge
+            const devEnvBadge = document.getElementById("dev-env-badge");
+            if (devEnvBadge) {
+                if (data.is_cloud_run) {
+                    devEnvBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-200 uppercase inline-block";
+                    devEnvBadge.innerText = "Cloud Run (Protected)";
+                } else {
+                    devEnvBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 uppercase inline-block";
+                    devEnvBadge.innerText = "Local Dev (Direct Access)";
+                }
+            }
 
             // API Keys
             if (keyGoogleStatus) {
@@ -254,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
             modelTestResult.innerHTML = `Mengirim prompt uji ke <span class="font-bold text-rose-600">${escapeHtml(modelName)}</span>...`;
 
             try {
-                const res = await fetch("/api/dev/test_model", {
+                const res = await authFetch("/api/dev/test_model", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ model_name: modelName })
@@ -296,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
             safeCreateIcons();
 
             try {
-                const res = await fetch("/api/dev/set_model", {
+                const res = await authFetch("/api/dev/set_model", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ model_name: modelName })
@@ -366,7 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chunkMetadata.innerHTML = "";
 
         try {
-            const res = await fetch(`/api/dev/chunks?index=${index}&config=${currentChunkConfig.toLowerCase()}`);
+            const res = await authFetch(`/api/dev/chunks?index=${index}&config=${currentChunkConfig.toLowerCase()}`);
             if (!res.ok) {
                 const err = await res.json();
                 throw new Error(err.detail || "Not found");
@@ -422,7 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 const start = performance.now();
-                const res = await fetch(`/api/dev/retrieval_test?query=${encodeURIComponent(query)}&config=${currentRetrievalConfig.toLowerCase()}`);
+                const res = await authFetch(`/api/dev/retrieval_test?query=${encodeURIComponent(query)}&config=${currentRetrievalConfig.toLowerCase()}`);
                 const end = performance.now();
                 
                 if (!res.ok) {
@@ -487,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ── SECTION 5: EVALUATION RUNS MANAGER ──────────────────────────────────
     async function fetchRuns() {
         try {
-            const res = await fetch("/api/dev/runs");
+            const res = await authFetch("/api/dev/runs");
             if (!res.ok) throw new Error("Gagal membaca manifest runs");
             const data = await res.json();
             runsData = data.runs || [];
@@ -618,7 +653,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const res = await fetch("/api/dev/runs/activate", {
+            const res = await authFetch("/api/dev/runs/activate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ run_id: runId })
@@ -661,7 +696,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ── SECTION 6: LIVE LOG TERMINAL ─────────────────────────────────────────
     async function fetchLogs() {
         try {
-            const res = await fetch("/api/dev/logs?lines=100");
+            const res = await authFetch("/api/dev/logs?lines=100");
             if (!res.ok) throw new Error("Gagal mengambil log sistem");
             const data = await res.json();
             logLinesData = data.lines || [];
@@ -759,4 +794,10 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchSystemStatus();
     fetchRuns();
     startLogPolling();
-});
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initDevDashboard);
+} else {
+    initDevDashboard();
+}
