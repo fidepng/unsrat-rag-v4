@@ -110,6 +110,8 @@ const RagChatWidget = {
       onboardCloseBtn: document.getElementById('rag-onboard-close'),
       onboardStartBtn: document.getElementById('rag-onboard-start-btn'),
       onboardExploreBtn: document.getElementById('rag-onboard-explore-btn'),
+      scopeToggleBtn: document.getElementById('rag-scope-accordion-toggle'),
+      scopeContent: document.getElementById('rag-scope-accordion-content'),
       bgIframe: document.getElementById('rag-bg-iframe'),
       modal: document.getElementById('rag-modal'),
       overlay: document.getElementById('rag-modal-overlay'),
@@ -195,6 +197,16 @@ const RagChatWidget = {
       onboardBackdrop.addEventListener('click', (e) => {
         e.stopPropagation();
         this.dismissOnboarding(false);
+      });
+    }
+
+    const { scopeToggleBtn, scopeContent } = this.elements;
+    if (scopeToggleBtn && scopeContent) {
+      scopeToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = scopeContent.classList.contains('expanded');
+        scopeContent.classList.toggle('expanded', !isExpanded);
+        scopeToggleBtn.setAttribute('aria-expanded', String(!isExpanded));
       });
     }
 

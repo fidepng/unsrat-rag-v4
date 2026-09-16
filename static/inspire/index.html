@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS Scoped khusus Demo Chatbot UNSRAT (Portal INSPIRE) -->
-  <link rel="stylesheet" href="/static/inspire/css/inspire.css?v=26">
+  <link rel="stylesheet" href="/static/inspire/css/inspire.css?v=27">
 
   <!-- Marked.js for Markdown Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -317,12 +317,15 @@
     </div>
   </div>
 
-  <!-- Onboarding Welcome Dialog (UAT Testing Guidance) -->
+  <!-- Onboarding Welcome Dialog (UAT Testing Guidance - Distilled & Clarified) -->
   <div id="rag-onboard-modal" class="rag-onboard-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rag-onboard-title">
     <div id="rag-onboard-backdrop" class="rag-onboard-backdrop"></div>
     <div class="rag-onboard-card">
       <div class="rag-onboard-header">
-        <h3 id="rag-onboard-title" class="rag-onboard-title">Pengujian UAT — Asisten Akademik UNSRAT</h3>
+        <div class="rag-onboard-header-badge-group">
+          <span class="rag-onboard-badge">PENGUJIAN UAT</span>
+          <h3 id="rag-onboard-title" class="rag-onboard-title">Asisten Akademik UNSRAT</h3>
+        </div>
         <button type="button" id="rag-onboard-close" class="rag-onboard-close-btn" aria-label="Tutup" title="Tutup">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
@@ -330,34 +333,45 @@
 
       <div class="rag-onboard-body">
         <p class="rag-onboard-desc">
-          Halaman ini merupakan lingkungan simulasi Portal INSPIRE untuk pelaksanaan kuesioner <strong>User Acceptance Testing (UAT) Tugas Akhir</strong> sistem <strong>Asisten Akademik UNSRAT</strong>.
+          Selamat datang di lingkungan simulasi <strong>User Acceptance Testing (UAT)</strong> Tugas Akhir. Asisten ini siap membantu menjawab pertanyaan seputar regulasi perkuliahan, kalender, dan kebijakan akademik resmi UNSRAT.
         </p>
 
-        <div class="rag-onboard-scope-box">
-          <span class="rag-scope-title">CAKUPAN BASIS PENGETAHUAN:</span>
-          <ul class="rag-scope-list">
-            <li>
-              <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Peraturan Rektor UNSRAT No. 1 Tahun 2025 (Peraturan Akademik)</span>
-            </li>
-            <li>
-              <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>Kalender &amp; Jadwal Akademik UNSRAT T.A. 2025/2026</span>
-            </li>
-            <li>
-              <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>7 Dokumen Profil Resmi Institusi UNSRAT</span>
-            </li>
-          </ul>
-          <div class="rag-scope-note">
-            <span>Data dokumen dihimpun dan diperbarui s.d. <strong>Mei 2026</strong>.</span>
+        <!-- Dropdown Accordion for Knowledge Base Scope -->
+        <div class="rag-onboard-accordion-wrapper">
+          <button type="button" id="rag-scope-accordion-toggle" class="rag-scope-toggle-btn" aria-expanded="false" aria-controls="rag-scope-accordion-content">
+            <div class="rag-scope-toggle-left">
+              <svg class="rag-scope-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              <span>Cakupan Basis Pengetahuan (3 Dokumen)</span>
+            </div>
+            <svg class="rag-scope-chevron" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          
+          <div id="rag-scope-accordion-content" class="rag-scope-accordion-body">
+            <ul class="rag-scope-list">
+              <li>
+                <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Peraturan Rektor UNSRAT No. 1 Tahun 2025 (Peraturan Akademik)</span>
+              </li>
+              <li>
+                <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Kalender &amp; Jadwal Akademik UNSRAT T.A. 2025/2026</span>
+              </li>
+              <li>
+                <svg class="rag-scope-check" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>7 Dokumen Profil Resmi Institusi UNSRAT</span>
+              </li>
+            </ul>
+            <div class="rag-scope-note">
+              <span>Data dokumen dihimpun dan diperbarui s.d. <strong>Mei 2026</strong>.</span>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="rag-onboard-footer">
         <button type="button" id="rag-onboard-start-btn" class="rag-onboard-btn-primary">
-          Mulai Pengujian
+          <span>Mulai Pengujian</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
         <button type="button" id="rag-onboard-explore-btn" class="rag-onboard-btn-secondary">
           Lihat Portal Simulasi
@@ -366,7 +380,7 @@
     </div>
   </div>
 
-  <script src="/static/inspire/js/inspire.js?v=25"></script>
+  <script src="/static/inspire/js/inspire.js?v=27"></script>
 <!-- impeccable-live-start -->
 <script src="http://localhost:8400/live.js?token=223add30-8757-4ff7-8295-f77678498577"></script>
 <!-- impeccable-live-end -->
