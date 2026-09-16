@@ -381,7 +381,7 @@
   }
 }
 
-/* Floating Trigger Button - Clean Institutional Elevation with Pulse Beacon */
+/* Floating Trigger Button - Clean Institutional Elevation with Outward Ripple Beacon */
 .rag-trigger {
   position: relative;
   background: var(--rag-primary-gradient);
@@ -396,15 +396,43 @@
   justify-content: center;
   cursor: pointer;
   transition: transform var(--rag-duration-fast) var(--rag-ease-out), box-shadow var(--rag-duration-fast) var(--rag-ease-out);
-  animation: rag-trigger-beacon 2.8s ease-in-out infinite;
 }
 
-@keyframes rag-trigger-beacon {
-  0%, 100% {
-    box-shadow: 0 8px 24px rgba(123, 45, 45, 0.4), 0 0 0 0 rgba(123, 45, 45, 0.45);
+.rag-trigger::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--rag-primary-gradient);
+  z-index: -1;
+  pointer-events: none;
+  animation: rag-trigger-ripple-out 2.8s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  -webkit-animation: rag-trigger-ripple-out 2.8s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+@-webkit-keyframes rag-trigger-ripple-out {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0.55;
   }
-  50% {
-    box-shadow: 0 10px 28px rgba(123, 45, 45, 0.55), 0 0 0 10px rgba(123, 45, 45, 0);
+  65%, 100% {
+    -webkit-transform: scale(1.52);
+    transform: scale(1.52);
+    opacity: 0;
+  }
+}
+
+@keyframes rag-trigger-ripple-out {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  65%, 100% {
+    -webkit-transform: scale(1.52);
+    transform: scale(1.52);
+    opacity: 0;
   }
 }
 
