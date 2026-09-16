@@ -158,9 +158,12 @@
         </div>
       </div>
 
-      <!-- Input Form (Textarea Auto-Grow) -->
+      <!-- Input Form (Textarea Auto-Grow with Character Counter) -->
       <form id="rag-chat-form" class="rag-chat-form">
-        <textarea id="rag-user-input" rows="1" placeholder="Ketik pertanyaan disini..." autocomplete="off"></textarea>
+        <div class="rag-input-wrapper">
+          <textarea id="rag-user-input" rows="1" maxlength="1000" placeholder="Ketik pertanyaan disini..." autocomplete="off"></textarea>
+          <div id="rag-char-counter" class="rag-char-counter" aria-live="polite">0 / 1000</div>
+        </div>
         <button id="rag-send-btn" type="button" class="rag-send-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
         </button>

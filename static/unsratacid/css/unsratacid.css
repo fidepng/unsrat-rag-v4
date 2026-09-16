@@ -761,12 +761,20 @@
   gap: 10px;
 }
 
-.rag-chat-form textarea {
+.rag-input-wrapper {
+  position: relative;
   flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
+.rag-chat-form textarea {
+  width: 100%;
+  box-sizing: border-box;
   background-color: #FAF9F6;
   border: 1px solid #E4DFD9;
   border-radius: 16px;
-  padding: 10px 14px;
+  padding: 10px 58px 10px 14px;
   font-size: 13.5px;
   outline: none;
   resize: none;
@@ -776,6 +784,30 @@
   overflow-y: auto;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.rag-char-counter {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+  color: #a8a29e;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+}
+
+.rag-char-counter.rag-char-warning {
+  color: #D97706;
+  font-weight: 600;
+}
+
+.rag-char-counter.rag-char-limit {
+  color: #DC2626;
+  font-weight: 700;
 }
 
 .rag-chat-form textarea:focus {
@@ -812,6 +844,91 @@
   width: 18px;
   height: 18px;
   display: block;
+}
+
+/* Error Card States */
+.rag-error-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  color: #991B1B;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+.rag-error-card.rag-error-timeout,
+.rag-error-card.rag-error-ratelimit {
+  background: #FFFBEB;
+  border-color: #FCD34D;
+  color: #92400E;
+}
+
+.rag-error-card.rag-error-validation {
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+  color: #991B1B;
+}
+
+.rag-error-card.rag-error-offline {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #334155;
+}
+
+.rag-error-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.rag-error-header svg {
+  flex-shrink: 0;
+}
+
+.rag-error-card p {
+  margin: 0;
+  font-size: 12px;
+  color: inherit;
+  opacity: 0.95;
+}
+
+.rag-retry-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #7B2D2D;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.rag-retry-btn:hover {
+  background: #632222;
+  transform: translateY(-1px);
+}
+
+.rag-retry-btn:active {
+  transform: translateY(0);
+}
+
+.rag-retry-btn svg {
+  width: 13px;
+  height: 13px;
 }
 
 .hidden {

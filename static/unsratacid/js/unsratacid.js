@@ -201,10 +201,7 @@ const RagChatWidget = {
     if (shouldShow) {
       modal.classList.remove('hidden');
       if (overlay) overlay.classList.remove('hidden');
-      const isTouchOrMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
-      if (userInput && !isTouchOrMobile) {
-        userInput.focus();
-      }
+      if (userInput) userInput.focus();
     } else {
       modal.classList.add('hidden');
       if (overlay) overlay.classList.add('hidden');
