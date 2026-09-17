@@ -1370,6 +1370,15 @@
   font-weight: 600;
 }
 
+.rag-guide-modal-note {
+  font-size: 11px;
+  color: #78716C;
+  line-height: 1.45;
+  border-top: 1px dashed #E7E5E4;
+  padding-top: 10px;
+  margin-top: 2px;
+}
+
 .rag-guide-modal-footer {
   border-top: none;
   padding-top: 4px;
