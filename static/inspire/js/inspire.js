@@ -70,7 +70,7 @@ const RagChatWidget = {
     try {
       if (typeof window !== 'undefined' && window.history) {
         if (window.history.replaceState) {
-          window.history.replaceState({ ragLayer: 'portal' }, '');
+          window.history.replaceState({ ragLayer: 'portal' }, '', window.location.pathname + window.location.search);
         }
       }
     } catch (err) {}
@@ -85,7 +85,16 @@ const RagChatWidget = {
       onboardModal.classList.add('hidden');
     }
 
-    if (openChat) {
+    // Clean hash back to portal base if not transitioning to chat
+    if (!openChat) {
+      try {
+        if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+          if (window.history.state && window.history.state.ragLayer === 'onboard') {
+            window.history.replaceState({ ragLayer: 'portal' }, '', window.location.pathname + window.location.search);
+          }
+        }
+      } catch (err) {}
+    } else {
       this.toggleModal(true);
     }
   },
@@ -94,7 +103,8 @@ const RagChatWidget = {
     try {
       if (typeof window !== 'undefined' && window.history && window.history.pushState) {
         if (!window.history.state || window.history.state.ragLayer !== layer) {
-          window.history.pushState({ ragLayer: layer }, '');
+          const hash = layer === 'portal' ? '' : `#${layer}`;
+          window.history.pushState({ ragLayer: layer }, '', window.location.pathname + window.location.search + hash);
         }
       }
     } catch (err) {}
@@ -564,10 +574,27 @@ const RagChatWidget = {
       }
     });
 
-    // Mobile Browser Gesture Back / Hardware Back handler (popstate)
-    window.addEventListener('popstate', () => {
+    // Mobile Browser Gesture Back / Hardware Back handler (popstate & hashchange with deduplication)
+    let lastHistoryDismissTime = 0;
+    const handleHistoryDismiss = () => {
+      const now = Date.now();
+      if (now - lastHistoryDismissTime < 60) return; // Ignore rapid duplicate events in same tick
+      lastHistoryDismissTime = now;
       this.dismissTopmostLayer();
-    });
+    };
+
+    window.addEventListener('popstate', handleHistoryDismiss);
+    window.addEventListener('hashchange', handleHistoryDismiss);
+
+    // Touch/Pointer user-activation reinforcement for mobile gesture navigation
+    const reinforceHistoryOnTouch = () => {
+      const { onboardModal } = this.elements;
+      if (onboardModal && !onboardModal.classList.contains('hidden')) {
+        this.pushHistory('onboard');
+      }
+    };
+    window.addEventListener('touchstart', reinforceHistoryOnTouch, { capture: true, passive: true });
+    window.addEventListener('pointerdown', reinforceHistoryOnTouch, { capture: true, passive: true });
 
     // Delegated interactions on chatMessages (Guide Open & Topic Chip Pre-Fill)
     if (chatMessages) {
