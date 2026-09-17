@@ -67,6 +67,7 @@ const RagChatWidget = {
     const { onboardModal } = this.elements;
     if (!onboardModal) return;
     onboardModal.classList.remove('hidden');
+    this.pushHistory('onboard');
   },
 
   dismissOnboarding(openChat = false) {
@@ -78,6 +79,52 @@ const RagChatWidget = {
     if (openChat) {
       this.toggleModal(true);
     }
+  },
+
+  pushHistory(layer) {
+    try {
+      if (typeof window !== 'undefined' && window.history && window.history.pushState) {
+        window.history.pushState({ ragLayer: layer }, '');
+      }
+    } catch (err) {}
+  },
+
+  dismissTopmostLayer() {
+    const { onboardModal, settingsPanel, sideCitationPanel, modal } = this.elements;
+    const guideModal = document.getElementById('rag-guide-modal');
+
+    // Layer 4: Topmost Dialogs/Popups
+    if (onboardModal && !onboardModal.classList.contains('hidden')) {
+      this.dismissOnboarding(false);
+      return true;
+    }
+    if (guideModal && guideModal.classList.contains('active')) {
+      if (typeof this.closeGuideModal === 'function') {
+        this.closeGuideModal();
+      } else {
+        guideModal.classList.remove('active');
+        guideModal.classList.add('hidden');
+      }
+      return true;
+    }
+    if (settingsPanel && !settingsPanel.classList.contains('hidden')) {
+      settingsPanel.classList.add('hidden');
+      return true;
+    }
+
+    // Layer 3: Citation Drawer / Sheet on mobile
+    if (sideCitationPanel && !sideCitationPanel.classList.contains('hidden') && (sideCitationPanel.classList.contains('rag-sheet-open') || window.innerWidth <= 768)) {
+      this.toggleCitationPanel(false);
+      return true;
+    }
+
+    // Layer 2: Main Chat Modal Window
+    if (modal && !modal.classList.contains('hidden') && modal.classList.contains('rag-modal-open')) {
+      this.toggleModal(false);
+      return true;
+    }
+
+    return false;
   },
 
   bindNetworkEvents() {
@@ -417,6 +464,7 @@ const RagChatWidget = {
         guideModal.classList.remove('hidden');
         void guideModal.offsetWidth; // Force reflow for smooth transition
         guideModal.classList.add('active');
+        this.pushHistory('guide');
         const trigger = document.getElementById('rag-guide-toggle-btn');
         if (trigger) trigger.setAttribute('aria-expanded', 'true');
         if (headerGuideBtn) {
@@ -442,6 +490,9 @@ const RagChatWidget = {
         }, 240);
       }
     };
+
+    this.closeGuideModal = closeGuideModal;
+    this.openGuideModal = openGuideModal;
 
     const toggleGuideModal = () => {
       if (!guideModal) return;
@@ -495,23 +546,16 @@ const RagChatWidget = {
       this.toggleModal(false);
     });
 
-    // Hierarchical keyboard Escape handler
+    // Hierarchical keyboard Escape handler (Strict Layer-by-Layer)
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (this.elements.onboardModal && !this.elements.onboardModal.classList.contains('hidden')) {
-          this.dismissOnboarding(false);
-        } else if (guideModal && guideModal.classList.contains('active')) {
-          closeGuideModal();
-        } else if (resetConfirmPopover && !resetConfirmPopover.classList.contains('hidden')) {
-          hideResetConfirm();
-        } else if (settingsPanel && !settingsPanel.classList.contains('hidden')) {
-          settingsPanel.classList.add('hidden');
-        } else if (this.elements.sideCitationPanel && !this.elements.sideCitationPanel.classList.contains('hidden')) {
-          this.toggleCitationPanel(false);
-        } else if (this.elements.modal && !this.elements.modal.classList.contains('hidden') && this.elements.modal.classList.contains('rag-modal-open')) {
-          this.toggleModal(false);
-        }
+        this.dismissTopmostLayer();
       }
+    });
+
+    // Mobile Browser Gesture Back / Hardware Back handler (popstate)
+    window.addEventListener('popstate', () => {
+      this.dismissTopmostLayer();
     });
 
     // Delegated interactions on chatMessages (Guide Open & Topic Chip Pre-Fill)
@@ -684,6 +728,7 @@ const RagChatWidget = {
 
     if (shouldShow) {
       modal.classList.remove('hidden');
+      this.pushHistory('chat');
       if (overlay) {
         overlay.classList.remove('hidden');
         void overlay.offsetWidth;
@@ -1383,6 +1428,7 @@ const RagChatWidget = {
       void sideCitationPanel.offsetHeight;
       requestAnimationFrame(() => {
         sideCitationPanel.classList.add('rag-sheet-open');
+        this.pushHistory('citation');
       });
       if (sheetBackdrop) {
         sheetBackdrop.style.removeProperty('opacity');
