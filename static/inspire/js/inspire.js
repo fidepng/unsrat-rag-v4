@@ -66,6 +66,15 @@ const RagChatWidget = {
   initOnboarding() {
     const { onboardModal } = this.elements;
     if (!onboardModal) return;
+
+    try {
+      if (typeof window !== 'undefined' && window.history) {
+        if (window.history.replaceState) {
+          window.history.replaceState({ ragLayer: 'portal' }, '');
+        }
+      }
+    } catch (err) {}
+
     onboardModal.classList.remove('hidden');
     this.pushHistory('onboard');
   },
@@ -84,7 +93,9 @@ const RagChatWidget = {
   pushHistory(layer) {
     try {
       if (typeof window !== 'undefined' && window.history && window.history.pushState) {
-        window.history.pushState({ ragLayer: layer }, '');
+        if (!window.history.state || window.history.state.ragLayer !== layer) {
+          window.history.pushState({ ragLayer: layer }, '');
+        }
       }
     } catch (err) {}
   },

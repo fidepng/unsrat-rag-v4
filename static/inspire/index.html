@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- CSS Scoped khusus Demo Chatbot UNSRAT (Portal INSPIRE) -->
-  <link rel="stylesheet" href="/static/inspire/css/inspire.css?v=28">
+  <link rel="stylesheet" href="/static/inspire/css/inspire.css?v=29">
 
   <!-- Marked.js for Markdown Rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -49,11 +49,6 @@
       <div class="rag-notice-marquee-content">
         <div class="rag-marquee-group">
           <div class="rag-notice-item">
-            <span class="rag-item-label">Status Portal:</span>
-            <span class="rag-item-val">Simulasi (Mock) INSPIRE UNSRAT — Fokus Pengujian pada Widget Chatbot</span>
-          </div>
-          <span class="rag-item-divider" aria-hidden="true">•</span>
-          <div class="rag-notice-item">
             <span class="rag-item-label">Tugas Akhir:</span>
             <span class="rag-item-val">Prototipe Asisten Akademik Virtual RAG UNSRAT</span>
           </div>
@@ -80,11 +75,6 @@
           <span class="rag-group-divider" aria-hidden="true">•</span>
         </div>
         <div class="rag-marquee-group" aria-hidden="true">
-          <div class="rag-notice-item">
-            <span class="rag-item-label">Status Portal:</span>
-            <span class="rag-item-val">Simulasi (Mock) INSPIRE UNSRAT — Fokus Pengujian pada Widget Chatbot</span>
-          </div>
-          <span class="rag-item-divider" aria-hidden="true">•</span>
           <div class="rag-notice-item">
             <span class="rag-item-label">Tugas Akhir:</span>
             <span class="rag-item-val">Prototipe Asisten Akademik Virtual RAG UNSRAT</span>
@@ -234,7 +224,7 @@
             <div class="rag-welcome-top">
               <img src="/static/assets/logo-unsrat.png" alt="UNSRAT Logo" class="rag-welcome-logo" />
               <h4 class="rag-welcome-title">SELAMAT DATANG</h4>
-              <p class="rag-welcome-desc">Layanan informasi regulasi dan kebijakan akademik resmi Universitas Sam Ratulangi (Lingkungan Pengujian Simulasi).</p>
+              <p class="rag-welcome-desc">Layanan informasi regulasi dan kebijakan akademik resmi Universitas Sam Ratulangi.</p>
               <button type="button" id="rag-guide-toggle-btn" class="rag-guide-inline-btn" aria-haspopup="dialog" aria-expanded="false" title="Panduan Cara Bertanya">
                 <svg class="rag-guide-icon-help" xmlns="http://www.w3.org/2000/svg" width="13.5" height="13.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
                 <span>Panduan Cara Bertanya</span>
@@ -331,8 +321,8 @@
             <div class="rag-guide-modal-item">
               <span class="rag-guide-num">2</span>
               <div class="rag-guide-text">
-                <strong>Sebutkan Topik &amp; Jenjang Secara Spesifik</strong>
-                <span>Sertakan jenjang studi atau kata kunci resmi (misalnya: <em>"syarat cuti mahasiswa S1"</em> atau <em>"beban SKS semester 1"</em>).</span>
+                <strong>Sebutkan Topik Secara Spesifik</strong>
+                <span>Sertakan jenjang studi atau kata kunci resmi (misalnya: <em>"syarat cuti mahasiswa S1"</em> bukan sekadar <em>"info cuti"</em>).</span>
               </div>
             </div>
             <div class="rag-guide-modal-item">
@@ -341,9 +331,6 @@
                 <strong>Satu Pokok Masalah per Pertanyaan</strong>
                 <span>Fokus pada satu topik agar kutipan Bab dan Pasal yang dihasilkan tepat sasaran tanpa ambiguitas rujukan.</span>
               </div>
-            </div>
-            <div class="rag-guide-modal-note">
-              <span>Rujukan ditarik dari 9 korpus dokumen resmi UNSRAT (Peraturan Rektor No. 1/2025, Kalender Akademik 2025/2026, &amp; Profil Institusi) pemutakhiran Mei 2026.</span>
             </div>
           </div>
           <div class="rag-guide-modal-footer">
@@ -370,7 +357,7 @@
 
       <div class="rag-onboard-body">
         <p class="rag-onboard-desc">
-          Selamat datang di sesi <strong>Uji Penerimaan Pengguna (User Acceptance Testing / UAT)</strong> Tugas Akhir. Website ini merupakan <em>portal mock/simulasi</em> dari INSPIRE UNSRAT untuk keperluan riset, di mana <strong>fokus utama pengujian adalah pada interaksi dan keandalan chatbot asisten akademik</strong> di pojok kanan bawah.
+          Selamat datang di sesi <strong>Uji Penerimaan Pengguna (User Acceptance Testing / UAT)</strong> Tugas Akhir. Asisten ini siap membantu menjawab pertanyaan seputar regulasi perkuliahan, kalender, dan kebijakan akademik resmi UNSRAT.
         </p>
 
         <!-- Dropdown Accordion for Knowledge Base Scope -->
@@ -405,7 +392,7 @@
               </li>
             </ul>
             <div class="rag-scope-note">
-              <span>Data dokumen dihimpun dari 9 korpus resmi s.d. <strong>Mei 2026</strong>.</span>
+              <span>Data dokumen dihimpun s.d. <strong>Mei 2026</strong>.</span>
             </div>
           </div>
         </div>
@@ -422,6 +409,6 @@
     </div>
   </div>
 
-  <script src="/static/inspire/js/inspire.js?v=28"></script>
+  <script src="/static/inspire/js/inspire.js?v=29"></script>
 </body>
 </html>
