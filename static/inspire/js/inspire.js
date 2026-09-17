@@ -598,55 +598,59 @@ const RagChatWidget = {
       }, { capture: true, passive: true });
 
       // Interactive Pointer/Touch Drag & Click on Chips Slider Track
-      const trackWrapper = document.getElementById('rag-chips-track-wrapper');
-      const track = document.querySelector('.rag-chips-track');
-      if (trackWrapper && track) {
-        let isDraggingTrack = false;
+      this.bindChipsTrackEvents();
+    }
+  },
 
-        const handleTrackScroll = (clientX, smooth = false) => {
-          const container = document.getElementById('rag-chips-container') || document.querySelector('.rag-chips-horizontal');
-          if (!container) return;
-          const rect = track.getBoundingClientRect();
-          if (rect.width <= 0) return;
-          const offsetX = Math.max(0, Math.min(rect.width, clientX - rect.left));
-          const progress = offsetX / rect.width;
-          const maxScroll = container.scrollWidth - container.clientWidth;
-          if (maxScroll > 0) {
-            container.scrollTo({
-              left: progress * maxScroll,
-              behavior: smooth ? 'smooth' : 'auto'
-            });
-          }
-        };
+  bindChipsTrackEvents() {
+    const trackWrapper = document.getElementById('rag-chips-track-wrapper');
+    const track = document.querySelector('.rag-chips-track');
+    if (trackWrapper && track) {
+      let isDraggingTrack = false;
 
-        trackWrapper.addEventListener('pointerdown', (e) => {
-          isDraggingTrack = true;
-          track.classList.add('rag-dragging');
-          try {
-            trackWrapper.setPointerCapture(e.pointerId);
-          } catch (err) {}
+      const handleTrackScroll = (clientX, smooth = false) => {
+        const container = document.getElementById('rag-chips-container') || document.querySelector('.rag-chips-horizontal');
+        if (!container) return;
+        const rect = track.getBoundingClientRect();
+        if (rect.width <= 0) return;
+        const offsetX = Math.max(0, Math.min(rect.width, clientX - rect.left));
+        const progress = offsetX / rect.width;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (maxScroll > 0) {
+          container.scrollTo({
+            left: progress * maxScroll,
+            behavior: smooth ? 'smooth' : 'auto'
+          });
+        }
+      };
+
+      trackWrapper.addEventListener('pointerdown', (e) => {
+        isDraggingTrack = true;
+        track.classList.add('rag-dragging');
+        try {
+          trackWrapper.setPointerCapture(e.pointerId);
+        } catch (err) {}
+        handleTrackScroll(e.clientX, false);
+      });
+
+      trackWrapper.addEventListener('pointermove', (e) => {
+        if (isDraggingTrack) {
           handleTrackScroll(e.clientX, false);
-        });
+        }
+      });
 
-        trackWrapper.addEventListener('pointermove', (e) => {
-          if (isDraggingTrack) {
-            handleTrackScroll(e.clientX, false);
-          }
-        });
+      const stopDragging = (e) => {
+        if (isDraggingTrack) {
+          isDraggingTrack = false;
+          track.classList.remove('rag-dragging');
+          try {
+            trackWrapper.releasePointerCapture(e.pointerId);
+          } catch (err) {}
+        }
+      };
 
-        const stopDragging = (e) => {
-          if (isDraggingTrack) {
-            isDraggingTrack = false;
-            track.classList.remove('rag-dragging');
-            try {
-              trackWrapper.releasePointerCapture(e.pointerId);
-            } catch (err) {}
-          }
-        };
-
-        trackWrapper.addEventListener('pointerup', stopDragging);
-        trackWrapper.addEventListener('pointercancel', stopDragging);
-      }
+      trackWrapper.addEventListener('pointerup', stopDragging);
+      trackWrapper.addEventListener('pointercancel', stopDragging);
     }
   },
 
@@ -764,7 +768,7 @@ const RagChatWidget = {
   },
 
   resetChat() {
-    const { chatMessages, headerGuideBtn } = this.elements;
+    const { chatMessages, headerGuideBtn, userInput, sendBtn } = this.elements;
     if (this.state.status === 'streaming' && this.state.abortController) {
       this.state.abortController.abort();
     }
@@ -780,12 +784,23 @@ const RagChatWidget = {
     this.state.status = 'idle';
     this.toggleCitationPanel(false);
 
+    // Reset Chatbox Input & Send Button
+    if (userInput) {
+      userInput.value = '';
+      this.adjustTextareaHeight();
+    }
+    if (sendBtn) {
+      sendBtn.innerHTML = RAG_ICONS.send;
+      sendBtn.disabled = false;
+    }
+
     if (headerGuideBtn) {
       headerGuideBtn.classList.add('rag-header-btn-hidden');
     }
 
     if (chatMessages && this.welcomeStateHTML) {
       chatMessages.innerHTML = this.welcomeStateHTML;
+      this.bindChipsTrackEvents();
     }
   },
 
