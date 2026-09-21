@@ -8,7 +8,7 @@
 #   SIMILARITY_THRESHOLD = 0.31 pada arsitektur UNSRAT-RAG.
 #
 # Jalankan:
-#   python scripts/calibrate_threshold.py --config b --recall-floor 0.95
+#   python scripts/calibrate_threshold.py --config b --target-recall 1.0
 
 import argparse
 import sys
@@ -38,8 +38,8 @@ def parse_args():
         help="ChromaDB configuration to evaluate (default: 'b')"
     )
     parser.add_argument(
-        "--recall-floor", type=float, default=0.95,
-        help="Minimum recall floor target constraint (default: 0.95)"
+        "--target-recall", type=float, default=1.0,
+        help="Target recall constraint threshold (default: 1.0 for Zero-FN priority)"
     )
     return parser.parse_args()
 
@@ -47,7 +47,7 @@ def parse_args():
 def main():
     args = parse_args()
     config_choice = args.config.lower()
-    recall_floor = args.recall_floor
+    target_recall = args.target_recall
 
     if config_choice == "a":
         chroma_dir = CHROMA_DIR_A
@@ -58,14 +58,15 @@ def main():
 
     calibration_dataset_path = Path("eval/dataset/calibration_dataset_final.csv")
     sweep_output_path = EVAL_RESULTS_DIR / "threshold_sweep_report.csv"
+    raw_distances_output_path = EVAL_RESULTS_DIR / "calibration_raw_distances.csv"
     sweep_min, sweep_max, sweep_step = 0.25, 0.42, 0.01
 
     print(f"\n{'='*75}")
     print(f"       SIMILARITY THRESHOLD CALIBRATOR (FINAL) — CONFIG {config_choice.upper()}")
     print(f"       Threshold Aktif Saat Ini di config.py: {SIMILARITY_THRESHOLD}")
-    print(f"       Target Recall Floor Minimum: {recall_floor}")
+    print(f"       Target Recall Minimum: {target_recall}")
     print(f"{'='*75}")
-    logger.info(f"Memulai kalibrasi threshold untuk Config {config_choice.upper()} (Recall Floor: {recall_floor})")
+    logger.info(f"Memulai kalibrasi threshold untuk Config {config_choice.upper()} (Target Recall: {target_recall})")
 
     # ── 1. Load Calibration Dataset ──────────────────────────────────────
     if not calibration_dataset_path.exists():
@@ -153,6 +154,11 @@ def main():
     total_queries = len(result_df)
     print(f"Berhasil mengumpulkan distance untuk {total_queries}/{len(cal_df)} query.")
 
+    EVAL_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    result_df.to_csv(raw_distances_output_path, index=False)
+    print(f"Raw distances tersimpan di : {raw_distances_output_path}")
+    logger.info(f"Raw distances tersimpan di {raw_distances_output_path}")
+
     # ── 5. Threshold Sweep & Metrik Diagnostik Komprehensif ──────────────
     print(f"\n>>> Menjalankan threshold sweep ({sweep_min}–{sweep_max}, step {sweep_step})...")
 
@@ -187,7 +193,6 @@ def main():
         })
 
     sweep_df = pd.DataFrame(sweep_rows)
-    EVAL_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     sweep_df.to_csv(sweep_output_path, index=False)
 
     print(f"\n{'='*75}")
@@ -199,9 +204,9 @@ def main():
 
     # ── 6. Automated Empirical Justification Reporter ────────────────────
     best_f1_row = sweep_df.loc[sweep_df["f1"].idxmax()] if sweep_df["f1"].notna().any() else None
-    zero_fn_df = sweep_df[sweep_df["FN"] == 0]
-    best_zero_fn_row = (
-        zero_fn_df.loc[zero_fn_df["precision"].idxmax()] if not zero_fn_df.empty else None
+    qualifying_df = sweep_df[sweep_df["recall"] >= target_recall]
+    best_target_recall_row = (
+        qualifying_df.loc[qualifying_df["precision"].idxmax()] if not qualifying_df.empty else None
     )
 
     print(f"\n{'='*75}")
@@ -214,28 +219,33 @@ def main():
         print(f"     Metrics             : Precision = {best_f1_row['precision']:.4f} | Recall = {best_f1_row['recall']:.4f} | F1 = {best_f1_row['f1']:.4f}")
         print(f"     Confusion Matrix    : TP={int(best_f1_row['TP'])}, FN={int(best_f1_row['FN'])}, FP={int(best_f1_row['FP'])}, TN={int(best_f1_row['TN'])}")
 
-    if best_zero_fn_row is not None:
-        print(f"\n  B) Zero-False-Negative Candidate (Recall = 1.0000 — SELECTED PRODUCTION VALUE):")
-        print(f"     Threshold Distance  : {best_zero_fn_row['threshold']} (Cosine Sim Equiv: {best_zero_fn_row['cosine_sim_equiv']})")
-        print(f"     Metrics             : Precision = {best_zero_fn_row['precision']:.4f} | Recall = {best_zero_fn_row['recall']:.4f} | F1 = {best_zero_fn_row['f1']:.4f}")
-        print(f"     Confusion Matrix    : TP={int(best_zero_fn_row['TP'])}, FN={int(best_zero_fn_row['FN'])} (Zero FN!), FP={int(best_zero_fn_row['FP'])}, TN={int(best_zero_fn_row['TN'])}")
+    if best_target_recall_row is not None:
+        if target_recall == 1.0:
+            header_b = "B) Zero-False-Negative Candidate (Recall = 1.0000 — SELECTED PRODUCTION VALUE):"
+        else:
+            header_b = f"B) Target Recall Candidate (Recall >= {target_recall:.4f} — SELECTED VALUE):"
+        print(f"\n  {header_b}")
+        print(f"     Threshold Distance  : {best_target_recall_row['threshold']} (Cosine Sim Equiv: {best_target_recall_row['cosine_sim_equiv']})")
+        print(f"     Metrics             : Precision = {best_target_recall_row['precision']:.4f} | Recall = {best_target_recall_row['recall']:.4f} | F1 = {best_target_recall_row['f1']:.4f}")
+        print(f"     Confusion Matrix    : TP={int(best_target_recall_row['TP'])}, FN={int(best_target_recall_row['FN'])}, FP={int(best_target_recall_row['FP'])}, TN={int(best_target_recall_row['TN'])}")
 
         print(f"\n  [EMPIRICAL RATIONALE & ACADEMIC JUSTIFICATION]")
         print(f"  - Nilai threshold aktif saat ini di config.py : SIMILARITY_THRESHOLD = {SIMILARITY_THRESHOLD}")
-        print(f"  - Pada threshold T = {best_zero_fn_row['threshold']}, jumlah False Negative (FN) = 0.")
+        print(f"  - Pada threshold T = {best_target_recall_row['threshold']}, jumlah False Negative (FN) = {int(best_target_recall_row['FN'])} (Recall = {best_target_recall_row['recall']:.4f}).")
         print(f"  - Pada sistem QA RAG Akademik, dampak False Negative (gagal me-retrieve dokumen relevan")
         print(f"    sehingga memicu jawaban fallback palsu) jauh lebih merusak UX dibandingkan False Positive")
         print(f"    (noise context) yang disaring secara otomatis oleh System Prompt anti-halusinasi Gemini 3.5 Flash.")
-        print(f"  - Menggunakan T = {best_zero_fn_row['threshold']} menjamin Recall 100% pada dataset kalibrasi")
-        print(f"    dengan F1-Score yang tetap sangat tinggi ({best_zero_fn_row['f1']:.4f}).")
+        print(f"  - Menggunakan T = {best_target_recall_row['threshold']} memenuhi target recall ({best_target_recall_row['recall'] * 100:.1f}%) pada dataset kalibrasi")
+        print(f"    dengan presisi tertinggi ({best_target_recall_row['precision']:.4f}) dan F1-Score yang tetap sangat tinggi ({best_target_recall_row['f1']:.4f}).")
     else:
-        print(f"\n  B) Tidak ada threshold di rentang sweep yang mencapai Zero False Negative (Recall 1.0).")
+        print(f"\n  B) Tidak ada threshold di rentang sweep yang mencapai Target Recall >= {target_recall:.4f}.")
 
     print(f"\n  Tabel sweep lengkap tersimpan di : {sweep_output_path}")
+    print(f"  Raw distances tersimpan di       : {raw_distances_output_path}")
     print(f"{'='*75}\n")
 
     logger.info(f"Sweep selesai. Max-F1: {best_f1_row.to_dict() if best_f1_row is not None else None}")
-    logger.info(f"Zero-FN Candidate: {best_zero_fn_row.to_dict() if best_zero_fn_row is not None else None}")
+    logger.info(f"Target Recall Candidate: {best_target_recall_row.to_dict() if best_target_recall_row is not None else None}")
     logger.info("Kalibrasi threshold selesai dikerjakan.")
 
 
